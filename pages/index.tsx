@@ -1,6 +1,19 @@
 import Head from 'next/head';
+import Modal from '../lib/components/modal';
+import { useEffect, useState } from 'react';
 
 export default function Home() {
+  const [isOpenBigModal, setIsOpenBigModal] = useState(false);
+  const [isOpenSmallModal, setIsOpenSmallModal] = useState(false);
+
+  useEffect(() => {
+    console.log('isOpenBigModal', isOpenBigModal);
+  }, [isOpenBigModal]);
+
+  useEffect(() => {
+    console.log('isOpenSmallModal', isOpenSmallModal);
+  }, [isOpenSmallModal]);
+
   return (
     <div>
       <Head>
@@ -14,7 +27,113 @@ export default function Home() {
           Instarank
         </title>
       </Head>
-      <h1>Olá mundo!</h1>
+      <main>
+        <h1>Olá Mundo</h1>
+        <button onClick={() => setIsOpenBigModal(true)}>
+          Abrir Modal Grande
+        </button>
+        <button onClick={() => setIsOpenSmallModal(true)}>
+          Abrir Modal Pequeno
+        </button>
+        <Modal
+          onClose={() => {
+            setIsOpenBigModal(false);
+          }}
+          isOpen={isOpenBigModal}
+        >
+          <p>
+            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Iste,
+            exercitationem quisquam recusandae, eveniet iure porro, accusantium
+            minima atque quas consequuntur temporibus? Et nulla eum consequuntur
+            adipisci reiciendis quibusdam id? Eveniet.
+          </p>
+          <p>
+            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Iste,
+            exercitationem quisquam recusandae, eveniet iure porro, accusantium
+            minima atque quas consequuntur temporibus? Et nulla eum consequuntur
+            adipisci reiciendis quibusdam id? Eveniet.
+          </p>
+          <p>
+            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Iste,
+            exercitationem quisquam recusandae, eveniet iure porro, accusantium
+            minima atque quas consequuntur temporibus? Et nulla eum consequuntur
+            adipisci reiciendis quibusdam id? Eveniet.
+          </p>
+          <p>
+            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Iste,
+            exercitationem quisquam recusandae, eveniet iure porro, accusantium
+            minima atque quas consequuntur temporibus? Et nulla eum consequuntur
+            adipisci reiciendis quibusdam id? Eveniet.
+          </p>
+          <p>
+            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Iste,
+            exercitationem quisquam recusandae, eveniet iure porro, accusantium
+            minima atque quas consequuntur temporibus? Et nulla eum consequuntur
+            adipisci reiciendis quibusdam id? Eveniet.
+          </p>
+          <p>
+            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Iste,
+            exercitationem quisquam recusandae, eveniet iure porro, accusantium
+            minima atque quas consequuntur temporibus? Et nulla eum consequuntur
+            adipisci reiciendis quibusdam id? Eveniet.
+          </p>
+          <p>
+            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Iste,
+            exercitationem quisquam recusandae, eveniet iure porro, accusantium
+            minima atque quas consequuntur temporibus? Et nulla eum consequuntur
+            adipisci reiciendis quibusdam id? Eveniet.
+          </p>
+          <p>
+            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Iste,
+            exercitationem quisquam recusandae, eveniet iure porro, accusantium
+            minima atque quas consequuntur temporibus? Et nulla eum consequuntur
+            adipisci reiciendis quibusdam id? Eveniet.
+          </p>
+          <p>
+            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Iste,
+            exercitationem quisquam recusandae, eveniet iure porro, accusantium
+            minima atque quas consequuntur temporibus? Et nulla eum consequuntur
+            adipisci reiciendis quibusdam id? Eveniet.
+          </p>
+          <p>
+            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Iste,
+            exercitationem quisquam recusandae, eveniet iure porro, accusantium
+            minima atque quas consequuntur temporibus? Et nulla eum consequuntur
+            adipisci reiciendis quibusdam id? Eveniet.
+          </p>
+          <p>
+            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Iste,
+            exercitationem quisquam recusandae, eveniet iure porro, accusantium
+            minima atque quas consequuntur temporibus? Et nulla eum consequuntur
+            adipisci reiciendis quibusdam id? Eveniet.
+          </p>
+          <p>
+            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Iste,
+            exercitationem quisquam recusandae, eveniet iure porro, accusantium
+            minima atque quas consequuntur temporibus? Et nulla eum consequuntur
+            adipisci reiciendis quibusdam id? Eveniet.
+          </p>
+          <p>
+            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Iste,
+            exercitationem quisquam recusandae, eveniet iure porro, accusantium
+            minima atque quas consequuntur temporibus? Et nulla eum consequuntur
+            adipisci reiciendis quibusdam id? Eveniet.
+          </p>
+        </Modal>
+
+        <Modal
+          isOpen={isOpenSmallModal}
+          onClose={() => setIsOpenSmallModal(false)}
+        >
+          <p>
+            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Iste,
+            exercitationem quisquam recusandae, eveniet iure porro, accusantium
+            minima atque quas consequuntur temporibus? Et nulla eum consequuntur
+            adipisci reiciendis quibusdam id? Eveniet. adipisci reiciendis
+            quibusdam id? Eveniet. adipisci reiciendis quibusdam id? Eveniet.
+          </p>
+        </Modal>
+      </main>
     </div>
   );
 }
