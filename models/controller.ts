@@ -3,7 +3,7 @@ import logger from '../infra/logger';
 import { BaseError } from '../errors/index';
 import { NextApiRequest, NextApiResponse } from 'next';
 
-export function extractAnonymousIpFromRequest(request: NextApiRequest): string {
+export function extractIpFromRequest(request: NextApiRequest): string {
   let ip = request.headers['x-real-ip'] || request.socket.remoteAddress;
 
   if (typeof ip !== 'string') {
@@ -18,11 +18,7 @@ export function extractAnonymousIpFromRequest(request: NextApiRequest): string {
     ip = ip.substr(7);
   }
 
-  const ipParts = ip.split('.');
-  ipParts[3] = '0';
-  const anonymizedIp = ipParts.join('.');
-
-  return anonymizedIp;
+  return ip;
 }
 
 export async function injectRequestMetadata(
@@ -33,7 +29,7 @@ export async function injectRequestMetadata(
   request.context = {
     ...request.context,
     requestId: uuidV4(),
-    clientIp: extractAnonymousIpFromRequest(request),
+    clientIp: extractIpFromRequest(request),
   };
 
   next();
