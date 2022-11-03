@@ -1,0 +1,16 @@
+version: '3.8'
+name: 'instarank'
+services:
+  db:
+    image: postgres:14.1-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=instarank
+      - POSTGRES_PASSWORD=instarank
+    ports:
+      - '5432:5432'
+    volumes:
+      - db:/var/lib/postgresql/data
+volumes:
+  db:
+    driver: local
