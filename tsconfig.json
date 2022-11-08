@@ -15,6 +15,13 @@
     "isolatedModules": true,
     "jsx": "preserve"
   },
+  "ts-node": {
+    "compilerOptions": {
+      "target": "es6",
+      "module": "commonjs",
+      "esModuleInterop": true
+    }
+  },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"]
 }
