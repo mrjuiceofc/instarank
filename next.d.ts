@@ -5,6 +5,7 @@ declare module 'next' {
     context: {
       requestId: string;
       clientIp: string;
+      userId?: string;
     };
   }
 }

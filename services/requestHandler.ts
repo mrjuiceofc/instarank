@@ -2,6 +2,7 @@ import { v4 as uuidV4 } from 'uuid';
 import logger from '../infra/logger';
 import { BaseError } from '../errors/index';
 import { NextApiRequest, NextApiResponse } from 'next';
+import * as jwt from 'jsonwebtoken';
 
 export function extractIpFromRequest(request: NextApiRequest): string {
   let ip = request.headers['x-real-ip'] || request.socket.remoteAddress;
@@ -19,6 +20,55 @@ export function extractIpFromRequest(request: NextApiRequest): string {
   }
 
   return ip;
+}
+
+export async function authRequired(
+  request: NextApiRequest,
+  response: NextApiResponse,
+  next: () => void
+) {
+  const authHeader = request.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+
+  if (!token) {
+    return response.status(401).json(
+      new BaseError({
+        message: 'Token not provided',
+        requestId: request.context.requestId,
+        errorLocationCode: 'authRequired',
+        statusCode: 401,
+      })
+    );
+  }
+
+  let decodedToken: jwt.JwtPayload;
+  try {
+    decodedToken = jwt.verify(token, process.env.JWT_SECRET) as jwt.JwtPayload;
+  } catch (error) {
+    return response.status(401).json(
+      new BaseError({
+        message: error.message,
+        requestId: request.context.requestId,
+        errorLocationCode: 'authRequired:jwt.verify',
+        statusCode: 401,
+      })
+    );
+  }
+
+  if (!decodedToken) {
+    return response.status(401).json(
+      new BaseError({
+        message: 'Token is invalid',
+        requestId: request.context.requestId,
+        errorLocationCode: 'authRequired:jwt.verify',
+        statusCode: 401,
+      })
+    );
+  }
+
+  request.context.userId = decodedToken.id;
+
+  next();
 }
 
 export async function injectRequestMetadata(

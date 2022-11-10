@@ -1,6 +1,6 @@
 import nextConnect from 'next-connect';
 import { formatISO } from 'date-fns';
-import * as controller from '../../models/controller';
+import * as controller from '../../services/requestHandler';
 import { NextApiResponse, NextApiRequest } from 'next';
 import prisma from '../../lib/prisma';
 import { BaseError } from '../../errors';

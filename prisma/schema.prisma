@@ -18,6 +18,8 @@ model plan {
   updatedAt       DateTime    @updatedAt @map("updated_at")
   deletedAt       DateTime?   @map("deleted_at")
 
+  users           user[]
+
   @@map("plans")
 }
 
@@ -27,12 +29,14 @@ model user {
   password        String
   ip              String
   planId          String     @map("plan_id")
-  lastAcess       DateTime?  @map("last_acess")
   monthlyLimit    Int        @map("monthly_limit")
+  lastAccessAt    DateTime?  @map("last_access_at")
   limitResetAt    DateTime?  @map("limit_reset_at")
   createdAt       DateTime   @default(now()) @map("created_at")
   updatedAt       DateTime   @updatedAt @map("updated_at")
   deletedAt       DateTime?  @map("deleted_at")
+
+  plan            plan        @relation(fields: [planId], references: [id])
 
   @@map("users")
 }
