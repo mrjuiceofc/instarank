@@ -2,8 +2,8 @@ import { plan, user } from '@prisma/client';
 import { BaseError } from '../../errors';
 import prisma from '../../lib/prisma';
 import { UserCreateOrUpdateDTO } from './dto';
-import { userAuth } from './userAuth';
 import * as bcrypt from 'bcrypt';
+import { userAuth } from './userAuth';
 
 export async function userCreate({
   email,
@@ -28,11 +28,11 @@ export async function userCreate({
   }
 
   if (userAlreadyExists) {
-    return await userAuth({
-      email,
-      password,
+    throw new BaseError({
+      message: 'User already exists',
+      errorLocationCode: 'userCreate.ts:userCreate:userAlreadyExists',
       requestId,
-      ip,
+      statusCode: 400,
     });
   }
 

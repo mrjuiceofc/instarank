@@ -1,7 +1,7 @@
 import nextConnect from 'next-connect';
 import * as controller from '../../../use-cases/requestHandler';
 import { NextApiResponse, NextApiRequest } from 'next';
-import { userCreate } from '../../../use-cases/users/userCreate';
+import { userAuth } from '../../../use-cases/users/userAuth';
 
 export default nextConnect({
   attachParams: true,
@@ -15,7 +15,7 @@ export default nextConnect({
 async function postHandler(request: NextApiRequest, response: NextApiResponse) {
   const { email, password } = request.body;
 
-  const result = await userCreate({
+  const result = await userAuth({
     requestId: request.context.requestId,
     ip: request.context.clientIp,
     email,
