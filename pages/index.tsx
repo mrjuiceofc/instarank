@@ -2,7 +2,7 @@ import Head from 'next/head';
 import { useGlobal } from '../lib/context/global';
 
 export default function Home() {
-  const { setIsOpenLoginModal } = useGlobal();
+  const { setIsOpenLoginModal, user, refreshUser, logout } = useGlobal();
 
   return (
     <div>
@@ -18,10 +18,27 @@ export default function Home() {
         </title>
       </Head>
       <main>
-        <h1>É pro login já tá funcionado testa ai:</h1>
-        <button onClick={() => setIsOpenLoginModal(true)}>
-          Abrir modal login
-        </button>
+        {user ? (
+          <>
+            <h1>Seus Dados:</h1>
+            <ul>
+              <li>Seu id: {user.id}</li>
+              <li>Seu e-mail: {user.email}</li>
+              <li>Seu ip: {user.ip}</li>
+              <li>Seu limite mensal: {user.monthlyLimit}</li>
+              <li>Seu plano: {user.plan.name}</li>
+            </ul>
+            <button onClick={() => refreshUser()}>Atualizar seus dados</button>
+            <button onClick={() => logout()}>Sair</button>
+          </>
+        ) : (
+          <>
+            <h1>Faça login:</h1>
+            <button onClick={() => setIsOpenLoginModal(true)}>
+              Abrir modal login
+            </button>
+          </>
+        )}
       </main>
     </div>
   );

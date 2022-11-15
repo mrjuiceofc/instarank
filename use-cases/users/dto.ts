@@ -15,3 +15,8 @@ export type HandleLimitResetDTO = {
   userId: string;
   requestId: string;
 };
+
+export type GetUserFromIdDTO = {
+  userId: string;
+  requestId: string;
+};

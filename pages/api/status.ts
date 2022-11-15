@@ -1,17 +1,17 @@
 import nextConnect from 'next-connect';
 import { formatISO } from 'date-fns';
-import * as controller from '../../use-cases/requestHandler';
+import * as requestHandler from '../../use-cases/requestHandler';
 import { NextApiResponse, NextApiRequest } from 'next';
 import prisma from '../../lib/prisma';
 import { BaseError } from '../../errors';
 
 export default nextConnect({
   attachParams: true,
-  onNoMatch: controller.onNoMatchHandler,
-  onError: controller.onErrorHandler,
+  onNoMatch: requestHandler.onNoMatchHandler,
+  onError: requestHandler.onErrorHandler,
 })
-  .use(controller.injectRequestMetadata)
-  .use(controller.logRequest)
+  .use(requestHandler.injectRequestMetadata)
+  .use(requestHandler.logRequest)
   .get(getHandler);
 
 async function getHandler(request: NextApiRequest, response: NextApiResponse) {

@@ -1,15 +1,15 @@
 import nextConnect from 'next-connect';
-import * as controller from '../../../use-cases/requestHandler';
+import * as requestHandler from '../../../use-cases/requestHandler';
 import { NextApiResponse, NextApiRequest } from 'next';
 import { userCreate } from '../../../use-cases/users/userCreate';
 
 export default nextConnect({
   attachParams: true,
-  onNoMatch: controller.onNoMatchHandler,
-  onError: controller.onErrorHandler,
+  onNoMatch: requestHandler.onNoMatchHandler,
+  onError: requestHandler.onErrorHandler,
 })
-  .use(controller.injectRequestMetadata)
-  .use(controller.logRequest)
+  .use(requestHandler.injectRequestMetadata)
+  .use(requestHandler.logRequest)
   .post(postHandler);
 
 async function postHandler(request: NextApiRequest, response: NextApiResponse) {

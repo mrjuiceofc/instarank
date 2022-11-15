@@ -3,6 +3,7 @@ import logger from '../infra/logger';
 import { BaseError } from '../errors/index';
 import { NextApiRequest, NextApiResponse } from 'next';
 import * as jwt from 'jsonwebtoken';
+import prisma from '../lib/prisma';
 
 export function extractIpFromRequest(request: NextApiRequest): string {
   let ip = request.headers['x-real-ip'] || request.socket.remoteAddress;
@@ -22,7 +23,7 @@ export function extractIpFromRequest(request: NextApiRequest): string {
   return ip;
 }
 
-export async function authRequired(
+export async function authRequire(
   request: NextApiRequest,
   response: NextApiResponse,
   next: () => void
@@ -35,7 +36,7 @@ export async function authRequired(
       new BaseError({
         message: 'Token not provided',
         requestId: request.context.requestId,
-        errorLocationCode: 'authRequired',
+        errorLocationCode: 'authRequire',
         statusCode: 401,
       })
     );
@@ -49,7 +50,7 @@ export async function authRequired(
       new BaseError({
         message: error.message,
         requestId: request.context.requestId,
-        errorLocationCode: 'authRequired:jwt.verify',
+        errorLocationCode: 'authRequire:jwt.verify',
         statusCode: 401,
       })
     );
@@ -60,13 +61,22 @@ export async function authRequired(
       new BaseError({
         message: 'Token is invalid',
         requestId: request.context.requestId,
-        errorLocationCode: 'authRequired:jwt.verify',
+        errorLocationCode: 'authRequire:jwt.verify',
         statusCode: 401,
       })
     );
   }
 
   request.context.userId = decodedToken.id;
+
+  await prisma.user.update({
+    where: {
+      id: decodedToken.id,
+    },
+    data: {
+      lastAccessAt: new Date(),
+    },
+  });
 
   next();
 }

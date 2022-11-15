@@ -33,7 +33,7 @@ export async function userAuth({
       message: 'Password or email is incorrect',
       errorLocationCode: 'userAuth.ts:userAuth:prisma.user.findUnique',
       requestId,
-      statusCode: 401,
+      statusCode: 403,
     });
   }
 
@@ -44,7 +44,7 @@ export async function userAuth({
       message: 'Password or email is incorrect',
       errorLocationCode: 'userAuth.ts:userAuth:bcrypt.compareSync',
       requestId,
-      statusCode: 401,
+      statusCode: 403,
     });
   }
 

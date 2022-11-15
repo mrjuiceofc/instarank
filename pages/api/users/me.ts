@@ -1,7 +1,7 @@
 import nextConnect from 'next-connect';
 import * as requestHandler from '../../../use-cases/requestHandler';
 import { NextApiResponse, NextApiRequest } from 'next';
-import { userAuth } from '../../../use-cases/users/userAuth';
+import { getUserFromId } from '../../../use-cases/users/getUserFromId';
 
 export default nextConnect({
   attachParams: true,
@@ -10,17 +10,17 @@ export default nextConnect({
 })
   .use(requestHandler.injectRequestMetadata)
   .use(requestHandler.logRequest)
-  .post(postHandler);
+  .use(requestHandler.authRequire)
+  .get(getHandler);
 
-async function postHandler(request: NextApiRequest, response: NextApiResponse) {
-  const { email, password } = request.body;
+async function getHandler(request: NextApiRequest, response: NextApiResponse) {
+  const userId = request.context.userId;
+  const requestId = request.context.requestId;
 
-  const result = await userAuth({
-    requestId: request.context.requestId,
-    ip: request.context.clientIp,
-    email,
-    password,
+  const user = await getUserFromId({
+    requestId,
+    userId,
   });
 
-  return response.status(201).json(result);
+  response.status(200).json(user);
 }

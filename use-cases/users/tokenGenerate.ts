@@ -105,6 +105,8 @@ async function handleRefreshToken(refreshToken: string, requestId: string) {
   return {
     token,
     refreshToken: newRefreshToken,
+    tokenExpiresIn: 4 * 60,
+    refreshTokenExpiresIn: 30 * 24 * 60 * 60,
   };
 }
 
@@ -162,5 +164,7 @@ async function handleEmail(email: string, requestId: string) {
   return {
     token,
     refreshToken,
+    tokenExpiresIn: 4 * 60,
+    refreshTokenExpiresIn: 30 * 24 * 60 * 60,
   };
 }
