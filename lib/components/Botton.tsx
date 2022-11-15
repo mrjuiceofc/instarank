@@ -11,17 +11,13 @@ type Props = {
 
 export function Button(props: Props) {
   const [newProps, setNewProps] = useState(props);
-  const [alreadyLoading, setAlreadyLoading] = useState(false);
 
   useEffect(() => {
-    if (newProps.isLoading && !alreadyLoading) {
-      setAlreadyLoading(true);
-    }
     setNewProps(props);
   }, [props]);
 
   useEffect(() => {
-    if (newProps.isLoading && alreadyLoading) {
+    if (newProps.isLoading) {
       setNewProps((old) => ({ ...old, isDisabled: true }));
     } else {
       setNewProps((old) => ({ ...old, isDisabled: false }));
