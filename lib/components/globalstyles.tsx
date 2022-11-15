@@ -34,4 +34,22 @@ export const Error = styled.span`
   `}
 `;
 
+export const Loading = styled.div`
+  border: 0.25rem solid ${({ theme }) => theme.colors.tertiaryLight};
+  border-top: 0.25rem solid ${({ theme }) => theme.colors.tertiaryDark};
+  border-radius: 50%;
+  width: 1rem;
+  height: 1rem;
+  animation: spin 1s linear infinite;
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+`;
+
 export default GlobalStyle;

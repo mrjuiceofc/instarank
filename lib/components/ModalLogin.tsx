@@ -27,6 +27,7 @@ export default function ModalLogin({ isOpen, onClose: defaultOnClose }: Props) {
   const { login } = useGlobal();
   const [passwordValue, setPasswordValue] = useState('');
   const [emailValue, setEmailValue] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const onClose = useCallback(() => {
     setInputError('');
@@ -38,6 +39,7 @@ export default function ModalLogin({ isOpen, onClose: defaultOnClose }: Props) {
 
   const onSubmit = useCallback(
     async (event: React.FormEvent<HTMLFormElement>) => {
+      setIsLoading(true);
       event.preventDefault();
       const body = {
         email: event.currentTarget.email.value,
@@ -47,6 +49,7 @@ export default function ModalLogin({ isOpen, onClose: defaultOnClose }: Props) {
         await schema.validate(body);
       } catch (error) {
         setInputError(error.path);
+        setIsLoading(false);
         return;
       }
       try {
@@ -60,20 +63,24 @@ export default function ModalLogin({ isOpen, onClose: defaultOnClose }: Props) {
         const data = await response.json();
         if (response.status === 403) {
           setGlobalError('O email ou a senha estão incorretos');
+          setIsLoading(false);
           return;
         }
         if (response.status === 500) {
           setGlobalError(
             'Ocorreu um erro interno no servidor, tente novamente mais tarde'
           );
+          setIsLoading(false);
           return;
         }
 
         if (response.status === 201) {
           login(data.token, data.refreshToken);
+          setIsLoading(false);
           onClose();
         }
       } catch (error) {
+        setIsLoading(false);
         console.log(error);
       }
     },
@@ -119,7 +126,7 @@ export default function ModalLogin({ isOpen, onClose: defaultOnClose }: Props) {
             }}
           />
           {globalError && <Error>{globalError}</Error>}
-          <Button variant="gradient" type="submit">
+          <Button isLoading={isLoading} variant="gradient" type="submit">
             Login
           </Button>
         </Form>
