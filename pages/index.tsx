@@ -1,4 +1,6 @@
 import Head from 'next/head';
+import styled from 'styled-components';
+import { Button } from '../lib/components/Botton';
 import { useGlobal } from '../lib/context/global';
 
 export default function Home() {
@@ -17,10 +19,10 @@ export default function Home() {
           Instarank
         </title>
       </Head>
-      <main>
+      <Wrapper>
         {user ? (
           <>
-            <h1>Seus Dados:</h1>
+            <h3>Seus Dados:</h3>
             <ul>
               <li>Seu id: {user.id}</li>
               <li>Seu e-mail: {user.email}</li>
@@ -28,18 +30,43 @@ export default function Home() {
               <li>Seu limite mensal: {user.monthlyLimit}</li>
               <li>Seu plano: {user.plan.name}</li>
             </ul>
-            <button onClick={() => refreshUser()}>Atualizar seus dados</button>
-            <button onClick={() => logout()}>Sair</button>
+            <h3>Ações:</h3>
+            <WrapperButtons>
+              <Button onClick={() => refreshUser()}>
+                Atualizar seus dados
+              </Button>
+              <Button variant="outline" onClick={() => logout()}>
+                Sair
+              </Button>
+            </WrapperButtons>
           </>
         ) : (
           <>
-            <h1>Faça login:</h1>
-            <button onClick={() => setIsOpenLoginModal(true)}>
-              Abrir modal login
-            </button>
+            <h3>Ações:</h3>
+            <WrapperButtons>
+              <Button onClick={() => setIsOpenLoginModal(true)}>
+                Fazer login
+              </Button>
+            </WrapperButtons>
           </>
         )}
-      </main>
+      </Wrapper>
     </div>
   );
 }
+
+const Wrapper = styled.main`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+`;
+
+const WrapperButtons = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 400px;
+  min-width: 300px;
+`;

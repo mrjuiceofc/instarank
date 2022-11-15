@@ -4,7 +4,7 @@ import pxToRem from '../utils/pxToRem';
 import { Loading } from './globalstyles';
 
 type Props = {
-  variant: 'gradient' | 'outline';
+  variant?: 'gradient' | 'outline';
   isLoading?: boolean;
   isDisabled?: boolean;
 } & React.ButtonHTMLAttributes<HTMLButtonElement>;
@@ -23,6 +23,12 @@ export function Button(props: Props) {
       setNewProps((old) => ({ ...old, isDisabled: false }));
     }
   }, [newProps.isLoading]);
+
+  useEffect(() => {
+    if (!newProps.variant) {
+      setNewProps((old) => ({ ...old, variant: 'gradient' }));
+    }
+  }, [newProps.variant]);
 
   return (
     <StyledButton {...newProps}>
