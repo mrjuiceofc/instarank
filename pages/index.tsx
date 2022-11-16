@@ -1,12 +1,13 @@
 import Head from 'next/head';
 import styled from 'styled-components';
 import { Button } from '../lib/components/Botton';
+import { Loading } from '../lib/components/globalstyles';
 import useAuth from '../lib/hooks/useAuth';
 import useGlobal from '../lib/hooks/useGlobal';
 
 export default function Home() {
   const { setIsOpenLoginModal } = useGlobal();
-  const { user, refreshUser, logout } = useAuth();
+  const { user, refreshUser, logout, isLoading: authIsLoading } = useAuth();
 
   return (
     <div>
@@ -22,7 +23,7 @@ export default function Home() {
         </title>
       </Head>
       <Wrapper>
-        {user ? (
+        {user && !authIsLoading && (
           <>
             <h3>Seus Dados:</h3>
             <ul>
@@ -42,7 +43,14 @@ export default function Home() {
               </Button>
             </WrapperButtons>
           </>
-        ) : (
+        )}
+        {authIsLoading && (
+          <>
+            <h3>Carregando...</h3>
+            <Loading />
+          </>
+        )}
+        {!user && !authIsLoading && (
           <>
             <h3>Ações:</h3>
             <WrapperButtons>

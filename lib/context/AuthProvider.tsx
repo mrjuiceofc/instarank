@@ -18,6 +18,7 @@ interface IAuthProvider {
   refreshUser: () => Promise<void>;
   login: (data: LoginData) => Promise<any>;
   logout: () => void;
+  isLoading: boolean;
 }
 
 export const AuthContext = createContext({} as IAuthProvider);
@@ -28,9 +29,11 @@ type ProviderProps = {
 
 export default function AuthProvider({ children }: ProviderProps) {
   const [loggedUser, setLoggedUser] = useState<user | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const requestUser = useCallback(async () => {
     try {
+      setIsLoading(true);
       const response = await axios.get('/api/users/me');
       const userJson = response.data;
       setLoggedUser(userJson);
@@ -40,11 +43,14 @@ export default function AuthProvider({ children }: ProviderProps) {
         localStorage.removeItem('token');
         localStorage.removeItem('refreshToken');
       }
+    } finally {
+      setIsLoading(false);
     }
   }, []);
 
   const login = useCallback(async ({ email, password }: LoginData) => {
     try {
+      setIsLoading(true);
       const response = await axios.post(
         '/api/users/auth',
         {
@@ -70,14 +76,18 @@ export default function AuthProvider({ children }: ProviderProps) {
         error: error.response.data,
         status: error.response.status,
       };
+    } finally {
+      setIsLoading(false);
     }
   }, []);
 
   const logout = useCallback(() => {
+    setIsLoading(true);
     localStorage.removeItem('token');
     localStorage.removeItem('refreshToken');
     localStorage.removeItem('user');
     setLoggedUser(null);
+    setIsLoading(false);
   }, []);
 
   useEffect(() => {
@@ -91,6 +101,7 @@ export default function AuthProvider({ children }: ProviderProps) {
         refreshUser: requestUser,
         login,
         logout,
+        isLoading,
       }}
     >
       {children}
