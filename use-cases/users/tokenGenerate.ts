@@ -87,7 +87,8 @@ async function handleRefreshToken(refreshToken: string, requestId: string) {
     },
     process.env.JWT_SECRET,
     {
-      expiresIn: '4m',
+      // expiresIn: '4m',
+      expiresIn: '10s',
     }
   );
   const newRefreshToken = jwt.sign(
@@ -146,7 +147,8 @@ async function handleEmail(email: string, requestId: string) {
     },
     process.env.JWT_SECRET,
     {
-      expiresIn: '4m',
+      // expiresIn: '4m',
+      expiresIn: '10s',
     }
   );
   const refreshToken = jwt.sign(

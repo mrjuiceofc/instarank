@@ -1,10 +1,12 @@
 import Head from 'next/head';
 import styled from 'styled-components';
 import { Button } from '../lib/components/Botton';
-import { useGlobal } from '../lib/context/global';
+import useAuth from '../lib/hooks/useAuth';
+import useGlobal from '../lib/hooks/useGlobal';
 
 export default function Home() {
-  const { setIsOpenLoginModal, user, refreshUser, logout } = useGlobal();
+  const { setIsOpenLoginModal } = useGlobal();
+  const { user, refreshUser, logout } = useAuth();
 
   return (
     <div>

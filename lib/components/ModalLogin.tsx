@@ -2,13 +2,13 @@ import styled, { css } from 'styled-components';
 import { Logo } from './Logo';
 import Modal from './Modal';
 import { TextField } from './TextField';
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { Button } from './Botton';
 import * as yup from 'yup';
 import YupPassword from 'yup-password';
 import pxToRem from '../utils/pxToRem';
 import { Error } from './globalstyles';
-import { useGlobal } from '../context/global';
+import useAuth from '../hooks/useAuth';
 YupPassword(yup);
 
 type Props = {
@@ -24,7 +24,7 @@ const schema = yup.object().shape({
 export default function ModalLogin({ isOpen, onClose: defaultOnClose }: Props) {
   const [inputError, setInputError] = useState('');
   const [globalError, setGlobalError] = useState('');
-  const { login } = useGlobal();
+  const { login } = useAuth();
   const [passwordValue, setPasswordValue] = useState('');
   const [emailValue, setEmailValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -53,20 +53,13 @@ export default function ModalLogin({ isOpen, onClose: defaultOnClose }: Props) {
         return;
       }
       try {
-        const response = await fetch('/api/users/auth', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(body),
-        });
-        const data = await response.json();
-        if (response.status === 403) {
+        const data = await login(body);
+        if (data.status === 403) {
           setGlobalError('O email ou a senha estão incorretos');
           setIsLoading(false);
           return;
         }
-        if (response.status === 500) {
+        if (data.status === 500) {
           setGlobalError(
             'Ocorreu um erro interno no servidor, tente novamente mais tarde'
           );
@@ -74,8 +67,7 @@ export default function ModalLogin({ isOpen, onClose: defaultOnClose }: Props) {
           return;
         }
 
-        if (response.status === 201) {
-          login(data.token, data.refreshToken);
+        if (data.status === 201) {
           setIsLoading(false);
           onClose();
         }

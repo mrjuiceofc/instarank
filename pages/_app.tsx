@@ -1,7 +1,8 @@
 import type { AppProps } from 'next/app';
 import { ThemeProvider, DefaultTheme } from 'styled-components';
 import GlobalStyle from '../lib/components/globalstyles';
-import { GlobalContextProvider } from '../lib/context/global';
+import AuthProvider from '../lib/context/AuthProvider';
+import GlobalProvider from '../lib/context/GlobalProvider';
 import pxToRem from '../lib/utils/pxToRem';
 
 const theme: DefaultTheme = {
@@ -46,10 +47,12 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <>
       <ThemeProvider theme={theme}>
-        <GlobalContextProvider>
-          <GlobalStyle />
-          <Component {...pageProps} />
-        </GlobalContextProvider>
+        <AuthProvider>
+          <GlobalProvider>
+            <GlobalStyle />
+            <Component {...pageProps} />
+          </GlobalProvider>
+        </AuthProvider>
       </ThemeProvider>
     </>
   );
