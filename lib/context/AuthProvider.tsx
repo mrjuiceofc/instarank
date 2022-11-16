@@ -36,6 +36,10 @@ export default function AuthProvider({ children }: ProviderProps) {
       setLoggedUser(userJson);
     } catch (error) {
       setLoggedUser(null);
+      if (error.response && error.response.status === 401) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('refreshToken');
+      }
     }
   }, []);
 

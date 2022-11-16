@@ -46,13 +46,20 @@ axios.interceptors.response.use(
         };
       }
       try {
-        const response = await axios.post('/api/users/refresh-token', {
-          refreshToken,
-        });
-
+        const response = await axios.post(
+          '/api/users/refresh-token',
+          {},
+          {
+            headers: {
+              'no-auth': true,
+              authorization: `Bearer ${refreshToken}`,
+            },
+          }
+        );
         const newTokens = response.data;
         localStorage.setItem('token', newTokens.token);
         localStorage.setItem('refreshToken', newTokens.refreshToken);
+        isRefreshing = false;
         const config = error.config;
         const method = config.method;
         const newResponse = await axios[method](config.url, config.data, {

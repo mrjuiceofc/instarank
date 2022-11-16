@@ -39,7 +39,7 @@ async function handleRefreshToken(refreshToken: string, requestId: string) {
       message: error.message,
       errorLocationCode: 'tokenGenerate.ts:tokenGenerate:jwt.verify',
       requestId,
-      statusCode: 500,
+      statusCode: 401,
     });
   }
 
@@ -79,36 +79,7 @@ async function handleRefreshToken(refreshToken: string, requestId: string) {
     });
   }
 
-  const token = jwt.sign(
-    {
-      id: user.id,
-      email: user.email,
-      ip: user.ip,
-    },
-    process.env.JWT_SECRET,
-    {
-      // expiresIn: '4m',
-      expiresIn: '10s',
-    }
-  );
-  const newRefreshToken = jwt.sign(
-    {
-      id: user.id,
-      email: user.email,
-      ip: user.ip,
-    },
-    process.env.JWT_SECRET,
-    {
-      expiresIn: '30d',
-    }
-  );
-
-  return {
-    token,
-    refreshToken: newRefreshToken,
-    tokenExpiresIn: 4 * 60,
-    refreshTokenExpiresIn: 30 * 24 * 60 * 60,
-  };
+  return getToken(user);
 }
 
 async function handleEmail(email: string, requestId: string) {
@@ -139,6 +110,13 @@ async function handleEmail(email: string, requestId: string) {
     });
   }
 
+  return getToken(user);
+}
+
+function getToken(user: user) {
+  // const tokenExpiresIn = 4 * 60;
+  const tokenExpiresIn = 5;
+  const refreshTokenExpiresIn = 30 * 24 * 60 * 60;
   const token = jwt.sign(
     {
       id: user.id,
@@ -147,8 +125,7 @@ async function handleEmail(email: string, requestId: string) {
     },
     process.env.JWT_SECRET,
     {
-      // expiresIn: '4m',
-      expiresIn: '10s',
+      expiresIn: tokenExpiresIn,
     }
   );
   const refreshToken = jwt.sign(
@@ -159,14 +136,14 @@ async function handleEmail(email: string, requestId: string) {
     },
     process.env.JWT_SECRET,
     {
-      expiresIn: '30d',
+      expiresIn: refreshTokenExpiresIn,
     }
   );
 
   return {
     token,
     refreshToken,
-    tokenExpiresIn: 4 * 60,
-    refreshTokenExpiresIn: 30 * 24 * 60 * 60,
+    tokenExpiresIn,
+    refreshTokenExpiresIn,
   };
 }
