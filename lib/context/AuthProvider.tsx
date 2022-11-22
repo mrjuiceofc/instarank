@@ -8,7 +8,7 @@ import {
 import type { user } from '../../use-cases/users/getUserFromId';
 import axios from '../utils/axios';
 
-type LoginData = {
+type AuthData = {
   email: string;
   password: string;
 };
@@ -16,7 +16,8 @@ type LoginData = {
 interface IAuthProvider {
   user: user;
   refreshUser: () => Promise<void>;
-  login: (data: LoginData) => Promise<any>;
+  createUser: (data: AuthData) => Promise<any>;
+  login: (data: AuthData) => Promise<any>;
   logout: () => void;
   isLoading: boolean;
 }
@@ -48,7 +49,37 @@ export default function AuthProvider({ children }: ProviderProps) {
     }
   }, []);
 
-  const login = useCallback(async ({ email, password }: LoginData) => {
+  const createUser = useCallback(async ({ email, password }: AuthData) => {
+    try {
+      setIsLoading(true);
+      const response = await axios.post(
+        '/api/users',
+        {
+          email,
+          password,
+        },
+        {
+          headers: {
+            'no-auth': 'true',
+          },
+        }
+      );
+      const data = response.data;
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('refreshToken', data.refreshToken);
+      await requestUser();
+      return {
+        ...data,
+        statusCode: response.status,
+      };
+    } catch (error) {
+      return error.response.data;
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  const login = useCallback(async ({ email, password }: AuthData) => {
     try {
       setIsLoading(true);
       const response = await axios.post(
@@ -69,13 +100,10 @@ export default function AuthProvider({ children }: ProviderProps) {
       await requestUser();
       return {
         ...data,
-        status: response.status,
+        statusCode: response.status,
       };
     } catch (error) {
-      return {
-        error: error.response.data,
-        status: error.response.status,
-      };
+      return error.response.data;
     } finally {
       setIsLoading(false);
     }
@@ -102,6 +130,7 @@ export default function AuthProvider({ children }: ProviderProps) {
         login,
         logout,
         isLoading,
+        createUser,
       }}
     >
       {children}

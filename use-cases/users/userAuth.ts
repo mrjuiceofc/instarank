@@ -21,7 +21,7 @@ export async function userAuth({
     });
   } catch (error) {
     throw new BaseError({
-      message: error.message,
+      message: 'Erro desconhecido ao buscar usuário',
       errorLocationCode: 'userAuth.ts:userAuth:prisma.user.findUnique',
       requestId,
       statusCode: 500,
@@ -30,7 +30,7 @@ export async function userAuth({
 
   if (!user) {
     throw new BaseError({
-      message: 'Password or email is incorrect',
+      message: 'Email ou senha incorretos',
       errorLocationCode: 'userAuth.ts:userAuth:prisma.user.findUnique',
       requestId,
       statusCode: 403,
@@ -41,7 +41,7 @@ export async function userAuth({
 
   if (!passwordMatch) {
     throw new BaseError({
-      message: 'Password or email is incorrect',
+      message: 'Email ou senha incorretos',
       errorLocationCode: 'userAuth.ts:userAuth:bcrypt.compareSync',
       requestId,
       statusCode: 403,
@@ -60,7 +60,7 @@ export async function userAuth({
     });
   } catch (error) {
     throw new BaseError({
-      message: error.message,
+      message: 'Erro desconhecido ao atualizar último acesso do usuário',
       errorLocationCode: 'userAuth.ts:userAuth:prisma.user.update',
       requestId,
       statusCode: 500,
@@ -74,7 +74,7 @@ export async function userAuth({
     });
   } catch (error) {
     throw new BaseError({
-      message: error.message,
+      message: 'Erro desconhecido ao atualizar limite de ordenações do usuário',
       errorLocationCode: 'userAuth.ts:userAuth:handleLimitReset',
       requestId,
       statusCode: 500,

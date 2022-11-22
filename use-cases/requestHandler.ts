@@ -34,7 +34,7 @@ export async function authRequire(
   if (!token) {
     return response.status(401).json(
       new BaseError({
-        message: 'Token not provided',
+        message: 'Token não encontrado',
         requestId: request.context.requestId,
         errorLocationCode: 'authRequire',
         statusCode: 401,
@@ -48,7 +48,7 @@ export async function authRequire(
   } catch (error) {
     return response.status(401).json(
       new BaseError({
-        message: error.message,
+        message: 'Token inválido',
         requestId: request.context.requestId,
         errorLocationCode: 'authRequire:jwt.verify',
         statusCode: 401,
@@ -59,7 +59,7 @@ export async function authRequire(
   if (!decodedToken) {
     return response.status(401).json(
       new BaseError({
-        message: 'Token is invalid',
+        message: 'Token inválido',
         requestId: request.context.requestId,
         errorLocationCode: 'authRequire:jwt.verify',
         statusCode: 401,
@@ -101,7 +101,7 @@ export async function onNoMatchHandler(
 ) {
   const errorObject = new BaseError({
     requestId: request.context?.requestId || uuidV4(),
-    message: 'Not Found',
+    message: 'Rota não encontrada',
     statusCode: 404,
     errorLocationCode: 'onNoMatchHandler',
     errorId: uuidV4(),

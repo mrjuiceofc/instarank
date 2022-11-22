@@ -38,7 +38,7 @@ export async function getUserFromId({ userId, requestId }: GetUserFromIdDTO) {
     });
   } catch (error) {
     throw new BaseError({
-      message: error.message,
+      message: 'Erro desconhecido ao buscar usuário',
       errorLocationCode:
         'getUserFromId.ts:getUserFromId:prisma.user.findUnique',
       requestId,
@@ -48,7 +48,7 @@ export async function getUserFromId({ userId, requestId }: GetUserFromIdDTO) {
 
   if (!user) {
     throw new BaseError({
-      message: 'User not found',
+      message: 'Usuário não encontrado',
       errorLocationCode:
         'getUserFromId.ts:getUserFromId:prisma.user.findUnique',
       requestId,

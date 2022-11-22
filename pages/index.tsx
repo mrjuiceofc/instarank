@@ -6,7 +6,7 @@ import useAuth from '../lib/hooks/useAuth';
 import useGlobal from '../lib/hooks/useGlobal';
 
 export default function Home() {
-  const { setIsOpenLoginModal } = useGlobal();
+  const { openLoginModal, openCreateUserModal } = useGlobal();
   const { user, refreshUser, logout, isLoading: authIsLoading } = useAuth();
 
   return (
@@ -54,7 +54,22 @@ export default function Home() {
           <>
             <h3>Ações:</h3>
             <WrapperButtons>
-              <Button onClick={() => setIsOpenLoginModal(true)}>
+              <Button
+                onClick={() => {
+                  openCreateUserModal('premium');
+                }}
+              >
+                Criar usuário premium
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  openCreateUserModal('free');
+                }}
+              >
+                Criar usuário free
+              </Button>
+              <Button variant="outline" onClick={() => openLoginModal()}>
                 Fazer login
               </Button>
             </WrapperButtons>

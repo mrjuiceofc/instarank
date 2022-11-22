@@ -11,7 +11,7 @@ export async function tokenGenerate({
 }: TokenGenerateDTO) {
   if (!email && !refreshToken) {
     throw new BaseError({
-      message: 'Email or refresh token is required',
+      message: 'Email ou refreshToken é obrigatório',
       errorLocationCode: 'tokenGenerate.ts:tokenGenerate',
       requestId,
       statusCode: 400,
@@ -36,7 +36,7 @@ async function handleRefreshToken(refreshToken: string, requestId: string) {
     ) as jwt.JwtPayload;
   } catch (error) {
     throw new BaseError({
-      message: error.message,
+      message: 'Refresh token inválido',
       errorLocationCode: 'tokenGenerate.ts:tokenGenerate:jwt.verify',
       requestId,
       statusCode: 401,
@@ -45,7 +45,7 @@ async function handleRefreshToken(refreshToken: string, requestId: string) {
 
   if (!decodedToken) {
     throw new BaseError({
-      message: 'Refresh token is invalid',
+      message: 'Refresh token inválido',
       errorLocationCode: 'tokenGenerate.ts:tokenGenerate:jwt.verify',
       requestId,
       statusCode: 401,
@@ -61,7 +61,7 @@ async function handleRefreshToken(refreshToken: string, requestId: string) {
     });
   } catch (error) {
     throw new BaseError({
-      message: error.message,
+      message: 'Erro desconhecido ao buscar usuário',
       errorLocationCode:
         'tokenGenerate.ts:tokenGenerate:prisma.user.findUnique',
       requestId,
@@ -71,7 +71,7 @@ async function handleRefreshToken(refreshToken: string, requestId: string) {
 
   if (!user) {
     throw new BaseError({
-      message: 'User not found',
+      message: 'Usuário não encontrado',
       errorLocationCode:
         'tokenGenerate.ts:tokenGenerate:prisma.user.findUnique',
       requestId,
@@ -92,7 +92,7 @@ async function handleEmail(email: string, requestId: string) {
     });
   } catch (error) {
     throw new BaseError({
-      message: error.message,
+      message: 'Erro desconhecido ao buscar usuário',
       errorLocationCode:
         'tokenGenerate.ts:tokenGenerate:prisma.user.findUnique',
       requestId,
@@ -102,7 +102,7 @@ async function handleEmail(email: string, requestId: string) {
 
   if (!user) {
     throw new BaseError({
-      message: 'User not found',
+      message: 'Usuário não encontrado',
       errorLocationCode:
         'tokenGenerate.ts:tokenGenerate:prisma.user.findUnique',
       requestId,
@@ -114,8 +114,7 @@ async function handleEmail(email: string, requestId: string) {
 }
 
 function getToken(user: user) {
-  // const tokenExpiresIn = 4 * 60;
-  const tokenExpiresIn = 5;
+  const tokenExpiresIn = 4 * 60;
   const refreshTokenExpiresIn = 30 * 24 * 60 * 60;
   const token = jwt.sign(
     {

@@ -19,7 +19,7 @@ export async function handleLimitReset({
     });
   } catch (error) {
     throw new BaseError({
-      message: error.message,
+      message: 'Erro desconhecido ao buscar usuário',
       errorLocationCode:
         'handleLimitReset.ts:handleLimitReset:prisma.user.findUnique',
       requestId,
@@ -29,7 +29,7 @@ export async function handleLimitReset({
 
   if (!user) {
     throw new BaseError({
-      message: 'User not found',
+      message: 'Usuário não encontrado',
       errorLocationCode:
         'handleLimitReset.ts:handleLimitReset:prisma.user.findUnique',
       requestId,
@@ -56,7 +56,7 @@ export async function handleLimitReset({
       });
     } catch (error) {
       throw new BaseError({
-        message: error.message,
+        message: 'Erro desconhecido ao atualizar limite de ordenações',
         errorLocationCode:
           'handleLimitReset.ts:handleLimitReset:prisma.user.update',
         requestId,

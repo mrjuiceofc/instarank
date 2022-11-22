@@ -5,29 +5,36 @@ import { TextField } from './TextField';
 import { useCallback, useState } from 'react';
 import { Button } from './Botton';
 import * as yup from 'yup';
+import YupPassword from 'yup-password';
 import pxToRem from '../utils/pxToRem';
 import { Error } from './globalstyles';
 import useAuth from '../hooks/useAuth';
 import useGlobal from '../hooks/useGlobal';
+YupPassword(yup);
 
 type Props = {
   isOpen: boolean;
   onClose: () => void;
+  plan?: string;
 };
 
 const schema = yup.object().shape({
   email: yup.string().email().min(3).max(255).required(),
-  password: yup.string(),
+  password: yup.string().password(),
 });
 
-export default function ModalLogin({ isOpen, onClose: defaultOnClose }: Props) {
+export default function ModalCreateUser({
+  isOpen,
+  onClose: defaultOnClose,
+  plan = 'free',
+}: Props) {
   const [inputError, setInputError] = useState('');
   const [globalError, setGlobalError] = useState('');
-  const { login } = useAuth();
+  const { createUser } = useAuth();
   const [passwordValue, setPasswordValue] = useState('');
   const [emailValue, setEmailValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const { openCreateUserModal } = useGlobal();
+  const { openLoginModal } = useGlobal();
 
   const onClose = useCallback(() => {
     setInputError('');
@@ -53,20 +60,27 @@ export default function ModalLogin({ isOpen, onClose: defaultOnClose }: Props) {
         return;
       }
       try {
-        const data = await login(body);
+        const data = await createUser(body);
         if (data.statusCode !== 201) {
           setGlobalError(data.message);
           setIsLoading(false);
           return;
         }
+
         setIsLoading(false);
-        onClose();
+        if (plan === 'free') {
+          onClose();
+          return;
+        }
+
+        // TODO: redirect to payment page
+        alert('TODO: redirect to payment page');
       } catch (error) {
         setIsLoading(false);
         console.log(error);
       }
     },
-    []
+    [plan]
   );
 
   return (
@@ -109,20 +123,18 @@ export default function ModalLogin({ isOpen, onClose: defaultOnClose }: Props) {
           />
           {globalError && <Error>{globalError}</Error>}
           <Button isLoading={isLoading} variant="gradient" type="submit">
-            Login
+            Criar conta
           </Button>
         </Form>
 
-        <ForgotPassword>Esqueceu a senha?</ForgotPassword>
-        <Line />
-        <CreateAccount
+        <LoginAccount
           onClick={() => {
-            openCreateUserModal('premium');
+            openLoginModal();
             onClose();
           }}
         >
-          Caso ainda tenha uma conta click aqui!
-        </CreateAccount>
+          Caso já tenha uma conta click aqui!
+        </LoginAccount>
       </Wrapper>
     </Modal>
   );
@@ -143,25 +155,7 @@ const Form = styled.form`
   gap: 0.5rem;
 `;
 
-const ForgotPassword = styled.span`
-  ${({ theme }) => css`
-    color: ${theme.text.detail.color};
-    font-size: ${theme.text.detail.fontSize};
-    line-height: ${theme.text.detail.lineHeight};
-    font-weight: ${theme.text.detail.fontWeight};
-    cursor: pointer;
-  `}
-`;
-
-const Line = styled.div`
-  ${({ theme }) => css`
-    width: ${pxToRem(60)};
-    height: ${pxToRem(1)};
-    background-color: ${theme.colors.tertiary};
-  `}
-`;
-
-const CreateAccount = styled.span`
+const LoginAccount = styled.span`
   ${({ theme }) => css`
     color: ${theme.colors.secondary};
     font-size: ${theme.text.detail.fontSize};
