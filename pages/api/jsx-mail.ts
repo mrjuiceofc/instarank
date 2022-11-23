@@ -5,6 +5,8 @@ import * as JSXMail from 'jsx-mail';
 
 // jsx mail keep dependencies
 import '@jsx-mail/components';
+import 'react';
+import 'styled-components';
 
 export default nextConnect({
   attachParams: true,

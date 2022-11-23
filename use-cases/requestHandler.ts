@@ -4,9 +4,10 @@ import { BaseError } from '../errors/index';
 import { NextApiRequest, NextApiResponse } from 'next';
 import * as jwt from 'jsonwebtoken';
 import prisma from '../lib/prisma';
+import requestIp from 'request-ip';
 
 export function extractIpFromRequest(request: NextApiRequest): string {
-  let ip = request.headers['x-real-ip'] || request.socket.remoteAddress;
+  let ip = requestIp.getClientIp(request);
 
   if (typeof ip !== 'string') {
     ip = ip.toString();
