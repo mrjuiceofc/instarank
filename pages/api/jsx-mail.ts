@@ -3,6 +3,9 @@ import * as requestHandler from '../../use-cases/requestHandler';
 import { NextApiResponse, NextApiRequest } from 'next';
 import * as JSXMail from 'jsx-mail';
 
+// jsx mail keep dependencies
+import '@jsx-mail/components';
+
 export default nextConnect({
   attachParams: true,
   onNoMatch: requestHandler.onNoMatchHandler,

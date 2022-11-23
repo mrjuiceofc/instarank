@@ -38,3 +38,6 @@ next-env.d.ts
 
 # JSX Mail
 mail/dist
+
+# Local Netlify folder
+.netlify
