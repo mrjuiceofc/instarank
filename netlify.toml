@@ -1,0 +1,2 @@
+[functions]
+included_files = ["mail/**/*.js", "jsx-mail.json"]
