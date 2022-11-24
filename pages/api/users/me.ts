@@ -11,6 +11,7 @@ export default nextConnect({
   .use(requestHandler.injectRequestMetadata)
   .use(requestHandler.logRequest)
   .use(requestHandler.authRequire)
+  .use(requestHandler.handleLimit)
   .get(getHandler);
 
 async function getHandler(request: NextApiRequest, response: NextApiResponse) {

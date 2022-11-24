@@ -5,6 +5,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import * as jwt from 'jsonwebtoken';
 import prisma from '../lib/prisma';
 import requestIp from 'request-ip';
+import { handleLimitReset } from './users/handleLimitReset';
 
 export function extractIpFromRequest(request: NextApiRequest): string {
   let ip = requestIp.getClientIp(request);
@@ -140,4 +141,24 @@ export function onErrorHandler(
   const errorObject = { ...error, requestId: request.context.requestId };
   logger.info(errorObject);
   return response.status(error.statusCode).json(errorObject);
+}
+
+export async function handleLimit(
+  request: NextApiRequest,
+  response: NextApiResponse,
+  next: () => void
+) {
+  const requestId = request.context.requestId;
+  const userId = request.context.userId;
+
+  if (!userId) {
+    return next();
+  }
+
+  await handleLimitReset({
+    requestId,
+    userId,
+  });
+
+  next();
 }
