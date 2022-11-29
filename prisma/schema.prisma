@@ -36,7 +36,23 @@ model user {
   updatedAt       DateTime   @updatedAt @map("updated_at")
   deletedAt       DateTime?  @map("deleted_at")
 
+  passwordResetAttempts  passwordResetAttempt[]
+
   plan            plan        @relation(fields: [planId], references: [id])
 
   @@map("users")
+}
+
+model passwordResetAttempt {
+  id              String      @id @default(uuid())
+  userId          String      @map("user_id")
+  password        String      @map("password")
+  createdAt       DateTime    @default(now()) @map("created_at")
+  updatedAt       DateTime    @updatedAt @map("updated_at")
+  expiredAt       DateTime    @map("expired_at")
+  deletedAt       DateTime?   @map("deleted_at")
+
+  user            user        @relation(fields: [userId], references: [id])
+
+  @@map("password_reset_attempts")
 }
