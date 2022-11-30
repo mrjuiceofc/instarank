@@ -20,3 +20,18 @@ export type GetUserFromIdDTO = {
   userId: string;
   requestId: string;
 };
+
+export type RequestPasswordResetDTO = {
+  requestId: string;
+  ip: string;
+  email: string;
+  newPassword: string;
+};
+
+export type SendEmailDTO = {
+  to: string;
+  subject: string;
+  variables: { [key: string]: string };
+  template: string;
+  requestId: string;
+};

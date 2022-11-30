@@ -1,12 +1,12 @@
 import React from 'react';
-import { WelcomeTemplate } from './templates/Welcome';
+import { PasswordResetTemplate } from './templates/PasswordReset';
 
 export default function App() {
   return {
-    Welcome: {
-      componentFunction: WelcomeTemplate,
+    PasswordReset: {
+      componentFunction: PasswordResetTemplate,
       props: {
-        name: 'string',
+        url: 'https://example.com?code=123456',
       },
     },
   };
