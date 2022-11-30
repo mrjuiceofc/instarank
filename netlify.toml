@@ -1,3 +1,4 @@
 [functions]
 included_files = ["mail/**/*.js", "jsx-mail.json"]
-timeout = 60
+[functions.timeout]
+default = 60
