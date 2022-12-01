@@ -1,12 +1,17 @@
 import * as JSXMail from 'jsx-mail';
 import * as nodemailer from 'nodemailer';
 import { SendEmailDTO } from './users/dto';
+import { BaseError } from '../errors';
+import fs from 'fs';
+import path from 'path';
 
 // jsx mail keep dependencies
 import '@jsx-mail/components';
 import 'react';
 import 'styled-components';
-import { BaseError } from '../errors';
+
+// jsx mail keep files
+fs.readFileSync(path.join(__dirname, '..', 'mail', 'dist', 'index.js'), 'utf8');
 
 const transporter = nodemailer.createTransport({
   service: process.env.MAIL_SERVER,
