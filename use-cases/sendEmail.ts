@@ -1,28 +1,20 @@
-import * as JSXMail from 'jsx-mail';
 import * as nodemailer from 'nodemailer';
 import { SendEmailDTO } from './users/dto';
 import { BaseError } from '../errors';
+import handlebars from 'handlebars';
 import fs from 'fs';
 import path from 'path';
 
-// jsx mail keep dependencies
-import '@jsx-mail/components';
-import 'react';
-import 'styled-components';
-
-// jsx mail keep files
-fs.readFileSync(path.join(__dirname, '..', 'mail', 'dist', 'index.js'), 'utf8');
-
 const transporter = nodemailer.createTransport({
-  service: process.env.MAIL_SERVER,
   host: process.env.SMTP_HOST,
-  secure: false,
+  secure: true,
   secureConnection: false,
   tls: {
     ciphers: 'SSLv3',
   },
   requireTLS: true,
   port: Number(process.env.SMTP_PORT),
+  debug: true,
   auth: {
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASSWORD,
@@ -38,7 +30,15 @@ export async function sendEmail({
 }: SendEmailDTO) {
   let html: string;
   try {
-    html = await JSXMail.render(template, variables);
+    const templatePath = path.resolve(
+      process.cwd(),
+      'mail',
+      'hbs',
+      `${template}.hbs`
+    );
+    const templateFileContent = fs.readFileSync(templatePath);
+    const parseTemplate = handlebars.compile(templateFileContent.toString());
+    html = parseTemplate(variables);
   } catch (error) {
     throw new BaseError({
       message: 'Erro desconhecido ao renderizar template de e-mail',
@@ -58,6 +58,7 @@ export async function sendEmail({
   try {
     await transporter.sendMail(mailOptions);
   } catch (error) {
+    console.log(error);
     throw new BaseError({
       message: 'Erro desconhecido ao enviar e-mail',
       errorLocationCode: 'sendEmail.ts:sendEmail:transporter.sendMail',
