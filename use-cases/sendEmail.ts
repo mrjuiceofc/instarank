@@ -1,5 +1,5 @@
 import * as nodemailer from 'nodemailer';
-import { SendEmailDTO } from './users/dto';
+import { SendEmailDTO } from './dto';
 import { BaseError } from '../errors';
 import handlebars from 'handlebars';
 import fs from 'fs';

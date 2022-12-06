@@ -28,10 +28,8 @@ export type RequestPasswordResetDTO = {
   newPassword: string;
 };
 
-export type SendEmailDTO = {
-  to: string;
-  subject: string;
-  variables: { [key: string]: string };
-  template: string;
+export type PasswordResetDTO = {
   requestId: string;
+  ip: string;
+  token: string;
 };
