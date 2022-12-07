@@ -86,7 +86,7 @@ export default function ModalCreateUser({
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <Wrapper>
-        <Logo />
+        <Logo customText="Criar conta" />
         <Form onSubmit={onSubmit}>
           <TextField
             name="email"

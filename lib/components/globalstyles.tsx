@@ -25,15 +25,6 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
-export const Error = styled.span`
-  ${({ theme }) => css`
-    color: ${theme.text.error.color};
-    font-size: ${theme.text.error.fontSize};
-    line-height: ${theme.text.error.lineHeight};
-    font-weight: ${theme.text.error.fontWeight};
-  `}
-`;
-
 export const Loading = styled.div`
   border: 0.25rem solid ${({ theme }) => theme.colors.tertiaryLight};
   border-top: 0.25rem solid ${({ theme }) => theme.colors.tertiaryDark};
@@ -50,6 +41,45 @@ export const Loading = styled.div`
       transform: rotate(360deg);
     }
   }
+`;
+
+// text styles
+type TextProps = {
+  margin?: string;
+  textAlign?: 'center' | 'left' | 'right';
+};
+
+export const Error = styled.span<TextProps>`
+  ${({ theme, margin, textAlign }) => css`
+    color: ${theme.text.error.color};
+    font-size: ${theme.text.error.fontSize};
+    line-height: ${theme.text.error.lineHeight};
+    font-weight: ${theme.text.error.fontWeight};
+    ${margin && `margin: ${margin};`}
+    ${textAlign && `text-align: ${textAlign};`}
+  `}
+`;
+
+export const SmallTitle = styled.p<TextProps>`
+  ${({ theme, margin, textAlign }) => css`
+    font-size: ${theme.text.smallTitle.fontSize};
+    line-height: ${theme.text.smallTitle.lineHeight};
+    color: ${theme.text.smallTitle.color};
+    font-weight: ${theme.text.smallTitle.fontWeight};
+    ${margin && `margin: ${margin};`}
+    ${textAlign && `text-align: ${textAlign};`}
+  `}
+`;
+
+export const Paragraph = styled.p<TextProps>`
+  ${({ theme, margin, textAlign }) => css`
+    font-size: ${theme.text.paragraph.fontSize};
+    line-height: ${theme.text.paragraph.lineHeight};
+    color: ${theme.text.paragraph.color};
+    font-weight: ${theme.text.paragraph.fontWeight};
+    ${margin && `margin: ${margin};`}
+    ${textAlign && `text-align: ${textAlign};`}
+  `}
 `;
 
 export default GlobalStyle;

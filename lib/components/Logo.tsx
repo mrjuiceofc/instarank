@@ -4,13 +4,14 @@ import LogoImage from '../../assets/logo.png';
 
 type Props = {
   showText?: boolean;
+  customText?: string;
 };
 
-export function Logo({ showText = true }: Props) {
+export function Logo({ showText = true, customText = 'Instarank' }: Props) {
   return (
     <Wrapper>
       <Image src={LogoImage} alt="Logo do Instarank" width={40} height={40} />
-      {showText && <span>Instarank</span>}
+      {showText && <span>{customText}</span>}
     </Wrapper>
   );
 }

@@ -22,6 +22,7 @@ declare module 'styled-components' {
       subtitle: Text;
       error: Text;
       detail: Text;
+      smallTitle: Text;
     };
   }
 }

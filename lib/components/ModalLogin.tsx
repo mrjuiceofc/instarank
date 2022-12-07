@@ -27,7 +27,7 @@ export default function ModalLogin({ isOpen, onClose: defaultOnClose }: Props) {
   const [passwordValue, setPasswordValue] = useState('');
   const [emailValue, setEmailValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const { openCreateUserModal } = useGlobal();
+  const { openCreateUserModal, openResetPasswordModal } = useGlobal();
 
   const onClose = useCallback(() => {
     setInputError('');
@@ -72,7 +72,7 @@ export default function ModalLogin({ isOpen, onClose: defaultOnClose }: Props) {
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <Wrapper>
-        <Logo />
+        <Logo customText="Login" />
         <Form onSubmit={onSubmit}>
           <TextField
             name="email"
@@ -113,7 +113,14 @@ export default function ModalLogin({ isOpen, onClose: defaultOnClose }: Props) {
           </Button>
         </Form>
 
-        <ForgotPassword>Esqueceu a senha?</ForgotPassword>
+        <ForgotPassword
+          onClick={() => {
+            openResetPasswordModal();
+            onClose();
+          }}
+        >
+          Esqueceu a senha?
+        </ForgotPassword>
         <Line />
         <CreateAccount
           onClick={() => {
@@ -121,7 +128,7 @@ export default function ModalLogin({ isOpen, onClose: defaultOnClose }: Props) {
             onClose();
           }}
         >
-          Caso ainda tenha uma conta click aqui!
+          Caso ainda não tenha uma conta click aqui!
         </CreateAccount>
       </Wrapper>
     </Modal>

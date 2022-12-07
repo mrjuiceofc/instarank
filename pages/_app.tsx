@@ -38,7 +38,13 @@ const theme: DefaultTheme = {
       fontSize: pxToRem(12),
       lineHeight: pxToRem(21),
       color: '#5A686C',
-      fontWeight: 400,
+      fontWeight: 500,
+    },
+    smallTitle: {
+      fontSize: pxToRem(16),
+      color: '#000000',
+      lineHeight: pxToRem(24),
+      fontWeight: 500,
     },
   },
 };
