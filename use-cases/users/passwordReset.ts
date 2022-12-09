@@ -38,8 +38,7 @@ export async function passwordReset({ requestId, token }: PasswordResetDTO) {
 
   if (requestPasswordReset.deletedAt) {
     throw new BaseError({
-      message:
-        'Tentativa de redefinição de senha já foi utilizada ou foi cancelada',
+      message: 'Redefinição de senha já foi utilizada ou foi cancelada',
       errorLocationCode:
         'passwordReset.ts:passwordReset:prisma.passwordResetAttempt.findFirst',
       requestId,

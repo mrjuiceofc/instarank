@@ -1,9 +1,14 @@
 import type { AppProps } from 'next/app';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 import { ThemeProvider, DefaultTheme } from 'styled-components';
 import GlobalStyle from '../lib/components/globalstyles';
 import AuthProvider from '../lib/context/AuthProvider';
 import GlobalProvider from '../lib/context/GlobalProvider';
+import useGlobal from '../lib/hooks/useGlobal';
 import pxToRem from '../lib/utils/pxToRem';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const theme: DefaultTheme = {
   colors: {
@@ -49,6 +54,25 @@ const theme: DefaultTheme = {
   },
 };
 
+type PageContentProps = {
+  Component: any;
+  pageProps: any;
+};
+
+function PageContent({ Component, pageProps }: PageContentProps) {
+  const { openLoginModal } = useGlobal();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (router.query.loginModal) {
+      openLoginModal();
+      router.replace(router.pathname, undefined, { shallow: true });
+    }
+  }, [router.query]);
+
+  return <Component {...pageProps} />;
+}
+
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <>
@@ -56,7 +80,8 @@ export default function App({ Component, pageProps }: AppProps) {
         <AuthProvider>
           <GlobalProvider>
             <GlobalStyle />
-            <Component {...pageProps} />
+            <PageContent Component={Component} pageProps={pageProps} />
+            <ToastContainer />
           </GlobalProvider>
         </AuthProvider>
       </ThemeProvider>

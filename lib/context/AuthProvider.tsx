@@ -19,6 +19,7 @@ interface IAuthProvider {
   createUser: (data: AuthData) => Promise<any>;
   login: (data: AuthData) => Promise<any>;
   resetPassword: (data: AuthData) => Promise<any>;
+  saveResetPassword: (token: string) => Promise<any>;
   logout: () => void;
   isLoading: boolean;
 }
@@ -137,6 +138,32 @@ export default function AuthProvider({ children }: ProviderProps) {
     }
   }, []);
 
+  const saveResetPassword = useCallback(async (token: string) => {
+    try {
+      setIsLoading(true);
+      const response = await axios.post(
+        '/api/users/password-reset',
+        {
+          token,
+        },
+        {
+          headers: {
+            'no-auth': 'true',
+          },
+        }
+      );
+      const data = response.data;
+      return {
+        ...data,
+        statusCode: response.status,
+      };
+    } catch (error) {
+      return error.response.data;
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
   const logout = useCallback(() => {
     setIsLoading(true);
     localStorage.removeItem('token');
@@ -160,6 +187,7 @@ export default function AuthProvider({ children }: ProviderProps) {
         isLoading,
         createUser,
         resetPassword,
+        saveResetPassword,
       }}
     >
       {children}
