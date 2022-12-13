@@ -24,6 +24,7 @@ specifiers:
   react: ^18.2.0
   react-dom: ^18.2.0
   react-toastify: ^9.1.1
+  react-tooltip: ^5.1.0
   request-ip: ^3.3.0
   styled-components: ^5.3.5
   ts-node: ^10.9.1
@@ -47,6 +48,7 @@ dependencies:
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
   react-toastify: 9.1.1_biqbaboplfbrettd7655fr4n2y
+  react-tooltip: 5.1.0_biqbaboplfbrettd7655fr4n2y
   request-ip: 3.3.0
   styled-components: 5.3.6_7i5myeigehqah43i5u7wbekgba
   uuid: 9.0.0
@@ -491,6 +493,16 @@ packages:
 
   /@emotion/unitless/0.7.5:
     resolution: {integrity: sha512-OWORNpfjMsSSUBVrRBVGECkhWcULOAJz9ZW8uK9qgxD+87M7jHRcvh/A96XXNhXTLmKcoYSQtBEX7lHMO7YRwg==}
+
+  /@floating-ui/core/1.0.4:
+    resolution: {integrity: sha512-FPFLbg2b06MIw1dqk2SOEMAMX3xlrreGjcui5OTxfBDtaKTmh0kioOVjT8gcfl58juawL/yF+S+gnq8aUYQx/Q==}
+    dev: false
+
+  /@floating-ui/dom/1.0.10:
+    resolution: {integrity: sha512-ZRe5ZmtGYCd82zrjWnnMW8hN5H1otedLh0Ur6rRo6f0exbEe6IlkVvo1RO7tgiMvbF0Df8hkhdm50VcVYqwP6g==}
+    dependencies:
+      '@floating-ui/core': 1.0.4
+    dev: false
 
   /@jridgewell/gen-mapping/0.1.1:
     resolution: {integrity: sha512-sQXCasFk+U8lWYEe66WxRDOE9PjVz4vSM51fTu3Hw+ClTpUSQb718772vH3pyS5pShp6lvQM7SxgIDXXXmOX7w==}
@@ -1209,6 +1221,10 @@ packages:
   /chownr/2.0.0:
     resolution: {integrity: sha512-bIomtDF5KGpdogkLd9VspvFzk9KfpyyGlS8YFVZl7TGPBHL5snIOnxeshwVgPteQ9b4Eydl+pVbIyE1DcvCWgQ==}
     engines: {node: '>=10'}
+    dev: false
+
+  /classnames/2.3.2:
+    resolution: {integrity: sha512-CSbhY4cFEJRe6/GQzIk5qXZ4Jeg5pcsP7b5peFSDpffpe1cqjASH/n9UTjBwOp6XpMSTwQ8Za2K5V02ueA7Tmw==}
     dev: false
 
   /cli-cursor/3.1.0:
@@ -2644,6 +2660,18 @@ packages:
       react-dom: '>=16'
     dependencies:
       clsx: 1.2.1
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+    dev: false
+
+  /react-tooltip/5.1.0_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-7lFBLVWUfUS1tf+4rIvL8QOWpKjmxGWuLQOh0gvXvgd3Mso9OixYRNiLy9vqDyf8pRWz4RNnXqJmPNRF6P/oZQ==}
+    peerDependencies:
+      react: '>=18.0.0'
+      react-dom: '>=18.0.0'
+    dependencies:
+      '@floating-ui/dom': 1.0.10
+      classnames: 2.3.2
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
     dev: false

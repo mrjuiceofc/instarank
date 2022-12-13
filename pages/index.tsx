@@ -3,10 +3,8 @@ import styled from 'styled-components';
 import { Button } from '../lib/components/Botton';
 import { Loading } from '../lib/components/globalstyles';
 import useAuth from '../lib/hooks/useAuth';
-import useGlobal from '../lib/hooks/useGlobal';
 
 export default function Home() {
-  const { openLoginModal, openCreateUserModal } = useGlobal();
   const { user, refreshUser, logout, isLoading: authIsLoading } = useAuth();
 
   return (
@@ -23,6 +21,16 @@ export default function Home() {
         </title>
       </Head>
       <Wrapper>
+        <WrapperText>
+          <h1>Olá!</h1>
+          <p>
+            Atualmente o Instarank ainda está em desenvolvimento. Por tanto
+            espero que tenha paciência até o lançamento oficial do site. Quando
+            isso acontecer você finalmente verá quais são as postagens mais
+            engajadas dos seus concorrentes no Instagram!
+          </p>
+        </WrapperText>
+
         {user && !authIsLoading && (
           <>
             <h3>Seus Dados:</h3>
@@ -50,31 +58,6 @@ export default function Home() {
             <Loading />
           </>
         )}
-        {!user && !authIsLoading && (
-          <>
-            <h3>Ações:</h3>
-            <WrapperButtons>
-              <Button
-                onClick={() => {
-                  openCreateUserModal('premium');
-                }}
-              >
-                Criar usuário premium
-              </Button>
-              <Button
-                variant="outline"
-                onClick={() => {
-                  openCreateUserModal('free');
-                }}
-              >
-                Criar usuário free
-              </Button>
-              <Button variant="outline" onClick={() => openLoginModal()}>
-                Fazer login
-              </Button>
-            </WrapperButtons>
-          </>
-        )}
       </Wrapper>
     </div>
   );
@@ -86,6 +69,12 @@ const Wrapper = styled.main`
   justify-content: center;
   align-items: center;
   width: 100%;
+  padding-bottom: 50px;
+`;
+
+const WrapperText = styled.div`
+  max-width: 400px;
+  text-align: center;
 `;
 
 const WrapperButtons = styled.div`

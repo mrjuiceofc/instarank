@@ -30,7 +30,7 @@ export default function ModalCreateUser({
 }: Props) {
   const [inputError, setInputError] = useState('');
   const [globalError, setGlobalError] = useState('');
-  const { createUser } = useAuth();
+  const { createUser, changePlan } = useAuth();
   const [passwordValue, setPasswordValue] = useState('');
   const [emailValue, setEmailValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -73,8 +73,7 @@ export default function ModalCreateUser({
           return;
         }
 
-        // TODO: redirect to payment page
-        alert('TODO: redirect to payment page');
+        changePlan(plan);
       } catch (error) {
         setIsLoading(false);
         console.log(error);

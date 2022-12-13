@@ -42,7 +42,7 @@ const Model = styled.div<{
 }>`
   visibility: ${(props) => (props.isOpen ? 'visible' : 'hidden')};
   display: flex;
-  z-index: auto;
+  z-index: 999;
   position: fixed;
   top: 0;
   left: 0;
@@ -54,14 +54,14 @@ const Model = styled.div<{
   padding-top: ${({ containerHeight }) =>
     containerHeight < 350
       ? 'calc((100vh / 2) - 150px)}'
-      : 'calc((100vh / 2) - 250px)'};
+      : 'calc((100vh / 2) - 195px)'};
   padding-bottom: ${({ containerHeight }) =>
     containerHeight < 350 ? '150px' : '50px'};
 `;
 
 const Container = styled.div`
   border-radius: 6.3px;
-  padding: 15px 28px;
+  padding: 35px 28px;
   background: #ffffff;
   width: 350px;
   height: fit-content;

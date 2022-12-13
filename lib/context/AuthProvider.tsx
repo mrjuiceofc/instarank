@@ -20,6 +20,7 @@ interface IAuthProvider {
   login: (data: AuthData) => Promise<any>;
   resetPassword: (data: AuthData) => Promise<any>;
   saveResetPassword: (token: string) => Promise<any>;
+  changePlan: (planName: string) => Promise<any>;
   logout: () => void;
   isLoading: boolean;
 }
@@ -177,6 +178,13 @@ export default function AuthProvider({ children }: ProviderProps) {
     requestUser();
   }, []);
 
+  const changePlan = useCallback(async (planName: string) => {
+    console.log(planName);
+    alert(
+      `Ainda não implementado, em breve você poderá mudar de plano para ${planName}`
+    );
+  }, []);
+
   return (
     <AuthContext.Provider
       value={{
@@ -188,6 +196,7 @@ export default function AuthProvider({ children }: ProviderProps) {
         createUser,
         resetPassword,
         saveResetPassword,
+        changePlan,
       }}
     >
       {children}
