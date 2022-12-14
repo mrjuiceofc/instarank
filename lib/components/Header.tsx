@@ -64,9 +64,9 @@ const Wrapper = styled.div`
 const LoginButton = styled(Button)`
   width: ${pxToRem(77)};
   height: ${pxToRem(28.5)};
-  font-weight: 400;
   font-size: ${pxToRem(14)};
   border-radius: ${pxToRem(10)};
+  font-weight: 400;
   text-transform: none;
   display: flex;
   justify-content: center;

@@ -23,6 +23,7 @@ declare module 'styled-components' {
       error: Text;
       detail: Text;
       smallTitle: Text;
+      title: Text;
     };
   }
 }

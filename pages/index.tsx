@@ -1,11 +1,14 @@
 import Head from 'next/head';
-import styled from 'styled-components';
+import Image from 'next/image';
+import styled, { css } from 'styled-components';
+import PhonesImage from '../assets/phones.png';
 import { Button } from '../lib/components/Botton';
-import { Loading } from '../lib/components/globalstyles';
-import useAuth from '../lib/hooks/useAuth';
+import { Paragraph } from '../lib/components/globalstyles';
+import useGlobal from '../lib/hooks/useGlobal';
+import pxToRem from '../lib/utils/pxToRem';
 
 export default function Home() {
-  const { user, refreshUser, logout, isLoading: authIsLoading } = useAuth();
+  const { openCreateUserModal } = useGlobal();
 
   return (
     <div>
@@ -21,43 +24,26 @@ export default function Home() {
         </title>
       </Head>
       <Wrapper>
-        <WrapperText>
-          <h1>Olá!</h1>
-          <p>
-            Atualmente o Instarank ainda está em desenvolvimento. Por tanto
-            espero que tenha paciência até o lançamento oficial do site. Quando
-            isso acontecer você finalmente verá quais são as postagens mais
-            engajadas dos seus concorrentes no Instagram!
-          </p>
-        </WrapperText>
-
-        {user && !authIsLoading && (
-          <>
-            <h3>Seus Dados:</h3>
-            <ul>
-              <li>Seu id: {user.id}</li>
-              <li>Seu e-mail: {user.email}</li>
-              <li>Seu ip: {user.ip}</li>
-              <li>Seu limite mensal: {user.monthlyLimit}</li>
-              <li>Seu plano: {user.plan.name}</li>
-            </ul>
-            <h3>Ações:</h3>
-            <WrapperButtons>
-              <Button onClick={() => refreshUser()}>
-                Atualizar seus dados
+        <WrapperAbout>
+          <WrapperText>
+            <Title>
+              Descubra qual a publicação mais engajada do seu concorrente.
+            </Title>
+            <StyledParagraph margin="0 0 30px 0">
+              Esta ferramenta ordena os posts de uma conta do Instagram em ordem
+              de curtidas ou comentários para analisar quais publicações estão
+              tendo maior engajamento dos usuários.
+            </StyledParagraph>
+            <WrapperButton>
+              <Button onClick={() => openCreateUserModal('free')}>
+                Começar GRATUITAMENTE
               </Button>
-              <Button variant="outline" onClick={() => logout()}>
-                Sair
-              </Button>
-            </WrapperButtons>
-          </>
-        )}
-        {authIsLoading && (
-          <>
-            <h3>Carregando...</h3>
-            <Loading />
-          </>
-        )}
+            </WrapperButton>
+          </WrapperText>
+          <StyledImage>
+            <Image src={PhonesImage} alt="Imagem de um perfil no Instagram" />
+          </StyledImage>
+        </WrapperAbout>
       </Wrapper>
     </div>
   );
@@ -66,21 +52,105 @@ export default function Home() {
 const Wrapper = styled.main`
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
   width: 100%;
-  padding-bottom: 50px;
+`;
+
+const WrapperAbout = styled.div`
+  display: flex;
+  justify-content: center;
+  padding: ${pxToRem(38)} ${pxToRem(53)} 0 ${pxToRem(53)};
+  flex-wrap: wrap;
+  width: 100%;
+
+  @media (max-width: 1005px) {
+    padding: ${pxToRem(38)} ${pxToRem(15)} 0 ${pxToRem(15)};
+  }
 `;
 
 const WrapperText = styled.div`
-  max-width: 400px;
-  text-align: center;
-`;
-
-const WrapperButtons = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  max-width: 400px;
-  min-width: 300px;
+  margin-top: ${pxToRem(58)};
+  max-width: ${pxToRem(600)};
+
+  @media (max-width: 1265px) {
+    max-width: ${pxToRem(500)};
+  }
+
+  @media (max-width: 1105px) {
+    max-width: ${pxToRem(400)};
+  }
+
+  @media (max-width: 1005px) {
+    align-items: center;
+    text-align: center;
+    max-width: 100%;
+    margin: 0;
+  }
+`;
+
+const Title = styled.h1`
+  ${({ theme }) => css`
+    font-size: ${theme.text.title.fontSize};
+    line-height: ${theme.text.title.lineHeight};
+    color: ${theme.text.title.color};
+    font-weight: ${theme.text.title.fontWeight};
+    margin: 0;
+    padding: 0;
+
+    @media (max-width: 1265px) {
+      font-size: ${pxToRem(30)};
+      line-height: ${pxToRem(40)};
+    }
+
+    @media (max-width: 1105px) {
+      font-size: ${pxToRem(24)};
+      line-height: ${pxToRem(32)};
+    }
+
+    @media (max-width: 1005px) {
+      font-size: ${pxToRem(20)};
+      line-height: ${pxToRem(28)};
+      margin-bottom: ${pxToRem(20)};
+    }
+  `}
+`;
+
+const StyledParagraph = styled(Paragraph)`
+  @media (max-width: 1165px) {
+    font-size: ${pxToRem(14)};
+    line-height: ${pxToRem(20)};
+  }
+`;
+
+const WrapperButton = styled.div`
+  width: ${pxToRem(290)};
+
+  @media (max-width: 1165px) {
+    width: 250px;
+    margin-bottom: ${pxToRem(30)};
+  }
+`;
+
+const StyledImage = styled.span`
+  & > span {
+    width: 615px !important;
+    height: 575px !important;
+    object-fit: cover !important;
+
+    @media (max-width: 1330px) {
+      width: 560px !important;
+      height: 520px !important;
+    }
+
+    @media (max-width: 1165px) {
+      width: 500px !important;
+      height: 460px !important;
+    }
+
+    @media (max-width: 1165px) {
+      width: 100% !important;
+      height: auto !important;
+    }
+  }
 `;

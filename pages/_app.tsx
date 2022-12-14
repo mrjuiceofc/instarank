@@ -53,6 +53,12 @@ const theme: DefaultTheme = {
       lineHeight: pxToRem(24),
       fontWeight: 500,
     },
+    title: {
+      fontSize: pxToRem(38.1),
+      color: '#333333',
+      lineHeight: pxToRem(58.1),
+      fontWeight: 500,
+    },
   },
 };
 

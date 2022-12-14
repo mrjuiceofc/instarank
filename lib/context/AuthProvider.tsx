@@ -20,7 +20,7 @@ interface IAuthProvider {
   login: (data: AuthData) => Promise<any>;
   resetPassword: (data: AuthData) => Promise<any>;
   saveResetPassword: (token: string) => Promise<any>;
-  changePlan: (planName: string) => Promise<any>;
+  changePlan: (planName: 'premium' | 'free') => Promise<any>;
   logout: () => void;
   isLoading: boolean;
 }

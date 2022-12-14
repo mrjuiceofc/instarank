@@ -45,7 +45,7 @@ const StyledButton = styled.button<Props>`
     text-transform: uppercase;
     font-size: ${theme.text.paragraph.fontSize};
     line-height: ${theme.text.paragraph.lineHeight};
-    font-weight: 500;
+    font-weight: 400;
     display: flex;
     justify-content: center;
     align-items: center;
