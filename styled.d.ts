@@ -16,6 +16,7 @@ declare module 'styled-components' {
       tertiaryDark: string;
       tertiaryLight: string;
       gradient: string;
+      light: string;
     };
     text: {
       paragraph: Text;

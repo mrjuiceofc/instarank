@@ -21,6 +21,7 @@ const theme: DefaultTheme = {
     tertiaryLight: '#F8F8F8',
     gradient:
       'linear-gradient(269.53deg, #A336BD -4.74%, #FF387D 29.23%, #FF5D34 70.94%, #FFAA1B 105.94%)',
+    light: '#FFFFFF',
   },
   text: {
     paragraph: {

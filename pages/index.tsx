@@ -4,10 +4,21 @@ import styled, { css } from 'styled-components';
 import PhonesImage from '../assets/phones.png';
 import { Button } from '../lib/components/Botton';
 import { Paragraph } from '../lib/components/globalstyles';
+import { PlanCard } from '../lib/components/PlanCard';
 import useGlobal from '../lib/hooks/useGlobal';
 import pxToRem from '../lib/utils/pxToRem';
+import prisma from '../lib/prisma';
 
-export default function Home() {
+type Props = {
+  plans: {
+    id: string;
+    name: string;
+    price: number;
+    monthlyLimit: number;
+  }[];
+};
+
+export default function Home({ plans }: Props) {
   const { openCreateUserModal } = useGlobal();
 
   return (
@@ -44,15 +55,47 @@ export default function Home() {
             <Image src={PhonesImage} alt="Imagem de um perfil no Instagram" />
           </StyledImage>
         </WrapperAbout>
+        <WrapperPlans>
+          {plans.map((plan) => (
+            <PlanCard
+              planName={plan.name}
+              planMonthlyLimit={plan.monthlyLimit}
+              planPrice={plan.price}
+            />
+          ))}
+        </WrapperPlans>
       </Wrapper>
     </div>
   );
+}
+
+export async function getStaticProps() {
+  const plans = await prisma.plan.findMany({
+    where: {
+      deletedAt: null,
+    },
+    orderBy: {
+      price: 'desc',
+    },
+  });
+
+  return {
+    props: {
+      plans: plans.map((plan) => ({
+        id: plan.id,
+        name: plan.name,
+        price: plan.price,
+        monthlyLimit: plan.monthlyLimit,
+      })),
+    },
+  };
 }
 
 const Wrapper = styled.main`
   display: flex;
   flex-direction: column;
   width: 100%;
+  z-index: 0;
 `;
 
 const WrapperAbout = styled.div`
@@ -61,9 +104,14 @@ const WrapperAbout = styled.div`
   padding: ${pxToRem(38)} ${pxToRem(53)} 0 ${pxToRem(53)};
   flex-wrap: wrap;
   width: 100%;
+  margin-bottom: -90px;
 
   @media (max-width: 1005px) {
     padding: ${pxToRem(38)} ${pxToRem(15)} 0 ${pxToRem(15)};
+  }
+
+  @media (max-width: 728px) {
+    margin-top: -60px;
   }
 `;
 
@@ -137,6 +185,7 @@ const StyledImage = styled.span`
     width: 615px !important;
     height: 575px !important;
     object-fit: cover !important;
+    z-index: -1 !important;
 
     @media (max-width: 1330px) {
       width: 560px !important;
@@ -153,4 +202,24 @@ const StyledImage = styled.span`
       height: auto !important;
     }
   }
+`;
+
+const WrapperPlans = styled.div`
+  ${({ theme }) => css`
+    background: ${theme.colors.gradient};
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: ${pxToRem(30)};
+    flex-wrap: wrap;
+    padding: ${pxToRem(100)} ${pxToRem(50)};
+    border-top-left-radius: ${pxToRem(50)};
+    border-top-right-radius: ${pxToRem(50)};
+
+    @media (max-width: 728px) {
+      padding: ${pxToRem(50)} ${pxToRem(25)};
+      border-top-left-radius: ${pxToRem(25)};
+      border-top-right-radius: ${pxToRem(25)};
+    }
+  `}
 `;
