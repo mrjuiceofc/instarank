@@ -104,14 +104,9 @@ const WrapperAbout = styled.div`
   padding: ${pxToRem(38)} ${pxToRem(53)} 0 ${pxToRem(53)};
   flex-wrap: wrap;
   width: 100%;
-  margin-bottom: -90px;
 
   @media (max-width: 1005px) {
     padding: ${pxToRem(38)} ${pxToRem(15)} 0 ${pxToRem(15)};
-  }
-
-  @media (max-width: 728px) {
-    margin-top: -60px;
   }
 `;
 
@@ -206,6 +201,7 @@ const StyledImage = styled.span`
 
 const WrapperPlans = styled.div`
   ${({ theme }) => css`
+    margin-top: -90px;
     background: ${theme.colors.gradient};
     display: flex;
     justify-content: center;
@@ -220,6 +216,7 @@ const WrapperPlans = styled.div`
       padding: ${pxToRem(50)} ${pxToRem(25)};
       border-top-left-radius: ${pxToRem(25)};
       border-top-right-radius: ${pxToRem(25)};
+      margin-top: -60px;
     }
   `}
 `;
