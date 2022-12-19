@@ -38,7 +38,7 @@ export default function PasswordReset() {
 
   return (
     <Wrapper>
-      <h3>Salvando a senha definida...</h3>
+      <h3>Salvando a senha nova...</h3>
       <Loading />
     </Wrapper>
   );
@@ -50,4 +50,5 @@ const Wrapper = styled.main`
   justify-content: center;
   align-items: center;
   width: 100%;
+  min-height: 100vh;
 `;

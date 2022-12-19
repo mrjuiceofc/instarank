@@ -7,13 +7,18 @@ type Props = {
   planName: string;
   planPrice: number;
   planMonthlyLimit: number;
-};
+} & React.HTMLAttributes<HTMLDivElement>;
 
-export function PlanCard({ planName, planMonthlyLimit, planPrice }: Props) {
+export function PlanCard({
+  planName,
+  planMonthlyLimit,
+  planPrice,
+  ...rest
+}: Props) {
   const { openCreateUserModal } = useGlobal();
 
   return (
-    <Wrapper>
+    <Wrapper {...rest}>
       <Title>{planName}</Title>
       <p>
         Ordene até {planMonthlyLimit.toLocaleString('pt-BR')} vezes por mês!

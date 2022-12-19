@@ -33,7 +33,7 @@ type ProviderProps = {
 
 export default function AuthProvider({ children }: ProviderProps) {
   const [loggedUser, setLoggedUser] = useState<user | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const requestUser = useCallback(async () => {
     try {

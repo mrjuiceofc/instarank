@@ -8,6 +8,9 @@ import { PlanCard } from '../lib/components/PlanCard';
 import useGlobal from '../lib/hooks/useGlobal';
 import pxToRem from '../lib/utils/pxToRem';
 import prisma from '../lib/prisma';
+import { useEffect } from 'react';
+import useAuth from '../lib/hooks/useAuth';
+import { useRouter } from 'next/router';
 
 type Props = {
   plans: {
@@ -20,6 +23,14 @@ type Props = {
 
 export default function Home({ plans }: Props) {
   const { openCreateUserModal } = useGlobal();
+  const { user, isLoading } = useAuth();
+  const route = useRouter();
+
+  useEffect(() => {
+    if (user && !isLoading) {
+      route.push('/app');
+    }
+  }, [user, isLoading]);
 
   return (
     <div>
@@ -61,6 +72,7 @@ export default function Home({ plans }: Props) {
               planName={plan.name}
               planMonthlyLimit={plan.monthlyLimit}
               planPrice={plan.price}
+              key={plan.id}
             />
           ))}
         </WrapperPlans>

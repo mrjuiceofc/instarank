@@ -11,6 +11,7 @@ const GlobalStyle = createGlobalStyle`
     font-size: ${({ theme }) => theme.text.paragraph.fontSize};
     line-height: ${({ theme }) => theme.text.paragraph.lineHeight};
     font-weight: ${({ theme }) => theme.text.paragraph.fontWeight};
+    height: 100%;
     padding: 0;
     margin: 0;
   }
