@@ -6,14 +6,22 @@ import pxToRem from '../utils/pxToRem';
 import { Button } from './Botton';
 import { Logo } from './Logo';
 import { Tooltip as ReactTooltip } from 'react-tooltip';
+import { useEffect, useState } from 'react';
 
 export function Header() {
   const { openLoginModal } = useGlobal();
-  const { user } = useAuth();
+  const { user, isLoading } = useAuth();
+  const [logoRedirectPath, setLogoRedirectPath] = useState('/');
+
+  useEffect(() => {
+    if (user && !isLoading) {
+      setLogoRedirectPath('/app');
+    }
+  }, [user, isLoading]);
 
   return (
     <Wrapper>
-      <Link href="/">
+      <Link href={logoRedirectPath}>
         <a title="Instarank">
           <Logo showText={false} />
         </a>
