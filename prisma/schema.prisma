@@ -37,6 +37,7 @@ model user {
   deletedAt       DateTime?  @map("deleted_at")
 
   passwordResetAttempts  passwordResetAttempt[]
+  warnings               warning[]
 
   plan            plan        @relation(fields: [planId], references: [id])
 
@@ -63,10 +64,13 @@ model warning {
   message         String
   actionUrl       String?     @map("action_url")
   actionText      String?     @map("action_text")
+  userId          String?     @map("user_id")
   seenAt          DateTime?   @map("seen_at")
   createdAt       DateTime    @default(now()) @map("created_at")
   updatedAt       DateTime    @updatedAt @map("updated_at")
   deletedAt       DateTime?   @map("deleted_at")
+
+  user            user?       @relation(fields: [userId], references: [id])
 
   @@map("warnings")
 }
