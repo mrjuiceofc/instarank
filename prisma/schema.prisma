@@ -56,3 +56,17 @@ model passwordResetAttempt {
 
   @@map("password_reset_attempts")
 }
+
+model warning {
+  id              String      @id @default(uuid())
+  title           String
+  message         String
+  actionUrl       String?     @map("action_url")
+  actionText      String?     @map("action_text")
+  seenAt          DateTime?   @map("seen_at")
+  createdAt       DateTime    @default(now()) @map("created_at")
+  updatedAt       DateTime    @updatedAt @map("updated_at")
+  deletedAt       DateTime?   @map("deleted_at")
+
+  @@map("warnings")
+}
