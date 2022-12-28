@@ -33,3 +33,8 @@ export type PasswordResetDTO = {
   ip: string;
   token: string;
 };
+
+export type GetWarningsFromUserIdDTO = {
+  userId: string;
+  requestId: string;
+};
