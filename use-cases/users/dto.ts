@@ -38,3 +38,9 @@ export type GetWarningsFromUserIdDTO = {
   userId: string;
   requestId: string;
 };
+
+export type MarkWarningAsReadDTO = {
+  userId: string;
+  requestId: string;
+  warningId: string;
+};
