@@ -38,6 +38,7 @@ model user {
 
   passwordResetAttempts  passwordResetAttempt[]
   warnings               warning[]
+  ordinances             ordinance[]
 
   plan            plan        @relation(fields: [planId], references: [id])
 
@@ -73,4 +74,21 @@ model warning {
   user            user?       @relation(fields: [userId], references: [id])
 
   @@map("warnings")
+}
+
+model ordinance {
+  id                  String      @id @default(uuid())
+  userId              String      @map("user_id")
+  instagramUsername   String      @map("instagram_username")
+  sortBy              String      @map("sort_by")
+  onlyType            String      @map("only_type")
+  fromDate            DateTime    @map("from_date")
+  untilDate           DateTime    @map("until_date")
+  createdAt           DateTime    @default(now()) @map("created_at")
+  updatedAt           DateTime    @updatedAt @map("updated_at")
+  deletedAt           DateTime?   @map("deleted_at")
+
+  user                user        @relation(fields: [userId], references: [id])
+
+  @@map("ordinances")
 }
