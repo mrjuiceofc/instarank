@@ -1,10 +1,15 @@
 import { Prisma } from '@prisma/client';
 
+declare const process: any;
+
 export const plans: Prisma.planCreateInput[] = [
   {
     id: '9225c56e-5344-4c57-b640-51940a337961',
     name: 'premium',
-    gatewayId: 'price_1LyLy5Hjyj22ql7XkcJuEYib',
+    gatewayId:
+      process.env.VERCEL_ENV === 'production'
+        ? 'price_1MMcYxHjyj22ql7XzAnT2s4C'
+        : 'price_1LyLy5Hjyj22ql7XkcJuEYib',
     monthlyLimit: 3000,
     price: 999,
     requireCard: true,

@@ -7,11 +7,7 @@ const main = async () => {
   await plansSeed();
 };
 
-declare const process: any;
-
 const plansSeed = async () => {
-  console.log(process.env.VERCEL_ENV);
-
   for (const plan of plans) {
     await prisma.plan.upsert({
       where: { id: plan.id },
