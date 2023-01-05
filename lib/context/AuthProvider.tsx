@@ -7,6 +7,8 @@ import {
 } from 'react';
 import type { user } from '../../use-cases/users/getUserFromId';
 import axios from '../utils/axios';
+import getStripe from '../get-stripejs.ts';
+import { toast } from 'react-toastify';
 
 type AuthData = {
   email: string;
@@ -20,7 +22,8 @@ interface IAuthProvider {
   login: (data: AuthData) => Promise<any>;
   resetPassword: (data: AuthData) => Promise<any>;
   saveResetPassword: (token: string) => Promise<any>;
-  changePlan: (planName: string) => Promise<any>;
+  requestChangePlan: (planName: string) => Promise<any>;
+  changePlan: (sessionId: string) => Promise<any>;
   logout: () => void;
   isLoading: boolean;
 }
@@ -178,11 +181,51 @@ export default function AuthProvider({ children }: ProviderProps) {
     requestUser();
   }, []);
 
-  const changePlan = useCallback(async (planName: string) => {
-    console.log(planName);
-    alert(
-      `Ainda não implementado, em breve você poderá mudar de plano para ${planName}`
-    );
+  const requestChangePlan = useCallback(async (planName: string) => {
+    setIsLoading(true);
+    let sessionId: string;
+    try {
+      const response = await axios.post('/api/plans/session', {
+        planName,
+      });
+      sessionId = response.data.id;
+    } catch (error) {
+      toast.error('Houve um erro ao buscar o plano');
+      return;
+    } finally {
+      setIsLoading(false);
+    }
+
+    try {
+      const stripe = await getStripe();
+      const { error } = await stripe?.redirectToCheckout({ sessionId });
+      if (error) {
+        throw error;
+      }
+    } catch (error) {
+      toast.error('Houve um erro ao abrir o checkout');
+      return;
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  const changePlan = useCallback(async (sessionId: string) => {
+    try {
+      setIsLoading(true);
+      const response = await axios.post('/api/plans/change', {
+        sessionId,
+      });
+      const data = response.data;
+      return {
+        ...data,
+        statusCode: response.status,
+      };
+    } catch (error) {
+      return error.response.data;
+    } finally {
+      setIsLoading(false);
+    }
   }, []);
 
   return (
@@ -196,6 +239,7 @@ export default function AuthProvider({ children }: ProviderProps) {
         createUser,
         resetPassword,
         saveResetPassword,
+        requestChangePlan,
         changePlan,
       }}
     >

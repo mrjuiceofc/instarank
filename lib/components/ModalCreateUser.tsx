@@ -30,7 +30,7 @@ export default function ModalCreateUser({
 }: Props) {
   const [inputError, setInputError] = useState('');
   const [globalError, setGlobalError] = useState('');
-  const { createUser, changePlan } = useAuth();
+  const { createUser, requestChangePlan } = useAuth();
   const [passwordValue, setPasswordValue] = useState('');
   const [emailValue, setEmailValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -73,7 +73,7 @@ export default function ModalCreateUser({
           return;
         }
 
-        changePlan(plan);
+        requestChangePlan(plan);
       } catch (error) {
         setIsLoading(false);
         console.log(error);

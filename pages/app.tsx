@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import styled from 'styled-components';
 import { Button } from '../lib/components/Botton';
 import useAuth from '../lib/hooks/useAuth';
@@ -17,8 +17,12 @@ type Props = {
 };
 
 export default function App({ premiumPlan }: Props) {
-  const { user, isLoading, changePlan } = useAuth();
+  const { user, isLoading, requestChangePlan } = useAuth();
   const route = useRouter();
+
+  const onChangePlan = useCallback(async () => {
+    await requestChangePlan(premiumPlan.name);
+  }, [premiumPlan]);
 
   useEffect(() => {
     if (!user && !isLoading) {
@@ -29,7 +33,7 @@ export default function App({ premiumPlan }: Props) {
   return (
     <Wrapper>
       {user && user.plan.name === 'free' && (
-        <FloatButton onClick={() => changePlan(premiumPlan.name)}>
+        <FloatButton isLoading={isLoading} onClick={() => onChangePlan()}>
           ganhe {premiumPlan.monthlyLimit.toLocaleString('pt-BR')} ordens
         </FloatButton>
       )}

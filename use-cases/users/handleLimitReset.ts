@@ -6,6 +6,7 @@ import { HandleLimitResetDTO } from './dto';
 export async function handleLimitReset({
   userId,
   requestId,
+  forceNow,
 }: HandleLimitResetDTO) {
   let user: user & { plan: plan };
   try {
@@ -43,7 +44,8 @@ export async function handleLimitReset({
   const limitResetTimestamp = user.limitResetAt.getTime();
   const now = new Date();
 
-  if (limitResetTimestamp < oneMonthAgoTimestamp) {
+  if (limitResetTimestamp < oneMonthAgoTimestamp || forceNow) {
+    console.log('resetting limit');
     try {
       await prisma.user.update({
         where: {

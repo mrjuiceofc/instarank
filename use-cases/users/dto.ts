@@ -14,6 +14,7 @@ export type TokenGenerateDTO = {
 export type HandleLimitResetDTO = {
   userId: string;
   requestId: string;
+  forceNow?: boolean;
 };
 
 export type GetUserFromIdDTO = {
