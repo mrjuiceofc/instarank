@@ -35,7 +35,7 @@ export async function getDataByUsername({
       message: 'Erro desconhecido ao buscar dados do instagram do usuário',
       requestId,
       statusCode: 500,
-      errorLocationCode: '',
+      errorLocationCode: 'instagram.getDataByUsername',
     });
   }
 }
