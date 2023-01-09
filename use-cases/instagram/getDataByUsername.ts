@@ -30,7 +30,11 @@ export async function getDataByUsername({
       following: user.edge_follow.count,
     };
   } catch (error) {
-    console.log(error.response.data);
+    if (error.response && error.response.data) {
+      console.log(error.response.data);
+    } else {
+      console.log(error);
+    }
     throw new BaseError({
       message: 'Erro desconhecido ao buscar dados do instagram do usuário',
       requestId,
