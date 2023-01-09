@@ -7,11 +7,7 @@ export async function getDataByUsername({
   username,
 }: GetDataByUsernameDTO) {
   try {
-    const {
-      data: {
-        data: { user },
-      },
-    } = await axios.get(
+    const { data } = await axios.get(
       `https://www.instagram.com/api/v1/users/web_profile_info/?username=${username}`,
       {
         headers: {
@@ -19,6 +15,10 @@ export async function getDataByUsername({
         },
       }
     );
+    console.log(data);
+
+    const user = data.user;
+
     return {
       id: user.id,
       username: user.username,

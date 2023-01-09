@@ -22,5 +22,10 @@ async function getHandler(request: NextApiRequest, response: NextApiResponse) {
     username,
   });
 
+  response.setHeader(
+    'Cache-Control',
+    'public, s-maxage=1, stale-while-revalidate'
+  );
+
   return response.status(200).json(user);
 }

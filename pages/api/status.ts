@@ -32,11 +32,6 @@ async function getHandler(request: NextApiRequest, response: NextApiResponse) {
     });
   }
 
-  response.setHeader(
-    'Cache-Control',
-    'public, s-maxage=1, stale-while-revalidate'
-  );
-
   return response.status(200).json({
     updated_at: formatISO(Date.now()),
     dependencies: dependencies,
