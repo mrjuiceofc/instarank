@@ -15,9 +15,8 @@ export async function getDataByUsername({
         },
       }
     );
-    console.log(data);
 
-    const user = data.user;
+    const user = data.data.user;
 
     return {
       id: user.id,
