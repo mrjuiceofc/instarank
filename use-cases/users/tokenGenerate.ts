@@ -114,7 +114,7 @@ async function handleEmail(email: string, requestId: string) {
 }
 
 function getToken(user: user) {
-  const tokenExpiresIn = 4 * 60;
+  const tokenExpiresIn = 30 * 60;
   const refreshTokenExpiresIn = 30 * 24 * 60 * 60;
   const token = jwt.sign(
     {
