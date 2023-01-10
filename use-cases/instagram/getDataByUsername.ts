@@ -6,9 +6,19 @@ export async function getDataByUsername({
   requestId,
   username,
 }: GetDataByUsernameDTO) {
+  if (!process.env.SCRAPE_API_KEY) {
+    throw new BaseError({
+      message: 'Chave de API do ScrapingBee não encontrada',
+      requestId,
+      statusCode: 500,
+      errorLocationCode: 'instagram.getDataByUsername',
+    });
+  }
+
   try {
+    const url = `https://www.instagram.com/api/v1/users/web_profile_info/?username=${username}`;
     const { data } = await axios.get(
-      `https://www.instagram.com/api/v1/users/web_profile_info/?username=${username}`,
+      `http://api.scrape.do?token=${process.env.SCRAPE_API_KEY}&url=${url}&customHeaders=true`,
       {
         headers: {
           'x-ig-app-id': '936619743392459',
