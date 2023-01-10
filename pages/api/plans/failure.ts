@@ -19,17 +19,22 @@ export default nextConnect({
   .post(postHandler);
 
 async function postHandler(request: NextApiRequest, response: NextApiResponse) {
+  console.log('[POST /api/plans/failure] Iniciando processo de webhook...');
+
   const sig = request.headers['stripe-signature'];
 
-  let event;
+  let event: Stripe.Event;
+  const body = request.body;
 
+  console.log('[POST /api/plans/failure] Verificando webhook...');
   try {
     event = stripe.webhooks.constructEvent(
-      request.body,
+      body,
       sig,
       process.env.STRIPE_WEBHOOK_SECRET
     );
   } catch (err) {
+    console.log('[POST /api/plans/failure] Erro ao verificar webhook:', err);
     response.status(400).send(
       new BaseError({
         errorLocationCode:
@@ -43,6 +48,9 @@ async function postHandler(request: NextApiRequest, response: NextApiResponse) {
   }
 
   if (event.type !== 'customer.subscription.deleted') {
+    console.log(
+      `[POST /api/plans/failure] Evento recebido não válido: ${event.type}`
+    );
     response.status(400).send(
       new BaseError({
         errorLocationCode:
@@ -56,6 +64,7 @@ async function postHandler(request: NextApiRequest, response: NextApiResponse) {
   }
 
   console.log('Evento recebido:', event);
+  console.log('Body:', body);
 
   return response.status(200).json({
     message: 'Assinatura cancelada com sucesso',
