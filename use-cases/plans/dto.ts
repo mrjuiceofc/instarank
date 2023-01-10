@@ -1,3 +1,5 @@
+import type { NextApiRequest } from 'next';
+
 export type CreateCheckoutSessionDTO = {
   planName: string;
   userId: string;
@@ -7,4 +9,9 @@ export type CreateCheckoutSessionDTO = {
 export type ChangePlanBySessionIdDTO = {
   sessionId: string;
   requestId: string;
+};
+
+export type ProcessWebhookDTO = {
+  request: NextApiRequest;
+  eventName: string;
 };
