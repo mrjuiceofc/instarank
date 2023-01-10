@@ -6,7 +6,12 @@ export async function getDataByUsername({
   requestId,
   username,
 }: GetDataByUsernameDTO) {
+  console.log(
+    `[getDataByUsername] Buscando dados do instagram do usuário ${username}...`
+  );
+
   if (!process.env.SCRAPE_API_KEY) {
+    console.log('Chave de API do ScrapingBee não encontrada');
     throw new BaseError({
       message: 'Chave de API do ScrapingBee não encontrada',
       requestId,
@@ -27,6 +32,10 @@ export async function getDataByUsername({
     );
 
     const user = data.data.user;
+
+    console.log(
+      `[getDataByUsername] Dados do instagram do usuário ${username} buscados com sucesso`
+    );
 
     return {
       id: user.id,
