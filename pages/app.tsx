@@ -3,7 +3,6 @@ import { useCallback, useEffect } from 'react';
 import styled from 'styled-components';
 import { Button } from '../lib/components/Botton';
 import useAuth from '../lib/hooks/useAuth';
-import useGlobal from '../lib/hooks/useGlobal';
 import prisma from '../lib/prisma';
 import pxToRem from '../lib/utils/pxToRem';
 

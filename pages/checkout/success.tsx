@@ -4,8 +4,18 @@ import { toast } from 'react-toastify';
 import styled from 'styled-components';
 import { Loading } from '../../lib/components/globalstyles';
 import useAuth from '../../lib/hooks/useAuth';
+import prisma from '../../lib/prisma';
 
-export default function CheckoutSuccess() {
+type Props = {
+  premiumPlan: {
+    id: string;
+    name: string;
+    price: number;
+    monthlyLimit: number;
+  };
+};
+
+export default function CheckoutSuccess({ premiumPlan }: Props) {
   const router = useRouter();
   const { changePlan, refreshUser } = useAuth();
   const [hasError, setHasError] = useState(false);
@@ -49,11 +59,40 @@ export default function CheckoutSuccess() {
       ) : (
         <>
           <h3>Mudando o seu plano...</h3>
+          <p>
+            O pagamento de{' '}
+            {(premiumPlan.price / 100).toLocaleString('pt-BR', {
+              style: 'currency',
+              currency: 'BRL',
+            })}{' '}
+            foi feito com sucesso, agora estamos mudando o seu plano para{' '}
+            {premiumPlan.name}...
+          </p>
           <Loading />
         </>
       )}
     </Wrapper>
   );
+}
+
+export async function getStaticProps() {
+  const plan = await prisma.plan.findFirst({
+    where: {
+      deletedAt: null,
+      name: 'premium',
+    },
+  });
+
+  return {
+    props: {
+      premiumPlan: {
+        id: plan.id,
+        name: plan.name,
+        price: plan.price,
+        monthlyLimit: plan.monthlyLimit,
+      },
+    },
+  };
 }
 
 const Wrapper = styled.main`
