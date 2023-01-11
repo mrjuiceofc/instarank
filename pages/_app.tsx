@@ -12,6 +12,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Header } from '../lib/components/Header';
 import 'react-tooltip/dist/react-tooltip.css';
 import Footer from '../lib/components/Footer';
+import ReactPixel from 'react-facebook-pixel';
 
 const theme: DefaultTheme = {
   colors: {
@@ -79,6 +80,25 @@ function PageContent({ Component, pageProps }: PageContentProps) {
       router.replace(router.pathname, undefined, { shallow: true });
     }
   }, [router.query]);
+
+  useEffect(() => {
+    const isLocalhost = window.location.hostname === 'localhost';
+
+    if (isLocalhost) {
+      return;
+    }
+
+    import('react-facebook-pixel')
+      .then((x) => x.default)
+      .then((ReactPixel) => {
+        ReactPixel.init('474835198152096');
+        ReactPixel.pageView();
+
+        router.events.on('routeChangeComplete', () => {
+          ReactPixel.pageView();
+        });
+      });
+  }, [router.events]);
 
   return (
     <>

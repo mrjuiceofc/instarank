@@ -25,6 +25,7 @@ specifiers:
   prisma: ^4.5.0
   react: ^18.2.0
   react-dom: ^18.2.0
+  react-facebook-pixel: ^1.0.4
   react-toastify: ^9.1.1
   react-tooltip: ^5.1.0
   request-ip: ^3.3.0
@@ -52,6 +53,7 @@ dependencies:
   pino: 8.7.0
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
+  react-facebook-pixel: 1.0.4
   react-toastify: 9.1.1_biqbaboplfbrettd7655fr4n2y
   react-tooltip: 5.1.0_biqbaboplfbrettd7655fr4n2y
   request-ip: 3.3.0
@@ -2699,6 +2701,10 @@ packages:
       loose-envify: 1.4.0
       react: 18.2.0
       scheduler: 0.23.0
+
+  /react-facebook-pixel/1.0.4:
+    resolution: {integrity: sha512-givZY8MS0v/mdbRzvcvouBo/j0TtDiu/93f4gIjJXwDDgwlf6bYUiQvb2qcqjluOOD/hIKUQHNYLNsSOnoEklg==}
+    dev: false
 
   /react-is/16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
