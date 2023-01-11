@@ -169,9 +169,9 @@ export async function downgradePlan({
     });
   }
 
-  let forceResetNow = false;
-  if (lastInvoice.status !== 'paid') {
-    forceResetNow = true;
+  let errorInLastInvoice = false;
+  if (lastInvoice.status === 'uncollectible') {
+    errorInLastInvoice = true;
   }
 
   try {
@@ -203,7 +203,7 @@ export async function downgradePlan({
     await handleLimitReset({
       requestId,
       userId: user.id,
-      forceNow: forceResetNow,
+      forceNow: errorInLastInvoice,
     });
   } catch (error) {
     console.log(`[downgradePlan] error ao redefinir limites: ${error}`);
@@ -236,12 +236,10 @@ export async function downgradePlan({
     await createWarning({
       requestId,
       userId: user.id,
-      message: `Houve uma falha na cobrança da sua assinatura por isso o seu plano foi alterado para o plano free. ${
-        forceResetNow
-          ? 'Como a sua ultima cobrança não foi paga, o seu limite de ordenações foi definido para o limite do plano free.'
-          : 'Você continuará tendo acesso ao plano premium até completar 30 dias da última cobrança paga.'
-      }`,
-      title: 'Falha na cobrança',
+      message: errorInLastInvoice
+        ? 'Houve uma falha na cobrança da sua assinatura por isso o seu plano foi alterado para o plano free. Como a sua ultima cobrança não foi paga, o seu limite de ordenações foi definido para o limite do plano free.'
+        : 'Sua assinatura foi cancelada e agora você está usando o plano free, caso não reconheça essa ação entre em contato com contato@instarank.com.br para saber mais. Você continuará tendo acesso ao plano premium até completar 30 dias da última cobrança paga.',
+      title: errorInLastInvoice ? 'Falha na cobrança' : 'Assinatura cancelada',
       actionText: 'Assinar novamente',
       actionUrl: checkoutSessionUrl,
     });
