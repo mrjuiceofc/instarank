@@ -12,7 +12,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Header } from '../lib/components/Header';
 import 'react-tooltip/dist/react-tooltip.css';
 import Footer from '../lib/components/Footer';
-import ReactPixel from 'react-facebook-pixel';
+import { Warnings } from '../lib/components/Warnings';
 
 const theme: DefaultTheme = {
   colors: {
@@ -105,6 +105,7 @@ function PageContent({ Component, pageProps }: PageContentProps) {
       <Header />
       <Component {...pageProps} />
       <Footer />
+      <Warnings />
     </>
   );
 }

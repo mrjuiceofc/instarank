@@ -7,6 +7,9 @@ export async function getWarningsFromUserId({
   userId,
   requestId,
 }: GetWarningsFromUserIdDTO) {
+  console.log(
+    `[${requestId} - getWarningsFromUserId] buscando avisos do usuário ${userId}`
+  );
   let user: user;
   try {
     user = await prisma.user.findFirst({

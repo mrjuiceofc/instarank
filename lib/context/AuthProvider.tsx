@@ -24,6 +24,8 @@ interface IAuthProvider {
   saveResetPassword: (token: string) => Promise<any>;
   requestChangePlan: (planName: string) => Promise<any>;
   changePlan: (sessionId: string) => Promise<any>;
+  getWarnings: () => Promise<any>;
+  readWarning: (warningId: string) => Promise<any>;
   logout: () => void;
   isLoading: boolean;
 }
@@ -228,6 +230,36 @@ export default function AuthProvider({ children }: ProviderProps) {
     }
   }, []);
 
+  const getWarnings = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      const response = await axios.get('/api/users/warnings');
+      const data = response.data;
+      return {
+        warnings: data,
+        statusCode: response.status,
+      };
+    } catch (error) {
+      return error.response.data;
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  const readWarning = useCallback(async (warningId: string) => {
+    try {
+      setIsLoading(true);
+      const response = await axios.put(`/api/users/warnings/${warningId}`);
+      return {
+        statusCode: response.status,
+      };
+    } catch (error) {
+      return error.response.data;
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
   return (
     <AuthContext.Provider
       value={{
@@ -241,6 +273,8 @@ export default function AuthProvider({ children }: ProviderProps) {
         saveResetPassword,
         requestChangePlan,
         changePlan,
+        getWarnings,
+        readWarning,
       }}
     >
       {children}
