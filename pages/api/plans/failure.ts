@@ -4,6 +4,7 @@ import { NextApiResponse, NextApiRequest } from 'next';
 import { BaseError } from '../../../errors';
 import { buffer } from 'micro';
 import { processWebhook } from '../../../use-cases/plans/processWebhook';
+import { downgradePlan } from '../../../use-cases/plans/downgradePlan';
 
 export default nextConnect({
   attachParams: true,
@@ -21,7 +22,28 @@ async function postHandler(request: NextApiRequest, response: NextApiResponse) {
     eventName: 'customer.subscription.deleted',
   });
 
-  console.log('Evento recebido:', event);
+  if (!event) {
+    throw new BaseError({
+      statusCode: 400,
+      errorLocationCode: 'failure:stripe.customer.subscription.deleted',
+      message: 'Evento não encontrado',
+      requestId: request.context.requestId,
+    });
+  }
+
+  if (!(event.data.object as any).customer) {
+    throw new BaseError({
+      statusCode: 400,
+      errorLocationCode: 'failure:stripe.customer.subscription.deleted',
+      message: 'Customer não encontrado',
+      requestId: request.context.requestId,
+    });
+  }
+
+  await downgradePlan({
+    requestId: request.context.requestId,
+    stripeCustomerId: (event.data.object as any).customer,
+  });
 
   return response.status(200).json({
     message: 'Assinatura cancelada com sucesso',

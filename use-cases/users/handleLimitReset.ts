@@ -45,8 +45,10 @@ export async function handleLimitReset({
   const now = new Date();
 
   if (limitResetTimestamp < oneMonthAgoTimestamp || forceNow) {
-    console.log('resetting limit');
     try {
+      console.log(
+        `[handleLimitReset] atualizando limite de ordenações do usuário ${user.id}`
+      );
       await prisma.user.update({
         where: {
           id: user.id,

@@ -15,3 +15,8 @@ export type ProcessWebhookDTO = {
   request: NextApiRequest;
   eventName: string;
 };
+
+export type DowngradePlanDTO = {
+  requestId: string;
+  stripeCustomerId: string;
+};

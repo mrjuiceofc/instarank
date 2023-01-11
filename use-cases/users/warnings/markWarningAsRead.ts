@@ -1,7 +1,7 @@
 import { user, warning } from '@prisma/client';
 import { BaseError } from '../../../errors';
 import prisma from '../../../lib/prisma';
-import { MarkWarningAsReadDTO } from '../dto';
+import { MarkWarningAsReadDTO } from './dto';
 
 export async function markWarningAsRead({
   userId,

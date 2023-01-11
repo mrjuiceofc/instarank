@@ -1,7 +1,7 @@
 import { user, warning } from '@prisma/client';
 import { BaseError } from '../../../errors';
 import prisma from '../../../lib/prisma';
-import { GetWarningsFromUserIdDTO } from '../dto';
+import { GetWarningsFromUserIdDTO } from './dto';
 
 export async function getWarningsFromUserId({
   userId,
