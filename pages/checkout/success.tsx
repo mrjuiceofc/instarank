@@ -69,10 +69,12 @@ export default function CheckoutSuccess({ plans }: Props) {
               <h3>Mudando o seu plano...</h3>
               <p>
                 O pagamento de{' '}
-                {(paidPlan.price / 100).toLocaleString('pt-BR', {
-                  style: 'currency',
-                  currency: 'BRL',
-                })}{' '}
+                <span>
+                  {(paidPlan.price / 100).toLocaleString('pt-BR', {
+                    style: 'currency',
+                    currency: 'BRL',
+                  })}
+                </span>{' '}
                 foi feito com sucesso, agora estamos mudando o seu plano para{' '}
                 {paidPlan.name}...
               </p>
