@@ -20,10 +20,5 @@ async function getHandler(request: NextApiRequest, response: NextApiResponse) {
 
   const result = await getWarningsFromUserId({ userId, requestId });
 
-  response.setHeader(
-    'Cache-Control',
-    'public, s-maxage=86400, stale-while-revalidate'
-  );
-
   return response.status(200).json(result);
 }
