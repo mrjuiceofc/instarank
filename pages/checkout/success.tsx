@@ -6,19 +6,22 @@ import { Loading } from '../../lib/components/globalstyles';
 import useAuth from '../../lib/hooks/useAuth';
 import prisma from '../../lib/prisma';
 
-type Props = {
-  premiumPlan: {
-    id: string;
-    name: string;
-    price: number;
-    monthlyLimit: number;
-  };
+type plan = {
+  id: string;
+  name: string;
+  price: number;
+  monthlyLimit: number;
 };
 
-export default function CheckoutSuccess({ premiumPlan }: Props) {
+type Props = {
+  plans: plan[];
+};
+
+export default function CheckoutSuccess({ plans }: Props) {
   const router = useRouter();
   const { changePlan, refreshUser } = useAuth();
   const [hasError, setHasError] = useState(false);
+  const [paidPlan, setPaidPlan] = useState<plan | null>(null);
 
   useEffect(() => {
     const load = async () => {
@@ -40,8 +43,11 @@ export default function CheckoutSuccess({ premiumPlan }: Props) {
       }
     };
 
+    const foundPlan = plans.find((plan) => plan.name === router.query.plan);
+    setPaidPlan(foundPlan);
+
     load();
-  }, [router.query]);
+  }, [router.query, plans]);
 
   return (
     <Wrapper>
@@ -58,16 +64,20 @@ export default function CheckoutSuccess({ premiumPlan }: Props) {
         </>
       ) : (
         <>
-          <h3>Mudando o seu plano...</h3>
-          <p>
-            O pagamento de{' '}
-            {(premiumPlan.price / 100).toLocaleString('pt-BR', {
-              style: 'currency',
-              currency: 'BRL',
-            })}{' '}
-            foi feito com sucesso, agora estamos mudando o seu plano para{' '}
-            {premiumPlan.name}...
-          </p>
+          {paidPlan && (
+            <>
+              <h3>Mudando o seu plano...</h3>
+              <p>
+                O pagamento de{' '}
+                {(paidPlan.price / 100).toLocaleString('pt-BR', {
+                  style: 'currency',
+                  currency: 'BRL',
+                })}{' '}
+                foi feito com sucesso, agora estamos mudando o seu plano para{' '}
+                {paidPlan.name}...
+              </p>
+            </>
+          )}
           <Loading />
         </>
       )}
@@ -76,21 +86,20 @@ export default function CheckoutSuccess({ premiumPlan }: Props) {
 }
 
 export async function getStaticProps() {
-  const plan = await prisma.plan.findFirst({
+  const plans = await prisma.plan.findMany({
     where: {
       deletedAt: null,
-      name: 'premium',
     },
   });
 
   return {
     props: {
-      premiumPlan: {
+      plans: plans.map((plan) => ({
         id: plan.id,
         name: plan.name,
         price: plan.price,
         monthlyLimit: plan.monthlyLimit,
-      },
+      })),
     },
   };
 }
