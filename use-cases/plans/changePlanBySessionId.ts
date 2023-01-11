@@ -54,11 +54,11 @@ export async function changePlanBySessionId({
     });
   }
 
-  if (!session.customer_email) {
+  if (!session.customer) {
     throw new BaseError({
       errorLocationCode:
         'changePlanBySessionId:stripe.checkout.sessions.retrieve',
-      message: 'O checkout não possui e-mail do cliente',
+      message: 'O id do cliente não foi encontrado',
       statusCode: 500,
       requestId,
     });
@@ -66,12 +66,20 @@ export async function changePlanBySessionId({
 
   let user: user;
   try {
-    user = await prisma.user.findUnique({
+    user = await prisma.user.findFirst({
       where: {
-        email: session.customer_email,
+        OR: [
+          {
+            email: session.customer_email || undefined,
+          },
+          {
+            gatewayId: (session.customer as string) || undefined,
+          },
+        ],
       },
     });
   } catch (error) {
+    console.log(error);
     throw new BaseError({
       errorLocationCode: 'changePlanBySessionId:prisma.user.findUnique',
       message: 'Erro desconhecido ao buscar usuário',
@@ -150,6 +158,7 @@ export async function changePlanBySessionId({
             id: plan.id,
           },
         },
+        gatewayId: session.customer as string,
       },
     });
   } catch (error) {

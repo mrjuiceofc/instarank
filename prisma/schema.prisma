@@ -29,6 +29,7 @@ model user {
   password        String
   ip              String
   planId          String     @map("plan_id")
+  gatewayId       String?    @unique @map("gateway_id")
   monthlyLimit    Int        @map("monthly_limit")
   lastAccessAt    DateTime?  @map("last_access_at")
   limitResetAt    DateTime?  @map("limit_reset_at")

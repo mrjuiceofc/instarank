@@ -51,12 +51,12 @@ export async function downgradePlan({
     });
   }
 
-  if (!customer.email) {
+  if (!customer.email && !customer.id) {
     console.log(`[downgradePlan] customer ${stripeCustomerId} sem email`);
     throw new BaseError({
       statusCode: 400,
       errorLocationCode: 'downgradePlan:stripe.customers.retrieve',
-      message: 'Customer sem email',
+      message: 'Customer não tem email e nem id',
       requestId,
     });
   }
@@ -68,7 +68,14 @@ export async function downgradePlan({
     console.log(`[downgradePlan] buscando usuário`);
     user = await prisma.user.findFirst({
       where: {
-        email: customer.email,
+        OR: [
+          {
+            gatewayId: customer.id || undefined,
+          },
+          {
+            email: customer.email || undefined,
+          },
+        ],
         deletedAt: null,
       },
       include: {
@@ -162,11 +169,8 @@ export async function downgradePlan({
     });
   }
 
-  const resetLimitDate = new Date(user.limitResetAt);
-  const lastInvoiceDate = new Date(lastInvoice.created * 1000);
-
   let forceResetNow = false;
-  if (resetLimitDate > lastInvoiceDate) {
+  if (lastInvoice.status !== 'paid') {
     forceResetNow = true;
   }
 
@@ -232,8 +236,11 @@ export async function downgradePlan({
     await createWarning({
       requestId,
       userId: user.id,
-      message:
-        'Houve uma falha na cobrança da sua assinatura por isso o seu plano foi alterado para o plano free. Você continuará tendo acesso ao plano premium até completar 30 dias da última cobrança feita com sucesso.',
+      message: `Houve uma falha na cobrança da sua assinatura por isso o seu plano foi alterado para o plano free. ${
+        forceResetNow
+          ? 'Como a sua ultima cobrança não foi paga, o seu limite de ordenações foi definido para o limite do plano free.'
+          : 'Você continuará tendo acesso ao plano premium até completar 30 dias da última cobrança paga.'
+      }`,
       title: 'Falha na cobrança',
       actionText: 'Assinar novamente',
       actionUrl: checkoutSessionUrl,
