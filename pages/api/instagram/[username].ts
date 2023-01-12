@@ -1,7 +1,7 @@
 import nextConnect from 'next-connect';
 import * as requestHandler from '../../../use-cases/requestHandler';
 import { NextApiResponse, NextApiRequest } from 'next';
-import { getDataByUsername } from '../../../use-cases/instagram/getDataByUsername';
+import { sortPostsByUsername } from '../../../use-cases/instagram/sortPostsByUsername';
 
 export default nextConnect({
   attachParams: true,
@@ -12,14 +12,20 @@ export default nextConnect({
   .use(requestHandler.logRequest)
   .use(requestHandler.authRequire)
   .use(requestHandler.handleLimit)
-  .get(getHandler);
+  .post(postHandler);
 
-async function getHandler(request: NextApiRequest, response: NextApiResponse) {
+async function postHandler(request: NextApiRequest, response: NextApiResponse) {
   const username = request.query.username as string;
+  const { sortBy, only, fromDate, untilDate } = request.body;
 
-  const user = await getDataByUsername({
+  const user = await sortPostsByUsername({
     requestId: request.context.requestId,
+    userId: request.context.userId,
     username,
+    sortBy,
+    only,
+    fromDate: new Date(fromDate),
+    untilDate: new Date(untilDate),
   });
 
   response.setHeader(

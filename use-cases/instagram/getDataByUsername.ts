@@ -21,15 +21,17 @@ export async function getDataByUsername({
   }
 
   try {
-    const url = `https://www.instagram.com/api/v1/users/web_profile_info/?username=${username}`;
-    const { data } = await axios.get(
-      `http://api.scrape.do?token=${process.env.SCRAPE_API_KEY}&url=${url}&customHeaders=true`,
-      {
-        headers: {
-          'x-ig-app-id': '936619743392459',
-        },
-      }
-    );
+    const igUrl = `https://www.instagram.com/api/v1/users/web_profile_info/?username=${username}`;
+    const url = ['preview', 'production'].includes(process.env.VERCEL_ENV)
+      ? `http://api.scrape.do?token=${process.env.SCRAPE_API_KEY}&url=${igUrl}&customHeaders=true`
+      : igUrl;
+
+    console.log(`[getDataByUsername] fetch url: ${url}`);
+    const { data } = await axios.get(url, {
+      headers: {
+        'x-ig-app-id': '936619743392459',
+      },
+    });
 
     const user = data.data.user;
 
@@ -37,16 +39,9 @@ export async function getDataByUsername({
       `[getDataByUsername] Dados do instagram do usuário ${username} buscados com sucesso`
     );
 
-    return {
-      id: user.id,
-      username: user.username,
-      fullName: user.full_name,
-      biography: user.biography,
-      profilePicUrl: user.profile_pic_url,
-      bio_links: user.bio_links,
-      followers: user.edge_followed_by.count,
-      following: user.edge_follow.count,
-    };
+    console.log(user);
+
+    // return data;
   } catch (error) {
     if (error.response && error.response.data) {
       console.log(error.response.data);
