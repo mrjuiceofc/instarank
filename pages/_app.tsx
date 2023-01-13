@@ -103,6 +103,12 @@ function PageContent({ Component, pageProps }: PageContentProps) {
   }, [router.events]);
 
   useEffect(() => {
+    const isLocalhost = window.location.hostname === 'localhost';
+
+    if (isLocalhost) {
+      return;
+    }
+
     const handleRouteChange = (url) => {
       gtag.pageview(url);
     };
@@ -118,14 +124,17 @@ function PageContent({ Component, pageProps }: PageContentProps) {
       <Component {...pageProps} />
       <Footer />
       <Warnings />
-      <Script
-        strategy="afterInteractive"
-        src={`https://www.googletagmanager.com/gtag/js?id=${gtag.GA_TRACKING_ID}`}
-      />
-      <Script
-        strategy="afterInteractive"
-        dangerouslySetInnerHTML={{
-          __html: `
+      {typeof window !== 'undefined' &&
+        window.location.hostname !== 'localhost' && (
+          <>
+            <Script
+              strategy="afterInteractive"
+              src={`https://www.googletagmanager.com/gtag/js?id=${gtag.GA_TRACKING_ID}`}
+            />
+            <Script
+              strategy="afterInteractive"
+              dangerouslySetInnerHTML={{
+                __html: `
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
@@ -133,8 +142,10 @@ function PageContent({ Component, pageProps }: PageContentProps) {
               page_path: window.location.pathname,
             });
           `,
-        }}
-      />
+              }}
+            />
+          </>
+        )}
     </>
   );
 }
