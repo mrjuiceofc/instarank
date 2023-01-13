@@ -1,7 +1,7 @@
 import { v4 as uuid } from 'uuid';
 
 type BaseErrorConstructor = {
-  requestId: string;
+  requestId?: string;
   message: string;
   errorLocationCode: string;
   statusCode?: number;

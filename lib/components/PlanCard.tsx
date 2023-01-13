@@ -21,7 +21,7 @@ export function PlanCard({
     <Wrapper {...rest}>
       <Title>{planName}</Title>
       <p>
-        Ordene até {planMonthlyLimit.toLocaleString('pt-BR')} vezes por mês!
+        Ordene até {planMonthlyLimit.toLocaleString('pt-BR')} postagens por mês!
       </p>
       <Subtitle>
         {(planPrice / 100).toLocaleString('pt-BR', {

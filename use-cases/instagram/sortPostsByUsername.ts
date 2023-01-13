@@ -1,6 +1,4 @@
-import { BaseError } from '../../errors';
 import { SortPostsByUsernameDTO } from './dto';
-import axios from 'axios';
 import { getDataByUsername } from './getDataByUsername';
 
 export async function sortPostsByUsername({
@@ -11,8 +9,35 @@ export async function sortPostsByUsername({
   only,
   fromDate,
   untilDate,
+  postsLimit,
 }: SortPostsByUsernameDTO) {
-  const igUser = await getDataByUsername({ requestId, username });
+  const ig = await getDataByUsername({
+    requestId,
+    username,
+    postsLimit,
+    fromDate,
+    untilDate,
+    only,
+  });
 
-  return {};
+  const posts = ig.posts.sort((a, b) => {
+    if (sortBy === 'likes') {
+      return b.likes - a.likes;
+    }
+
+    if (sortBy === 'comments') {
+      return b.comments - a.comments;
+    }
+
+    if (sortBy === 'date') {
+      return b.publicationDate.getTime() - a.publicationDate.getTime();
+    }
+
+    return 0;
+  });
+
+  return {
+    posts,
+    user: ig.user,
+  };
 }

@@ -33,7 +33,8 @@ export default function App({ premiumPlan }: Props) {
     <Wrapper>
       {user && user.plan.name === 'free' && (
         <FloatButton isLoading={isLoading} onClick={() => onChangePlan()}>
-          ganhe {premiumPlan.monthlyLimit.toLocaleString('pt-BR')} ordens
+          Ordene até {premiumPlan.monthlyLimit.toLocaleString('pt-BR')}{' '}
+          postagens
         </FloatButton>
       )}
       <p>

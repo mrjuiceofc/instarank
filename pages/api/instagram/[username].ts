@@ -16,7 +16,7 @@ export default nextConnect({
 
 async function postHandler(request: NextApiRequest, response: NextApiResponse) {
   const username = request.query.username as string;
-  const { sortBy, only, fromDate, untilDate } = request.body;
+  const { sortBy, only, fromDate, untilDate, postsLimit } = request.body;
 
   const user = await sortPostsByUsername({
     requestId: request.context.requestId,
@@ -26,6 +26,7 @@ async function postHandler(request: NextApiRequest, response: NextApiResponse) {
     only,
     fromDate: new Date(fromDate),
     untilDate: new Date(untilDate),
+    postsLimit: Number(postsLimit),
   });
 
   response.setHeader(

@@ -12,12 +12,23 @@ export function Header() {
   const { openLoginModal } = useGlobal();
   const { user, isLoading } = useAuth();
   const [logoRedirectPath, setLogoRedirectPath] = useState('/');
+  const [limitResetDate, setLimitResetDate] = useState<Date | null>(null);
 
   useEffect(() => {
     if (user && !isLoading) {
       setLogoRedirectPath('/app');
     }
   }, [user, isLoading]);
+
+  useEffect(() => {
+    if (!user) return;
+
+    const lastResetDate = new Date(user.limitResetAt);
+    const nextResetDate = new Date(
+      lastResetDate.setMonth(lastResetDate.getMonth() + 1)
+    );
+    setLimitResetDate(nextResetDate);
+  }, [user]);
 
   return (
     <Wrapper>
@@ -33,14 +44,15 @@ export function Header() {
       ) : (
         <>
           <LimitParagraph id="monthly-limit">
-            {user.monthlyLimit.toLocaleString('pt-BR')}/Mês
+            Restante: {user.monthlyLimit.toLocaleString('pt-BR')}
           </LimitParagraph>
           <ReactTooltip anchorId="monthly-limit">
             <LimitTooltip>
               <p>
-                Esse é o número de vezes que você pode ordenar as postagens de
-                algum usuário. Esse número será redefinido todos os meses na
-                mesma data em que você fez o seu cadastro.
+                Este é o número de postagens que você pode ordenar por mês. Este
+                número será redefinido com base no seu plano a cada 30 dias,
+                isso está previsto para ocorrer em{' '}
+                {limitResetDate?.toLocaleDateString('pt-BR')}
               </p>
               {user.plan.name === 'free' && (
                 <p>
