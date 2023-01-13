@@ -100,6 +100,7 @@ export async function getStaticProps() {
         monthlyLimit: plan.monthlyLimit,
       })),
     },
+    revalidate: 10,
   };
 }
 
