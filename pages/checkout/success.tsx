@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { Loading } from '../../lib/components/globalstyles';
 import useAuth from '../../lib/hooks/useAuth';
 import prisma from '../../lib/prisma';
-import * as gtag from '../../lib/gtag';
+import pxToRem from '../../lib/utils/pxToRem';
 
 type plan = {
   id: string;
@@ -34,12 +34,6 @@ export default function CheckoutSuccess({ plans }: Props) {
           if (result.statusCode !== 200) {
             throw new Error("Couldn't change plan");
           }
-          gtag.event({
-            action: 'purchase',
-            category: 'User',
-            label: 'Purchase Plan',
-            value: result.plan.price,
-          });
           await refreshUser();
           toast.success('Plano alterado com sucesso!');
           router.push('/app');
@@ -120,4 +114,6 @@ const Wrapper = styled.main`
   align-items: center;
   width: 100%;
   min-height: 100vh;
+  text-align: center;
+  padding: 0 ${pxToRem(15)};
 `;
