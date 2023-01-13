@@ -4,7 +4,7 @@ import { GetDataByUsernameDTO, InstagramPost, InstagramUser } from './dto';
 
 const client = getInstagramClient();
 
-const DEFAULT_MAX_POSTS = 30;
+const DEFAULT_MAX_POSTS = 33;
 const MAX_REQUESTS = 10;
 
 export async function getDataByUsername({

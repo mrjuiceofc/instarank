@@ -12,7 +12,9 @@ export function getProxyUrl({ url }: GetProxyUrlDTO) {
     });
   }
 
-  const proxyUrl = ['preview', 'production'].includes(process.env.VERCEL_ENV)
+  const proxyUrl = ['preview', 'production', 'development'].includes(
+    process.env.VERCEL_ENV
+  )
     ? `http://api.scrape.do?token=${
         process.env.SCRAPE_API_KEY
       }&url=${encodeURIComponent(url)}&customHeaders=true`
