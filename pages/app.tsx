@@ -17,6 +17,7 @@ import * as yup from 'yup';
 import { Loading } from '../lib/components/globalstyles';
 import { toast } from 'react-toastify';
 import { PostCard } from '../lib/components/PostCard';
+import Head from 'next/head';
 
 type Props = {
   premiumPlan: {
@@ -99,118 +100,136 @@ export default function App({ premiumPlan }: Props) {
   );
 
   return (
-    <Wrapper>
-      <Form onSubmit={onSubmitSort}>
-        <FormColumn>
-          <ProfileImage
-            src={instagramUser?.profileImage || DefaultPersonImage.src}
-          />
-          <TextField
-            placeholder="Adicione o @ do usuário"
-            label="Nome de usuário"
-            name="username"
-            error={inputError === 'username' && 'O nome de usuário é inválido'}
-            onChange={async () => {
-              if (inputError === 'username') {
-                setInputError('');
+    <div>
+      <Head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+          name="description"
+          content="Esta ferramenta ordena os posts de uma conta do Instagram em ordem de curtidas ou comentários para analisar quais publicações estão tendo maior engajamento dos usuários"
+        />
+        <title>
+          Descubra qual a publicação mais engajada do seu concorrente |
+          Instarank
+        </title>
+      </Head>
+      <Wrapper>
+        <Form onSubmit={onSubmitSort}>
+          <FormColumn>
+            <ProfileImage
+              src={instagramUser?.profileImage || DefaultPersonImage.src}
+            />
+            <TextField
+              placeholder="Adicione o @ do usuário"
+              label="Nome de usuário"
+              name="username"
+              error={
+                inputError === 'username' && 'O nome de usuário é inválido'
               }
-            }}
-          />
-          <TextField
-            placeholder="Quantos posts deseja ordenar?"
-            type="number"
-            name="postsLimit"
-            label="Quantidade de posts"
-            error={
-              inputError === 'postsLimit' && 'A quantidade de posts é inválida'
-            }
-            onChange={async () => {
-              if (inputError === 'postsLimit') {
-                setInputError('');
+              onChange={async () => {
+                if (inputError === 'username') {
+                  setInputError('');
+                }
+              }}
+            />
+            <TextField
+              placeholder="Quantos posts deseja ordenar?"
+              type="number"
+              name="postsLimit"
+              label="Quantidade de posts"
+              error={
+                inputError === 'postsLimit' &&
+                'A quantidade de posts é inválida'
               }
-            }}
-          />
-        </FormColumn>
-        <FormColumn>
-          <SelectInput
-            placeholder="Selecione o tipo de ordenação"
-            label="Tipo de ordenação"
-            name="sortBy"
-            error={inputError === 'sortBy' && 'O tipo de ordenação é inválido'}
-            onChange={async () => {
-              if (inputError === 'sortBy') {
-                setInputError('');
+              onChange={async () => {
+                if (inputError === 'postsLimit') {
+                  setInputError('');
+                }
+              }}
+            />
+          </FormColumn>
+          <FormColumn>
+            <SelectInput
+              placeholder="Selecione o tipo de ordenação"
+              label="Tipo de ordenação"
+              name="sortBy"
+              error={
+                inputError === 'sortBy' && 'O tipo de ordenação é inválido'
               }
-            }}
-          >
-            <option value="likes">Likes</option>
-            <option value="date">Data</option>
-            <option value="comments">Comentários</option>
-          </SelectInput>
-          <SelectInput
-            name="only"
-            placeholder="Considere apenas"
-            label="Considerar apenas"
-            error={inputError === 'only' && 'O tipo de post é inválido'}
-            onChange={async () => {
-              if (inputError === 'only') {
-                setInputError('');
-              }
-            }}
-          >
-            <option value="all">Todos</option>
-            <option value="posts">Posts</option>
-            <option value="reels">Reels</option>
-          </SelectInput>
-          <TextField
-            name="fromDate"
-            label="A partir da data"
-            type="date"
-            placeholder="A partir de qual data"
-            error={inputError === 'fromDate' && 'A data inicial é inválida'}
-            onChange={async () => {
-              if (inputError === 'fromDate') {
-                setInputError('');
-              }
-            }}
-          />
-          <TextField
-            name="untilDate"
-            label="Até a data"
-            type="date"
-            placeholder="Até qual data você deseja ordenar"
-            error={inputError === 'untilDate' && 'A data final é inválida'}
-            onChange={async () => {
-              if (inputError === 'untilDate') {
-                setInputError('');
-              }
-            }}
-          />
+              onChange={async () => {
+                if (inputError === 'sortBy') {
+                  setInputError('');
+                }
+              }}
+            >
+              <option value="likes">Likes</option>
+              <option value="date">Data</option>
+              <option value="comments">Comentários</option>
+            </SelectInput>
+            <SelectInput
+              name="only"
+              placeholder="Considere apenas"
+              label="Considerar apenas"
+              error={inputError === 'only' && 'O tipo de post é inválido'}
+              onChange={async () => {
+                if (inputError === 'only') {
+                  setInputError('');
+                }
+              }}
+            >
+              <option value="all">Todos</option>
+              <option value="posts">Posts</option>
+              <option value="reels">Reels</option>
+            </SelectInput>
+            <TextField
+              name="fromDate"
+              label="A partir da data"
+              type="date"
+              placeholder="A partir de qual data"
+              error={inputError === 'fromDate' && 'A data inicial é inválida'}
+              onChange={async () => {
+                if (inputError === 'fromDate') {
+                  setInputError('');
+                }
+              }}
+            />
+            <TextField
+              name="untilDate"
+              label="Até a data"
+              type="date"
+              placeholder="Até qual data você deseja ordenar"
+              error={inputError === 'untilDate' && 'A data final é inválida'}
+              onChange={async () => {
+                if (inputError === 'untilDate') {
+                  setInputError('');
+                }
+              }}
+            />
 
-          <Button type="submit">Ordenar</Button>
-        </FormColumn>
-      </Form>
-      <PostsWrapper>
-        {!posts && (
-          <p>
-            Preencha o formulário acima para ordenar os posts de um usuário do
-            Instagram
-          </p>
-        )}
-        {posts && posts.length === 0 && (
-          <p>Não foram encontrados posts para o usuário informado</p>
-        )}
-        {posts &&
-          posts.length > 0 &&
-          posts.map((post) => <PostCard post={post} key={post.igUrl} />)}
-      </PostsWrapper>
+            <Button type="submit">Ordenar</Button>
+          </FormColumn>
+        </Form>
+        <PostsWrapper>
+          {!posts && (
+            <p>
+              Preencha o formulário acima para ordenar os posts de um usuário do
+              Instagram
+            </p>
+          )}
+          {posts && posts.length === 0 && (
+            <p>Não foram encontrados posts para o usuário informado</p>
+          )}
+          {posts &&
+            posts.length > 0 &&
+            posts.map((post) => <PostCard post={post} key={post.igUrl} />)}
+        </PostsWrapper>
 
-      {user && user.plan.name === 'free' && (
-        <FloatButton isLoading={isLoading} onClick={() => onChangePlan()}>
-          Ordene até {premiumPlan.monthlyLimit.toLocaleString('pt-BR')} posts
-        </FloatButton>
-      )}
-    </Wrapper>
+        {user && user.plan.name === 'free' && (
+          <FloatButton isLoading={isLoading} onClick={() => onChangePlan()}>
+            Ordene até {premiumPlan.monthlyLimit.toLocaleString('pt-BR')} posts
+          </FloatButton>
+        )}
+      </Wrapper>
+    </div>
   );
 }
 
