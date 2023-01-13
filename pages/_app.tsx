@@ -13,6 +13,8 @@ import { Header } from '../lib/components/Header';
 import 'react-tooltip/dist/react-tooltip.css';
 import Footer from '../lib/components/Footer';
 import { Warnings } from '../lib/components/Warnings';
+import Script from 'next/script';
+import * as gtag from '../lib/gtag';
 
 const theme: DefaultTheme = {
   colors: {
@@ -91,7 +93,7 @@ function PageContent({ Component, pageProps }: PageContentProps) {
     import('react-facebook-pixel')
       .then((x) => x.default)
       .then((ReactPixel) => {
-        ReactPixel.init('474835198152096');
+        ReactPixel.init(process.env.NEXT_PUBLIC_FACEBOOK_PIXEL_ID);
         ReactPixel.pageView();
 
         router.events.on('routeChangeComplete', () => {
@@ -100,12 +102,39 @@ function PageContent({ Component, pageProps }: PageContentProps) {
       });
   }, [router.events]);
 
+  useEffect(() => {
+    const handleRouteChange = (url) => {
+      gtag.pageview(url);
+    };
+    router.events.on('routeChangeComplete', handleRouteChange);
+    return () => {
+      router.events.off('routeChangeComplete', handleRouteChange);
+    };
+  }, [router.events]);
+
   return (
     <>
       <Header />
       <Component {...pageProps} />
       <Footer />
       <Warnings />
+      <Script
+        strategy="afterInteractive"
+        src={`https://www.googletagmanager.com/gtag/js?id=${gtag.GA_TRACKING_ID}`}
+      />
+      <Script
+        strategy="afterInteractive"
+        dangerouslySetInnerHTML={{
+          __html: `
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${gtag.GA_TRACKING_ID}', {
+              page_path: window.location.pathname,
+            });
+          `,
+        }}
+      />
     </>
   );
 }
