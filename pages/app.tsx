@@ -14,7 +14,6 @@ import DefaultPersonImage from '../assets/person.jpg';
 import { TextField } from '../lib/components/TextField';
 import { SelectInput } from '../lib/components/SelectInput';
 import * as yup from 'yup';
-import { Loading } from '../lib/components/globalstyles';
 import { toast } from 'react-toastify';
 import { PostCard } from '../lib/components/PostCard';
 import Head from 'next/head';
@@ -74,19 +73,29 @@ export default function App({ premiumPlan }: Props) {
         setInputError(error.path);
         return;
       }
-      toast.loading(
+      const id = toast.loading(
         'Aguarde enquanto ordenamos os posts, isso pode demorar até 1 minuto...'
       );
 
       const response = await sortPosts(body);
       await refreshUser();
 
-      toast.dismiss();
-
       if (response.statusCode !== 200) {
-        toast.error(response.message);
+        toast.update(id, {
+          render: response.message,
+          type: 'error',
+          isLoading: false,
+          autoClose: 3000,
+        });
         return;
       }
+
+      toast.update(id, {
+        render: 'Ordenação concluída',
+        type: 'success',
+        isLoading: false,
+        autoClose: 3000,
+      });
 
       if (response.data.posts.length === 0) {
         toast.warning('Não foram encontrados posts para o usuário informado');
