@@ -1,6 +1,11 @@
 import { BaseError } from '../../errors';
 import { getInstagramClient } from '../../lib/get-instagram-client';
-import { GetDataByUsernameDTO, InstagramPost, InstagramUser } from './dto';
+import {
+  GetDataByUsernameDTO,
+  InstagramImage,
+  InstagramPost,
+  InstagramUser,
+} from './dto';
 
 const client = getInstagramClient();
 
@@ -56,22 +61,50 @@ export async function getDataByUsername({
       if (!user) {
         user = {
           username: data.user.username,
-          profileImage: data.user.profile_pic_url,
+          profileImage: `https://api.allorigins.win/raw?url=${encodeURIComponent(
+            data.user.profile_pic_url
+          )}`,
         };
       }
 
       posts.push(
         ...data.items
           .map((item) => {
+            let images: InstagramImage;
+
+            if (item.carousel_media) {
+              images = {
+                highResolution: item.carousel_media.map(
+                  (i) =>
+                    `https://api.allorigins.win/raw?url=${encodeURIComponent(
+                      i.image_versions2.candidates[0].url
+                    )}`
+                ),
+                lowResolution: item.carousel_media.map(
+                  (i) =>
+                    `https://api.allorigins.win/raw?url=${encodeURIComponent(
+                      i.image_versions2.candidates.find((c) => c.width <= 500)
+                        .url
+                    )}`
+                ),
+              };
+            } else {
+              images = {
+                highResolution: `https://api.allorigins.win/raw?url=${encodeURIComponent(
+                  item.image_versions2.candidates[0].url
+                )}`,
+                lowResolution: `https://api.allorigins.win/raw?url=${encodeURIComponent(
+                  item.image_versions2.candidates.find((c) => c.width <= 500)
+                    .url
+                )}`,
+              };
+            }
+
             return {
               likes: item.like_count,
               comments: item.comment_count,
               igUrl: `https://www.instagram.com/p/${item.code}`,
-              files: item.carousel_media
-                ? item.carousel_media.map(
-                    (i) => i.image_versions2.candidates[0].url
-                  )
-                : [item.image_versions2.candidates[0].url],
+              images,
               type: item.media_type === 1 ? 'posts' : 'reels',
               publicationDate: new Date(item.taken_at * 1000),
             };

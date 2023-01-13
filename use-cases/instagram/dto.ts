@@ -2,11 +2,11 @@ export type SortPostsByUsernameDTO = {
   requestId: string;
   userId: string;
   username: string;
+  postsLimit: number;
   sortBy: 'likes' | 'comments' | 'date';
   only: 'posts' | 'reels' | 'all';
   fromDate: Date;
   untilDate: Date;
-  postsLimit: number;
 };
 
 export type GetDataByUsernameDTO = {
@@ -27,8 +27,13 @@ export type InstagramUser = {
   profileImage: string;
 };
 
+export type InstagramImage = {
+  lowResolution: string;
+  highResolution: string;
+};
+
 export type InstagramPost = {
-  files: string[];
+  images: InstagramImage;
   likes: number;
   comments: number;
   igUrl: string;

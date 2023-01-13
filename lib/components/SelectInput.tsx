@@ -5,15 +5,17 @@ import { Error } from './globalstyles';
 type Props = {
   error?: string;
   label?: string;
-} & React.InputHTMLAttributes<HTMLInputElement>;
+} & React.SelectHTMLAttributes<HTMLSelectElement>;
 
-export function TextField(props: Props) {
+export function SelectInput(props: Props) {
   const defaultId = props.name || props.id || Date.now().toString();
 
   return (
     <Wrapper>
       {props.label && <label htmlFor={defaultId}>{props.label}</label>}
-      <Input id={defaultId} type="text" {...props} />
+      <SelectStyled id={defaultId} {...props}>
+        {props.children}
+      </SelectStyled>
       {props.error && <Error>{props.error}</Error>}
     </Wrapper>
   );
@@ -33,7 +35,7 @@ const Wrapper = styled.div`
   }
 `;
 
-const Input = styled.input`
+const SelectStyled = styled.select`
   ${({ theme }) => css`
     width: 100%;
     padding: 0.5rem;

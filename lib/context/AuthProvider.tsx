@@ -9,6 +9,7 @@ import type { user } from '../../use-cases/users/getUserFromId';
 import axios from '../utils/axios';
 import getStripe from '../get-stripejs.ts';
 import { toast } from 'react-toastify';
+import type { SortPostsByUsernameDTO } from '../../use-cases/instagram/dto';
 
 type AuthData = {
   email: string;
@@ -26,6 +27,7 @@ interface IAuthProvider {
   changePlan: (sessionId: string) => Promise<any>;
   getWarnings: () => Promise<any>;
   readWarning: (warningId: string) => Promise<any>;
+  sortPosts: (data: SortPostsByUsernameDTO) => Promise<any>;
   logout: () => void;
   isLoading: boolean;
 }
@@ -260,6 +262,21 @@ export default function AuthProvider({ children }: ProviderProps) {
     }
   }, []);
 
+  const sortPosts = useCallback(async (body: SortPostsByUsernameDTO) => {
+    try {
+      const response = await axios.post(`/api/instagram/${body.username}`, {
+        ...body,
+        username: undefined,
+      });
+      return {
+        data: response.data,
+        statusCode: response.status,
+      };
+    } catch (error) {
+      return error.response.data;
+    }
+  }, []);
+
   return (
     <AuthContext.Provider
       value={{
@@ -275,6 +292,7 @@ export default function AuthProvider({ children }: ProviderProps) {
         changePlan,
         getWarnings,
         readWarning,
+        sortPosts,
       }}
     >
       {children}
