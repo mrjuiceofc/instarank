@@ -48,9 +48,7 @@ export default function Home({ plans }: Props) {
       <Wrapper>
         <WrapperAbout>
           <WrapperText>
-            <Title>
-              Descubra qual a publicação mais engajada do seu concorrente.
-            </Title>
+            <Title>Descubra o segredo do seu concorrente no Instagram</Title>
             <StyledParagraph margin="0 0 30px 0">
               Esta ferramenta ordena os posts de uma conta do Instagram em ordem
               de curtidas ou comentários para analisar quais publicações estão
@@ -165,8 +163,8 @@ const Title = styled.h1`
     }
 
     @media (max-width: 1005px) {
-      font-size: ${pxToRem(20)};
-      line-height: ${pxToRem(28)};
+      font-size: ${pxToRem(30)};
+      line-height: ${pxToRem(40)};
       margin-bottom: ${pxToRem(20)};
     }
   `}
