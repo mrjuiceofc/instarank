@@ -88,6 +88,7 @@ model ordinance {
   onlyType            String      @map("only_type")
   fromDate            DateTime    @map("from_date")
   untilDate           DateTime    @map("until_date")
+  postLimit           Int         @map("post_limit")
   createdAt           DateTime    @default(now()) @map("created_at")
   updatedAt           DateTime    @updatedAt @map("updated_at")
   deletedAt           DateTime?   @map("deleted_at")
