@@ -30,6 +30,9 @@ model user {
   ip              String
   planId          String     @map("plan_id")
   gatewayId       String?    @unique @map("gateway_id")
+  utmSource       String?    @map("utm_source")
+  utmMedium       String?    @map("utm_medium")
+  utmCampaign     String?    @map("utm_campaign")
   monthlyLimit    Int        @map("monthly_limit")
   lastAccessAt    DateTime?  @map("last_access_at")
   limitResetAt    DateTime?  @map("limit_reset_at")

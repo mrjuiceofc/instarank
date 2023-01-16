@@ -48,9 +48,16 @@ export default function ModalCreateUser({
     async (event: React.FormEvent<HTMLFormElement>) => {
       setIsLoading(true);
       event.preventDefault();
+      const utmSource = localStorage.getItem('utmSource');
+      const utmMedium = localStorage.getItem('utmMedium');
+      const utmCampaign = localStorage.getItem('utmCampaign');
+
       const body = {
         email: event.currentTarget.email.value,
         password: event.currentTarget.password.value,
+        utmCampaign,
+        utmMedium,
+        utmSource,
       };
       try {
         await schema.validate(body);
@@ -59,6 +66,7 @@ export default function ModalCreateUser({
         setIsLoading(false);
         return;
       }
+
       try {
         const data = await createUser(body);
         if (data.statusCode !== 201) {
@@ -67,13 +75,18 @@ export default function ModalCreateUser({
           return;
         }
 
-        setIsLoading(false);
+        localStorage.removeItem('utmSource');
+        localStorage.removeItem('utmMedium');
+        localStorage.removeItem('utmCampaign');
+
         if (plan === 'free') {
+          setIsLoading(false);
           onClose();
           return;
         }
 
         requestChangePlan(plan);
+        setIsLoading(false);
       } catch (error) {
         setIsLoading(false);
         console.log(error);

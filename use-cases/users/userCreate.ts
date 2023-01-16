@@ -10,6 +10,9 @@ export async function userCreate({
   password,
   requestId,
   ip,
+  utmSource,
+  utmMedium,
+  utmCampaign,
 }: UserCreateOrUpdateDTO) {
   let userAlreadyExists: user;
   try {
@@ -102,6 +105,9 @@ export async function userCreate({
         monthlyLimit: freePlan.monthlyLimit,
         lastAccessAt: new Date(),
         limitResetAt: new Date(),
+        utmSource,
+        utmMedium,
+        utmCampaign,
       },
     });
   } catch (error) {

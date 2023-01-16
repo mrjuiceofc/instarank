@@ -16,6 +16,12 @@ type AuthData = {
   password: string;
 };
 
+type CreateUserAuthData = AuthData & {
+  utmCampaign?: string;
+  utmMedium?: string;
+  utmSource?: string;
+};
+
 interface IAuthProvider {
   user: user;
   refreshUser: () => Promise<void>;
@@ -59,35 +65,47 @@ export default function AuthProvider({ children }: ProviderProps) {
     }
   }, []);
 
-  const createUser = useCallback(async ({ email, password }: AuthData) => {
-    try {
-      setIsLoading(true);
-      const response = await axios.post(
-        '/api/users',
-        {
-          email,
-          password,
-        },
-        {
-          headers: {
-            'no-auth': 'true',
+  const createUser = useCallback(
+    async ({
+      email,
+      password,
+      utmCampaign,
+      utmMedium,
+      utmSource,
+    }: CreateUserAuthData) => {
+      try {
+        setIsLoading(true);
+        const response = await axios.post(
+          '/api/users',
+          {
+            email,
+            password,
+            utmCampaign,
+            utmMedium,
+            utmSource,
           },
-        }
-      );
-      const data = response.data;
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('refreshToken', data.refreshToken);
-      await requestUser();
-      return {
-        ...data,
-        statusCode: response.status,
-      };
-    } catch (error) {
-      return error.response.data;
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
+          {
+            headers: {
+              'no-auth': 'true',
+            },
+          }
+        );
+        const data = response.data;
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('refreshToken', data.refreshToken);
+        await requestUser();
+        return {
+          ...data,
+          statusCode: response.status,
+        };
+      } catch (error) {
+        return error.response.data;
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    []
+  );
 
   const login = useCallback(async ({ email, password }: AuthData) => {
     try {

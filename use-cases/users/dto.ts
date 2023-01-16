@@ -1,6 +1,9 @@
 export type UserCreateOrUpdateDTO = {
   email: string;
   password: string;
+  utmSource?: string;
+  utmMedium?: string;
+  utmCampaign?: string;
   ip: string;
   requestId: string;
 };

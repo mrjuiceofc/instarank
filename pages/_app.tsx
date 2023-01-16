@@ -118,6 +118,24 @@ function PageContent({ Component, pageProps }: PageContentProps) {
     };
   }, [router.events]);
 
+  useEffect(() => {
+    if (!router.query) {
+      return;
+    }
+
+    if (router.query.utm_source) {
+      localStorage.setItem('utmSource', router.query.utm_source as string);
+    }
+
+    if (router.query.utm_medium) {
+      localStorage.setItem('utmMedium', router.query.utm_medium as string);
+    }
+
+    if (router.query.utm_campaign) {
+      localStorage.setItem('utmCampaign', router.query.utm_campaign as string);
+    }
+  }, [router.query]);
+
   return (
     <>
       <Header />
