@@ -77,8 +77,8 @@ export default function Home({ plans }: Props) {
             />
           ))}
         </WrapperPlans>
-        <LeftBlurCircle />
-        <RightBlurCircle />
+        {/* <LeftBlurCircle /> */}
+        {/* <RightBlurCircle /> */}
       </Wrapper>
     </div>
   );
