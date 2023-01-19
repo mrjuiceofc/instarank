@@ -79,14 +79,14 @@ export async function getDataByUsername({
                     `https://api.allorigins.win/raw?url=${encodeURIComponent(
                       i.image_versions2.candidates[0].url
                     )}`
-                ),
+                )[0],
                 lowResolution: item.carousel_media.map(
                   (i) =>
                     `https://api.allorigins.win/raw?url=${encodeURIComponent(
                       i.image_versions2.candidates.find((c) => c.width <= 500)
                         .url
                     )}`
-                ),
+                )[0],
               };
             } else {
               images = {

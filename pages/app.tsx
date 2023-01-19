@@ -117,8 +117,7 @@ export default function App({ premiumPlan }: Props) {
           content="Esta ferramenta ordena os posts de uma conta do Instagram em ordem de curtidas ou comentários para analisar quais publicações estão tendo maior engajamento dos usuários"
         />
         <title>
-          Descubra qual a publicação mais engajada do seu concorrente |
-          Instarank
+          Descubra o segredo do seu concorrente no Instagram | Instarank
         </title>
       </Head>
       <Wrapper>

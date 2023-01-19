@@ -13,13 +13,16 @@ export default nextConnect({
   .post(postHandler);
 
 async function postHandler(request: NextApiRequest, response: NextApiResponse) {
-  const { email, password } = request.body;
+  const { email, password, utmSource, utmMedium, utmCampaign } = request.body;
 
   const result = await userCreate({
     requestId: request.context.requestId,
     ip: request.context.clientIp,
     email,
     password,
+    utmSource,
+    utmMedium,
+    utmCampaign,
   });
 
   return response.status(201).json(result);

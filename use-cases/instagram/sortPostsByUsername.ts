@@ -105,6 +105,28 @@ export async function sortPostsByUsername({
     });
   }
 
+  try {
+    await prisma.ordinance.create({
+      data: {
+        instagramUsername: username,
+        fromDate,
+        untilDate,
+        user: {
+          connect: {
+            id: userId,
+          },
+        },
+        sortBy,
+        onlyType: only,
+        postLimit: postsLimit,
+      },
+    });
+  } catch (error) {
+    console.log(
+      `[sortPostsByUsername - ${requestId}] Erro ao salvar a ordem ${error} | esse erro não afetou o resultado da requisição`
+    );
+  }
+
   return {
     user: ig.user,
     postAmount,

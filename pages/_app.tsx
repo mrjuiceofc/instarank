@@ -15,6 +15,7 @@ import Footer from '../lib/components/Footer';
 import { Warnings } from '../lib/components/Warnings';
 import Script from 'next/script';
 import * as gtag from '../lib/gtag';
+import { hotjar } from 'react-hotjar';
 
 const theme: DefaultTheme = {
   colors: {
@@ -117,6 +118,41 @@ function PageContent({ Component, pageProps }: PageContentProps) {
       router.events.off('routeChangeComplete', handleRouteChange);
     };
   }, [router.events]);
+
+  useEffect(() => {
+    if (!router.query) {
+      return;
+    }
+
+    if (router.query.utm_source) {
+      localStorage.setItem('utmSource', router.query.utm_source as string);
+    }
+
+    if (router.query.utm_medium) {
+      localStorage.setItem('utmMedium', router.query.utm_medium as string);
+    }
+
+    if (router.query.utm_campaign) {
+      localStorage.setItem('utmCampaign', router.query.utm_campaign as string);
+    }
+  }, [router.query]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    const isLocalhost = window.location.hostname === 'localhost';
+
+    if (isLocalhost) {
+      return;
+    }
+
+    hotjar.initialize(
+      Number(process.env.NEXT_PUBLIC_HJID),
+      Number(process.env.NEXT_PUBLIC_HJSV)
+    );
+  }, []);
 
   return (
     <>
