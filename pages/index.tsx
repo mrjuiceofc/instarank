@@ -48,7 +48,7 @@ export default function Home({ plans }: Props) {
         <WrapperAbout>
           <WrapperText>
             <Title>Descubra o segredo do seu concorrente no Instagram</Title>
-            <StyledParagraph margin="0 0 30px 0">
+            <StyledParagraph>
               Esta ferramenta ordena os posts de uma conta do Instagram em ordem
               de curtidas ou comentários para analisar quais publicações estão
               tendo maior engajamento dos usuários.
@@ -63,6 +63,9 @@ export default function Home({ plans }: Props) {
             <Image src={PhonesImage} alt="Imagem de um perfil no Instagram" />
           </StyledImage>
         </WrapperAbout>
+        <WrapperPlanTitle>
+          <Title>Encontre o plano certo para você</Title>
+        </WrapperPlanTitle>
         <WrapperPlans>
           {plans.map((plan) => (
             <PlanCard
@@ -73,6 +76,8 @@ export default function Home({ plans }: Props) {
             />
           ))}
         </WrapperPlans>
+        {/* <LeftBlurCircle /> */}
+        {/* <RightBlurCircle /> */}
       </Wrapper>
     </div>
   );
@@ -84,7 +89,7 @@ export async function getStaticProps() {
       deletedAt: null,
     },
     orderBy: {
-      price: 'desc',
+      price: 'asc',
     },
   });
 
@@ -111,9 +116,9 @@ const Wrapper = styled.main`
 const WrapperAbout = styled.div`
   display: flex;
   justify-content: center;
-  padding: ${pxToRem(38)} ${pxToRem(53)} 0 ${pxToRem(53)};
   flex-wrap: wrap;
   width: 100%;
+  padding: ${pxToRem(38)} ${pxToRem(53)} 0 ${pxToRem(53)};
 
   @media (max-width: 1005px) {
     padding: ${pxToRem(38)} ${pxToRem(15)} 0 ${pxToRem(15)};
@@ -162,8 +167,8 @@ const Title = styled.h1`
     }
 
     @media (max-width: 1005px) {
-      font-size: ${pxToRem(30)};
-      line-height: ${pxToRem(40)};
+      font-size: ${pxToRem(25)};
+      line-height: ${pxToRem(35)};
       margin-bottom: ${pxToRem(20)};
     }
   `}
@@ -209,24 +214,51 @@ const StyledImage = styled.span`
   }
 `;
 
-const WrapperPlans = styled.div`
-  ${({ theme }) => css`
-    margin-top: -90px;
-    background: ${theme.colors.gradient};
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: ${pxToRem(30)};
-    flex-wrap: wrap;
-    padding: ${pxToRem(100)} ${pxToRem(50)};
-    border-top-left-radius: ${pxToRem(50)};
-    border-top-right-radius: ${pxToRem(50)};
+const WrapperPlanTitle = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: -90px;
+  text-align: center;
+  padding: 0 ${pxToRem(50)};
 
-    @media (max-width: 728px) {
-      padding: ${pxToRem(50)} ${pxToRem(25)};
-      border-top-left-radius: ${pxToRem(25)};
-      border-top-right-radius: ${pxToRem(25)};
-      margin-top: -60px;
-    }
-  `}
+  @media (max-width: 728px) {
+    margin-top: -50px;
+  }
+`;
+
+const WrapperPlans = styled.div`
+  margin-top: -50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: ${pxToRem(30)};
+  flex-wrap: wrap;
+  padding: ${pxToRem(100)} ${pxToRem(50)};
+
+  @media (max-width: 728px) {
+    padding: ${pxToRem(50)} ${pxToRem(25)};
+    margin-top: -20px;
+  }
+`;
+
+const BlurCircle = styled.div`
+  ${({ theme }) => css`
+    background: ${theme.colors.gradient};
+    width: ${pxToRem(1000)};
+    height: ${pxToRem(1000)};
+    border-radius: 50%;
+    position: fixed;
+    top: -${pxToRem(500)};
+    z-index: -100;
+    filter: blur(${pxToRem(2000)});
+    opacity: 0.15;
+  `};
+`;
+
+const LeftBlurCircle = styled(BlurCircle)`
+  left: -${pxToRem(800)};
+`;
+
+const RightBlurCircle = styled(BlurCircle)`
+  right: -${pxToRem(800)};
 `;
