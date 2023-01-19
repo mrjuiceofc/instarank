@@ -69,28 +69,22 @@ export function Header() {
 }
 
 const Wrapper = styled.div`
-  ${({ theme }) => css`
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: ${pxToRem(57)};
-    width: 100%;
-    background: ${theme.colors.tertiaryLight};
-    filter: drop-shadow(0px 3px 5px rgba(0, 0, 0, 0.1));
-    padding: 0 ${pxToRem(13)};
-  `}
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: ${pxToRem(57)};
+  width: 100%;
+  padding: ${pxToRem(38)} ${pxToRem(53)} 0 ${pxToRem(53)};
+  margin-bottom: ${pxToRem(30)};
+
+  @media (max-width: 1005px) {
+    padding: ${pxToRem(38)} ${pxToRem(15)} 0 ${pxToRem(15)};
+    margin-bottom: ${pxToRem(20)};
+  }
 `;
 
 const LoginButton = styled(Button)`
-  width: ${pxToRem(77)};
-  height: ${pxToRem(28.5)};
-  font-size: ${pxToRem(14)};
-  border-radius: ${pxToRem(10)};
-  font-weight: 400;
-  text-transform: none;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  width: ${pxToRem(170)};
 `;
 
 const LimitParagraph = styled.p``;
