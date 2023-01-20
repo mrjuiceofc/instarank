@@ -26,6 +26,6 @@ export const feedbacks = [
     name: 'Thiago',
     imgSrc: ThiagoImg.src,
     message:
-      'Eu recomendo essa o instarank para qualquer pessoa que deseja entender melhor o engajamento do Instagram e aumentar seus próprios resultados.',
+      'Eu recomendo o instarank para qualquer pessoa que deseja entender melhor o engajamento do Instagram e aumentar seus próprios resultados.',
   },
 ];
