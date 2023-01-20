@@ -2,19 +2,16 @@ import { Button } from '../Botton';
 import { Error } from '../globalstyles';
 import useAuth from '../../hooks/useAuth';
 import useGlobal from '../../hooks/useGlobal';
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 import { TextField } from '../TextField';
 import * as yup from 'yup';
-import YupPassword from 'yup-password';
 import { Logo } from '../Logo';
 import styled, { css } from 'styled-components';
 import useModalResetPassword from './hook';
 
-YupPassword(yup);
-
 const schema = yup.object().shape({
   email: yup.string().email().min(3).max(255).required(),
-  password: yup.string().password(),
+  password: yup.string().min(6).max(255).required(),
 });
 
 export default function ResetStep() {
@@ -94,7 +91,7 @@ export default function ResetStep() {
           value={passwordValue}
           error={
             inputError === 'password' &&
-            'A nova senha deve ter ter no mínimo 8 caracteres, uma letra maiúscula, uma letra minúscula, um número e um caractere especial'
+            'A nova senha deve ter no mínimo 6 caracteres'
           }
           onChange={(e) => {
             setPasswordValue(e.target.value);
