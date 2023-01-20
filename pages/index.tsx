@@ -11,6 +11,7 @@ import prisma from '../lib/prisma';
 import { useEffect } from 'react';
 import useAuth from '../lib/hooks/useAuth';
 import { useRouter } from 'next/router';
+import { feedbacks } from '../lib/mocks/feedbacks';
 
 type Props = {
   plans: {
@@ -63,21 +64,39 @@ export default function Home({ plans }: Props) {
             <Image src={PhonesImage} alt="Imagem de um perfil no Instagram" />
           </StyledImage>
         </WrapperAbout>
-        <WrapperPlanTitle>
-          <Title>Encontre o plano certo para você</Title>
-        </WrapperPlanTitle>
-        <WrapperPlans>
-          {plans.map((plan) => (
-            <PlanCard
-              planName={plan.name}
-              planMonthlyLimit={plan.monthlyLimit}
-              planPrice={plan.price}
-              key={plan.id}
-            />
-          ))}
-        </WrapperPlans>
-        {/* <LeftBlurCircle /> */}
-        {/* <RightBlurCircle /> */}
+        <FirstSection>
+          <WrapperSectionTitle>
+            <Title>Mais de 25.000 usuários satisfeitos </Title>
+          </WrapperSectionTitle>
+          <WrapperFeedbacks>
+            {feedbacks.map((feedback) => (
+              <Feedback>
+                <div>
+                  <div>
+                    <img src={feedback.imgSrc} alt={feedback.name} />
+                    <span>{feedback.name}</span>
+                  </div>
+                  <p>{feedback.message}</p>
+                </div>
+              </Feedback>
+            ))}
+          </WrapperFeedbacks>
+        </FirstSection>
+        <Section>
+          <WrapperSectionTitle>
+            <Title>Encontre o plano certo para você</Title>
+          </WrapperSectionTitle>
+          <WrapperPlans>
+            {plans.map((plan) => (
+              <PlanCard
+                planName={plan.name}
+                planMonthlyLimit={plan.monthlyLimit}
+                planPrice={plan.price}
+                key={plan.id}
+              />
+            ))}
+          </WrapperPlans>
+        </Section>
       </Wrapper>
     </div>
   );
@@ -111,6 +130,7 @@ const Wrapper = styled.main`
   flex-direction: column;
   width: 100%;
   z-index: 0;
+  margin-bottom: ${pxToRem(100)};
 `;
 
 const WrapperAbout = styled.div`
@@ -169,7 +189,6 @@ const Title = styled.h1`
     @media (max-width: 1005px) {
       font-size: ${pxToRem(25)};
       line-height: ${pxToRem(35)};
-      margin-bottom: ${pxToRem(20)};
     }
   `}
 `;
@@ -214,51 +233,104 @@ const StyledImage = styled.span`
   }
 `;
 
-const WrapperPlanTitle = styled.div`
+const Section = styled.section`
   display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
+  width: 100%;
+  gap: ${pxToRem(20)};
+`;
+
+const FirstSection = styled(Section)`
   margin-top: -90px;
-  text-align: center;
-  padding: 0 ${pxToRem(50)};
 
   @media (max-width: 728px) {
-    margin-top: -50px;
+    margin-top: -40px;
   }
 `;
 
+const WrapperSectionTitle = styled.div`
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  padding: 0 ${pxToRem(50)};
+`;
+
+const WrapperFeedbacks = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: ${pxToRem(30)};
+  width: 100%;
+  flex-wrap: wrap;
+  padding: 0 ${pxToRem(53)} ${pxToRem(100)} ${pxToRem(53)};
+  max-width: ${pxToRem(1500)};
+
+  @media (max-width: 1005px) {
+    padding: 0 ${pxToRem(15)} ${pxToRem(80)} ${pxToRem(15)};
+  }
+`;
+
+const Feedback = styled.div`
+  ${({ theme }) => css`
+    background: ${theme.colors.gradient};
+    padding: ${pxToRem(1)};
+    border-radius: ${pxToRem(6)};
+    width: ${pxToRem(500)};
+
+    @media (max-width: 700px) {
+      width: 100%;
+    }
+
+    div {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-start;
+      gap: ${pxToRem(5)};
+      background: ${theme.colors.light};
+      padding: ${pxToRem(10)};
+      border-radius: ${pxToRem(6)};
+      width: 100%;
+      height: 100%;
+
+      div {
+        display: flex;
+        align-items: center;
+        flex-direction: row;
+        gap: ${pxToRem(10)};
+        width: 100%;
+
+        img {
+          width: ${pxToRem(50)};
+          height: ${pxToRem(50)};
+          border-radius: 50%;
+          object-fit: cover;
+        }
+
+        span {
+          font-size: ${pxToRem(14)};
+          font-weight: 500;
+        }
+      }
+
+      p {
+        margin: 0px;
+      }
+    }
+  `};
+`;
+
 const WrapperPlans = styled.div`
-  margin-top: -50px;
   display: flex;
   justify-content: center;
   align-items: center;
   gap: ${pxToRem(30)};
   flex-wrap: wrap;
-  padding: ${pxToRem(100)} ${pxToRem(50)};
+  padding: 0 ${pxToRem(50)};
 
   @media (max-width: 728px) {
-    padding: ${pxToRem(50)} ${pxToRem(25)};
-    margin-top: -20px;
+    padding: 0 ${pxToRem(25)};
   }
-`;
-
-const BlurCircle = styled.div`
-  ${({ theme }) => css`
-    background: ${theme.colors.gradient};
-    width: ${pxToRem(1000)};
-    height: ${pxToRem(1000)};
-    border-radius: 50%;
-    position: fixed;
-    top: -${pxToRem(500)};
-    z-index: -100;
-    filter: blur(${pxToRem(2000)});
-    opacity: 0.15;
-  `};
-`;
-
-const LeftBlurCircle = styled(BlurCircle)`
-  left: -${pxToRem(800)};
-`;
-
-const RightBlurCircle = styled(BlurCircle)`
-  right: -${pxToRem(800)};
 `;

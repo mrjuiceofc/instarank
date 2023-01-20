@@ -107,6 +107,10 @@ const Wrapper = styled.div<Props>`
     css`
       background: ${theme.colors.tertiaryLight};
     `}
+
+    @media (max-width: 768px) {
+      width: 100%;
+    }
   `}
 `;
 
