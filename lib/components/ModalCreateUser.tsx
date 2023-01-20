@@ -5,12 +5,10 @@ import { TextField } from './TextField';
 import { useCallback, useState } from 'react';
 import { Button } from './Botton';
 import * as yup from 'yup';
-import YupPassword from 'yup-password';
 import pxToRem from '../utils/pxToRem';
 import { Error } from './globalstyles';
 import useAuth from '../hooks/useAuth';
 import useGlobal from '../hooks/useGlobal';
-YupPassword(yup);
 
 type Props = {
   isOpen: boolean;
@@ -20,7 +18,7 @@ type Props = {
 
 const schema = yup.object().shape({
   email: yup.string().email().min(3).max(255).required(),
-  password: yup.string().password(),
+  password: yup.string().min(6).max(255).required(),
 });
 
 export default function ModalCreateUser({
@@ -123,7 +121,7 @@ export default function ModalCreateUser({
             value={passwordValue}
             error={
               inputError === 'password' &&
-              'A senha deve ter ter no mínimo 8 caracteres, uma letra maiúscula, uma letra minúscula, um número e um caractere especial'
+              'A senha deve ter no mínimo 6 caracteres'
             }
             onChange={(e) => {
               setPasswordValue(e.target.value);
