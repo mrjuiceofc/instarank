@@ -2,7 +2,7 @@ import styled, { css } from 'styled-components';
 import { Logo } from './Logo';
 import Modal from './Modal';
 import { TextField } from './TextField';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Button } from './Botton';
 import * as yup from 'yup';
 import pxToRem from '../utils/pxToRem';
@@ -33,6 +33,7 @@ export default function ModalCreateUser({
   const [emailValue, setEmailValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { openLoginModal } = useGlobal();
+  const { user } = useAuth();
 
   const onClose = useCallback(() => {
     setInputError('');
@@ -41,6 +42,12 @@ export default function ModalCreateUser({
     setEmailValue('');
     defaultOnClose();
   }, []);
+
+  useEffect(() => {
+    if (user && !isLoading) {
+      onClose();
+    }
+  }, [user, onClose, isLoading]);
 
   const onSubmit = useCallback(
     async (event: React.FormEvent<HTMLFormElement>) => {
