@@ -70,7 +70,7 @@ export default function Home({ plans }: Props) {
           </WrapperSectionTitle>
           <WrapperFeedbacks>
             {feedbacks.map((feedback) => (
-              <Feedback>
+              <Feedback key={feedback.name}>
                 <div>
                   <div>
                     <img src={feedback.imgSrc} alt={feedback.name} />

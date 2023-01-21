@@ -85,12 +85,6 @@ function PageContent({ Component, pageProps }: PageContentProps) {
   }, [router.query]);
 
   useEffect(() => {
-    const isLocalhost = window.location.hostname === 'localhost';
-
-    if (isLocalhost) {
-      return;
-    }
-
     import('react-facebook-pixel')
       .then((x) => x.default)
       .then((ReactPixel) => {
@@ -104,13 +98,8 @@ function PageContent({ Component, pageProps }: PageContentProps) {
   }, [router.events]);
 
   useEffect(() => {
-    const isLocalhost = window.location.hostname === 'localhost';
-
-    if (isLocalhost) {
-      return;
-    }
-
     const handleRouteChange = (url) => {
+      console.log('url', url);
       gtag.pageview(url);
     };
     router.events.on('routeChangeComplete', handleRouteChange);

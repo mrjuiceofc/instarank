@@ -9,6 +9,7 @@ import pxToRem from '../utils/pxToRem';
 import { Error } from './globalstyles';
 import useAuth from '../hooks/useAuth';
 import useGlobal from '../hooks/useGlobal';
+import * as gtag from '../gtag';
 
 type Props = {
   isOpen: boolean;
@@ -76,6 +77,8 @@ export default function ModalCreateUser({
         localStorage.removeItem('utmSource');
         localStorage.removeItem('utmMedium');
         localStorage.removeItem('utmCampaign');
+
+        gtag.conversion('AW-11069655695/dKZYCN3p84gYEI-Vtp4p');
 
         if (plan === 'free') {
           setIsLoading(false);
