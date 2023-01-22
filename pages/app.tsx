@@ -44,6 +44,7 @@ export default function App({ premiumPlan }: Props) {
   );
   const [posts, setPosts] = useState<InstagramPost[] | null>(null);
   const [inputError, setInputError] = useState('');
+  const [isSorting, setIsSorting] = useState(false);
 
   const route = useRouter();
 
@@ -77,8 +78,12 @@ export default function App({ premiumPlan }: Props) {
         'Aguarde enquanto ordenamos os posts, isso pode demorar até 1 minuto...'
       );
 
+      setIsSorting(true);
+
       const response = await sortPosts(body);
       await refreshUser();
+
+      setIsSorting(false);
 
       if (response.statusCode !== 200) {
         toast.update(id, {
@@ -216,6 +221,7 @@ export default function App({ premiumPlan }: Props) {
                   setInputError('');
                 }
               }}
+              max={new Date().toISOString().split('T')[0]}
             />
             <TextField
               name="untilDate"
@@ -228,9 +234,12 @@ export default function App({ premiumPlan }: Props) {
                   setInputError('');
                 }
               }}
+              max={new Date().toISOString().split('T')[0]}
             />
 
-            <Button type="submit">Ordenar</Button>
+            <Button isDisabled={isSorting} type="submit">
+              Ordenar
+            </Button>
           </FormColumn>
         </Form>
         <PostsWrapper>
