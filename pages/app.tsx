@@ -92,7 +92,13 @@ export default function App({ premiumPlan }: Props) {
 
       if (response.data.posts.length === 0) {
         toast.update(id, {
-          render: 'Nenhum post encontrado',
+          render: `Nenhum ${
+            response.data.params.only === 'reels' ? 'reels' : 'posts'
+          } de ${response.data.user.username} foi encontrado entre ${new Date(
+            response.data.params.fromDate
+          ).toLocaleDateString('pt-BR')} e ${new Date(
+            response.data.params.untilDate
+          ).toLocaleDateString('pt-BR')}`,
           type: 'warning',
           isLoading: false,
           autoClose: 3000,
