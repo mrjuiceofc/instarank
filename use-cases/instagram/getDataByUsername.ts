@@ -58,7 +58,7 @@ export async function getDataByUsername({
       hasMore = data.more_available;
       maxId = data.next_max_id;
 
-      if (!data.user) {
+      if (!user && !data.user) {
         throw new BaseError({
           message: `O usuário ${username} não existe no instagram`,
           requestId,
