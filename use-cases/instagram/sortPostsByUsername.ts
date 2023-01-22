@@ -4,17 +4,8 @@ import prisma from '../../lib/prisma';
 import { InstagramPost, SortPostsByUsernameDTO } from './dto';
 import { getDataByUsername } from './getDataByUsername';
 
-export async function sortPostsByUsername({
-  requestId,
-  userId,
-  username,
-  sortBy,
-  only,
-  fromDate,
-  untilDate,
-  postsLimit,
-}: SortPostsByUsernameDTO) {
-  const isValid = validParams({
+export async function sortPostsByUsername(params: SortPostsByUsernameDTO) {
+  const {
     requestId,
     userId,
     username,
@@ -23,16 +14,7 @@ export async function sortPostsByUsername({
     fromDate,
     untilDate,
     postsLimit,
-  });
-
-  if (!isValid) {
-    throw new BaseError({
-      message: 'Os parâmetros informados são inválidos',
-      requestId,
-      statusCode: 400,
-      errorLocationCode: 'sortPostsByUsername.ts:sortPostsByUsername',
-    });
-  }
+  } = validParams(params);
 
   let user: user;
   try {
@@ -129,7 +111,16 @@ export async function sortPostsByUsername({
 
   return {
     user: ig.user,
-    postAmount,
+    params: {
+      requestId,
+      userId,
+      username,
+      sortBy,
+      only,
+      fromDate,
+      untilDate,
+      postsLimit,
+    },
     posts,
   };
 }
@@ -164,7 +155,7 @@ function validParams({
   fromDate,
   untilDate,
   postsLimit,
-}: SortPostsByUsernameDTO) {
+}: SortPostsByUsernameDTO): SortPostsByUsernameDTO {
   if (!userId)
     throw new BaseError({
       message: 'O id do usuário não foi informado',
@@ -221,29 +212,14 @@ function validParams({
       errorLocationCode: 'sortPostsByUsername.ts:validParams',
     });
 
-  if (fromDate > untilDate)
-    throw new BaseError({
-      message: 'A data inicial não pode ser maior que a data final',
-      requestId,
-      statusCode: 400,
-      errorLocationCode: 'sortPostsByUsername.ts:validParams',
-    });
+  if (fromDate > untilDate) {
+    fromDate = new Date(untilDate);
+    fromDate.setDate(fromDate.getDate() - 7);
+  }
 
-  if (fromDate > new Date())
-    throw new BaseError({
-      message: 'A data inicial não pode ser maior que a data atual',
-      requestId,
-      statusCode: 400,
-      errorLocationCode: 'sortPostsByUsername.ts:validParams',
-    });
+  if (fromDate > new Date()) fromDate = new Date();
 
-  if (untilDate > new Date())
-    throw new BaseError({
-      message: 'A data final não pode ser maior que a data atual',
-      requestId,
-      statusCode: 400,
-      errorLocationCode: 'sortPostsByUsername.ts:validParams',
-    });
+  if (untilDate > new Date()) untilDate = new Date();
 
   const oneMonthAgo = new Date();
   oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
@@ -280,5 +256,14 @@ function validParams({
       errorLocationCode: 'sortPostsByUsername.ts:validParams',
     });
 
-  return true;
+  return {
+    requestId,
+    userId,
+    username,
+    sortBy,
+    only,
+    fromDate,
+    untilDate,
+    postsLimit,
+  };
 }

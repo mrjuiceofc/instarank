@@ -90,17 +90,28 @@ export default function App({ premiumPlan }: Props) {
         return;
       }
 
+      if (response.data.posts.length === 0) {
+        toast.update(id, {
+          render: 'Nenhum post encontrado',
+          type: 'warning',
+          isLoading: false,
+          autoClose: 3000,
+        });
+        return;
+      }
+
       toast.update(id, {
-        render: 'Ordenação concluída',
+        render: `${response.data.posts.length} ${
+          response.data.params.only === 'reels' ? 'reels' : 'posts'
+        } ordenados por ${response.data.params.sortBy} entre ${new Date(
+          response.data.params.fromDate
+        ).toLocaleDateString('pt-BR')} e ${new Date(
+          response.data.params.untilDate
+        ).toLocaleDateString('pt-BR')}`,
         type: 'success',
         isLoading: false,
         autoClose: 3000,
       });
-
-      if (response.data.posts.length === 0) {
-        toast.warning('Não foram encontrados posts para o usuário informado');
-        return;
-      }
 
       setInstagramUser(response.data.user);
       setPosts(response.data.posts);
@@ -265,6 +276,7 @@ const Form = styled.form`
   flex-wrap: wrap;
   gap: ${pxToRem(16)};
   justify-content: center;
+  width: 100%;
 `;
 
 const FormColumn = styled.div`
@@ -273,6 +285,11 @@ const FormColumn = styled.div`
   align-items: center;
   gap: ${pxToRem(15)};
   width: ${pxToRem(300)};
+
+  @media (max-width: 768px) {
+    width: 100%;
+    min-width: ${pxToRem(250)};
+  }
 `;
 
 const ProfileImage = styled.img`
