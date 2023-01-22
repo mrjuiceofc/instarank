@@ -58,6 +58,15 @@ export async function getDataByUsername({
       hasMore = data.more_available;
       maxId = data.next_max_id;
 
+      if (!data.user) {
+        throw new BaseError({
+          message: `O usuário ${username} não existe no instagram`,
+          requestId,
+          statusCode: 404,
+          errorLocationCode: 'instagram.getDataByUsername',
+        });
+      }
+
       if (!user) {
         user = {
           username: data.user.username,
@@ -139,6 +148,11 @@ export async function getDataByUsername({
     } else {
       console.log(error);
     }
+
+    if (error instanceof BaseError) {
+      throw error;
+    }
+
     throw new BaseError({
       message: 'Erro desconhecido ao buscar dados do instagram do usuário',
       requestId,
