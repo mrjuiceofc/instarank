@@ -276,6 +276,7 @@ const Form = styled.form`
   flex-wrap: wrap;
   gap: ${pxToRem(16)};
   justify-content: center;
+  width: 100%;
 `;
 
 const FormColumn = styled.div`
@@ -284,6 +285,11 @@ const FormColumn = styled.div`
   align-items: center;
   gap: ${pxToRem(15)};
   width: ${pxToRem(300)};
+
+  @media (max-width: 768px) {
+    width: 100%;
+    min-width: ${pxToRem(250)};
+  }
 `;
 
 const ProfileImage = styled.img`
