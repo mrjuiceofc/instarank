@@ -45,7 +45,7 @@ export async function sortPostsByUsername(params: SortPostsByUsernameDTO) {
 
   if (user.monthlyLimit < postsLimit) {
     throw new BaseError({
-      message: 'A quantidade de posts informada é maior que o limite mensal',
+      message: `Quantidade de posts solicitada excede o limite mensal do usuário que é ${user.monthlyLimit}`,
       requestId,
       statusCode: 400,
       errorLocationCode:
