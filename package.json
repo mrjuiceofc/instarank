@@ -1,6 +1,6 @@
 {
   "name": "instarank",
-  "description": "Discover your competitor's most engaged post",
+  "description": "Earn up to 10,000 followers per month on Instagram with a subscription",
   "private": true,
   "scripts": {
     "build": "pnpm services:prepare:prod && next build",

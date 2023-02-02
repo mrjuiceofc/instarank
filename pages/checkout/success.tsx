@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
 import { Loading } from '../../lib/components/globalstyles';
-import useAuth from '../../lib/hooks/useAuth';
+import useUser from '../../lib/hooks/useUser';
 import prisma from '../../lib/prisma';
 import pxToRem from '../../lib/utils/pxToRem';
 
@@ -20,7 +20,7 @@ type Props = {
 
 export default function CheckoutSuccess({ plans }: Props) {
   const router = useRouter();
-  const { changePlan, refreshUser } = useAuth();
+  const { changePlan, refreshUser } = useUser();
   const [hasError, setHasError] = useState(false);
   const [paidPlan, setPaidPlan] = useState<plan | null>(null);
 

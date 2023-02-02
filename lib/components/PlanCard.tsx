@@ -18,7 +18,7 @@ export function PlanCard(props: Props) {
     <Wrapper {...props}>
       <WrapperTitles {...props}>
         <Title>{planName}</Title>
-        {planName === 'free' && <p>Veja os resultados sem pagar nada</p>}
+        {planName === 'free' && <p>Ganhe seguidores grátis todos os meses</p>}
         {planName === 'premium' && (
           <p>Experimente o poder de infinitas possibilidades</p>
         )}
@@ -35,7 +35,9 @@ export function PlanCard(props: Props) {
       <WrapperFeatures>
         <Feature>
           <img src={CheckIconImg.src} alt="Incluído" />
-          <p>Ordene até {planMonthlyLimit.toLocaleString('pt-BR')} posts</p>
+          <p>
+            Até {planMonthlyLimit.toLocaleString('pt-BR')} seguidores todo mês
+          </p>
         </Feature>
         {planName === 'premium' && (
           <>
@@ -49,7 +51,7 @@ export function PlanCard(props: Props) {
             </Feature>
             <Feature>
               <img src={CheckIconImg.src} alt="Incluído" />
-              <p>Um passo a frente do concorrente</p>
+              <p>Perfil crescendo todos os meses</p>
             </Feature>
             <Feature>
               <img src={CheckIconImg.src} alt="Incluído" />
@@ -73,7 +75,7 @@ export function PlanCard(props: Props) {
             </Feature>
             <Feature>
               <img src={CheckIconImg.src} alt="Incluído" />
-              <p>Todos os posts do último mês</p>
+              <p>Distribua os seguidores como quiser</p>
             </Feature>
           </>
         )}

@@ -9,7 +9,6 @@ import type { user } from '../../use-cases/users/getUserFromId';
 import axios from '../utils/axios';
 import getStripe from '../get-stripejs.ts';
 import { toast } from 'react-toastify';
-import type { SortPostsByUsernameDTO } from '../../use-cases/instagram/dto';
 
 type AuthData = {
   email: string;
@@ -22,7 +21,7 @@ type CreateUserAuthData = AuthData & {
   utmSource?: string;
 };
 
-interface IAuthProvider {
+interface IUserProvider {
   user: user;
   refreshUser: () => Promise<void>;
   createUser: (data: AuthData) => Promise<any>;
@@ -33,18 +32,19 @@ interface IAuthProvider {
   changePlan: (sessionId: string) => Promise<any>;
   getWarnings: () => Promise<any>;
   readWarning: (warningId: string) => Promise<any>;
-  sortPosts: (data: SortPostsByUsernameDTO) => Promise<any>;
+  getOrders: () => Promise<any>;
+  createOrder: (data: { username: string; amount: number }) => Promise<any>;
   logout: () => void;
   isLoading: boolean;
 }
 
-export const AuthContext = createContext({} as IAuthProvider);
+export const UserContext = createContext({} as IUserProvider);
 
 type ProviderProps = {
   children: ReactNode;
 };
 
-export default function AuthProvider({ children }: ProviderProps) {
+export default function UserProvider({ children }: ProviderProps) {
   const [loggedUser, setLoggedUser] = useState<user | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -266,6 +266,38 @@ export default function AuthProvider({ children }: ProviderProps) {
     }
   }, []);
 
+  const createOrder = useCallback(async ({ username, amount }) => {
+    try {
+      const response = await axios.post('/api/orders', {
+        username,
+        amount,
+      });
+      const data = response.data;
+      return {
+        order: data,
+        statusCode: response.status,
+      };
+    } catch (error) {
+      return error.response.data;
+    }
+  }, []);
+
+  const getOrders = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      const response = await axios.get('/api/orders');
+      const data = response.data;
+      return {
+        orders: data,
+        statusCode: response.status,
+      };
+    } catch (error) {
+      return error.response.data;
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
   const readWarning = useCallback(async (warningId: string) => {
     try {
       setIsLoading(true);
@@ -280,23 +312,8 @@ export default function AuthProvider({ children }: ProviderProps) {
     }
   }, []);
 
-  const sortPosts = useCallback(async (body: SortPostsByUsernameDTO) => {
-    try {
-      const response = await axios.post(`/api/instagram/${body.username}`, {
-        ...body,
-        username: undefined,
-      });
-      return {
-        data: response.data,
-        statusCode: response.status,
-      };
-    } catch (error) {
-      return error.response.data;
-    }
-  }, []);
-
   return (
-    <AuthContext.Provider
+    <UserContext.Provider
       value={{
         user: loggedUser,
         refreshUser: requestUser,
@@ -309,11 +326,12 @@ export default function AuthProvider({ children }: ProviderProps) {
         requestChangePlan,
         changePlan,
         getWarnings,
+        getOrders,
         readWarning,
-        sortPosts,
+        createOrder,
       }}
     >
       {children}
-    </AuthContext.Provider>
+    </UserContext.Provider>
   );
 }

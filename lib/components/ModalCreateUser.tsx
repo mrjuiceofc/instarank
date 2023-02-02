@@ -7,7 +7,7 @@ import { Button } from './Botton';
 import * as yup from 'yup';
 import pxToRem from '../utils/pxToRem';
 import { Error } from './globalstyles';
-import useAuth from '../hooks/useAuth';
+import useUser from '../hooks/useUser';
 import useGlobal from '../hooks/useGlobal';
 import * as gtag from '../gtag';
 
@@ -29,7 +29,7 @@ export default function ModalCreateUser({
 }: Props) {
   const [inputError, setInputError] = useState('');
   const [globalError, setGlobalError] = useState('');
-  const { createUser, requestChangePlan } = useAuth();
+  const { createUser, requestChangePlan } = useUser();
   const [passwordValue, setPasswordValue] = useState('');
   const [emailValue, setEmailValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);

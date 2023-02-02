@@ -47,7 +47,7 @@ export async function handleLimitReset({
   if (limitResetTimestamp < oneMonthAgoTimestamp || forceNow) {
     try {
       console.log(
-        `[handleLimitReset] atualizando limite de ordenações do usuário ${user.id}`
+        `[handleLimitReset] atualizando limite de seguidores do usuário ${user.id}`
       );
       await prisma.user.update({
         where: {
@@ -60,7 +60,7 @@ export async function handleLimitReset({
       });
     } catch (error) {
       throw new BaseError({
-        message: 'Erro desconhecido ao atualizar limite de ordenações',
+        message: 'Erro desconhecido ao atualizar limite de seguidores',
         errorLocationCode:
           'handleLimitReset.ts:handleLimitReset:prisma.user.update',
         requestId,

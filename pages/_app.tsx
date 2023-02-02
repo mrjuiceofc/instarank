@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { ThemeProvider, DefaultTheme } from 'styled-components';
 import GlobalStyle from '../lib/components/globalstyles';
-import AuthProvider from '../lib/context/AuthProvider';
+import UserProvider from '../lib/context/UserProvider';
 import GlobalProvider from '../lib/context/GlobalProvider';
 import useGlobal from '../lib/hooks/useGlobal';
 import pxToRem from '../lib/utils/pxToRem';
@@ -179,13 +179,13 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <>
       <ThemeProvider theme={theme}>
-        <AuthProvider>
+        <UserProvider>
           <GlobalProvider>
             <GlobalStyle />
             <PageContent Component={Component} pageProps={pageProps} />
             <ToastContainer />
           </GlobalProvider>
-        </AuthProvider>
+        </UserProvider>
       </ThemeProvider>
     </>
   );

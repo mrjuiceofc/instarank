@@ -30,7 +30,7 @@ export default class MyDocument extends Document {
           <meta httpEquiv="Content-Type" content="text/html; charset=utf-8" />
           <meta
             name="keywords"
-            content="instagram, posts, curtidas, comentários, engajamento, ferramenta, ordenar, ordenação"
+            content="instagram, posts, seguidores, comprar seguidores"
           />
           <meta name="author" content="Theryston Santos" />
           <meta name="robots" content="index, follow" />

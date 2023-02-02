@@ -1,0 +1,12 @@
+name: order-update-cron
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+jobs:
+  cron:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call update order API route
+        run: |
+          curl --request POST \
+          --url 'https://instarank.com.br/api/orders/check'

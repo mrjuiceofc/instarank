@@ -7,7 +7,7 @@ import { Button } from './Botton';
 import * as yup from 'yup';
 import pxToRem from '../utils/pxToRem';
 import { Error } from './globalstyles';
-import useAuth from '../hooks/useAuth';
+import useUser from '../hooks/useUser';
 import useGlobal from '../hooks/useGlobal';
 
 type Props = {
@@ -23,7 +23,7 @@ const schema = yup.object().shape({
 export default function ModalLogin({ isOpen, onClose: defaultOnClose }: Props) {
   const [inputError, setInputError] = useState('');
   const [globalError, setGlobalError] = useState('');
-  const { login } = useAuth();
+  const { login } = useUser();
   const [passwordValue, setPasswordValue] = useState('');
   const [emailValue, setEmailValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);

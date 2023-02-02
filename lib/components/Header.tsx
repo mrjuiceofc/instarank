@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import styled, { css } from 'styled-components';
-import useAuth from '../hooks/useAuth';
+import useUser from '../hooks/useUser';
 import useGlobal from '../hooks/useGlobal';
 import pxToRem from '../utils/pxToRem';
 import { Button } from './Botton';
@@ -10,7 +10,7 @@ import { useEffect, useState } from 'react';
 
 export function Header() {
   const { openLoginModal } = useGlobal();
-  const { user, isLoading } = useAuth();
+  const { user, isLoading } = useUser();
   const [logoRedirectPath, setLogoRedirectPath] = useState('/');
   const [limitResetDate, setLimitResetDate] = useState<Date | null>(null);
 
@@ -49,15 +49,15 @@ export function Header() {
           <ReactTooltip anchorId="monthly-limit">
             <LimitTooltip>
               <p>
-                Este é o número de postagens que você pode ordenar por mês. Este
-                número será redefinido com base no seu plano a cada 30 dias,
-                isso está previsto para ocorrer em{' '}
+                Este é o número de seguidores que você pode distribuir para quem
+                quiser. Este número será redefinido com base no seu plano a cada
+                30 dias, isso está previsto para ocorrer em{' '}
                 {limitResetDate?.toLocaleDateString('pt-BR')}
               </p>
               {user.plan.name === 'free' && (
                 <p>
-                  Se você quiser aumentar esse limite, você pode fazer uma
-                  assinatura mensal.
+                  Se você quiser aumentar esse número de seguidores, você pode
+                  fazer uma assinatura mensal.
                 </p>
               )}
             </LimitTooltip>

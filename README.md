@@ -1,3 +1,3 @@
 # Instarank
 
-Discover your competitor’s most engaged post. More Information soon
+Earn up to 10,000 followers per month on Instagram with a subscription
