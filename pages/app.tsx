@@ -10,6 +10,7 @@ import * as yup from 'yup';
 import Head from 'next/head';
 import { TextField } from '../lib/components/TextField';
 import { toast } from 'react-toastify';
+import type { order_status } from '@prisma/client';
 
 type Props = {
   premiumPlan: {
@@ -18,6 +19,20 @@ type Props = {
     price: number;
     monthlyLimit: number;
   };
+};
+
+type StatusTranslate = {
+  [key in order_status]: string;
+};
+
+const statusTranslate: StatusTranslate = {
+  PENDING: 'Pendente',
+  PROCESSING: 'Processando',
+  PARTIAL: 'Parcialmente concluída',
+  COMPLETED: 'Concluída',
+  CANCELLED: 'Cancelada',
+  FAILED: 'Falhou',
+  IN_PROGRESS: 'Em progresso',
 };
 
 export default function App({ premiumPlan }: Props) {
@@ -204,7 +219,7 @@ export default function App({ premiumPlan }: Props) {
                     {order.amount.toLocaleString('pt-BR')}
                   </p>
                   <p>
-                    <strong>Status:</strong> {order.status}
+                    <strong>Status:</strong> {statusTranslate[order.status]}
                   </p>
                   <p>
                     <strong>Restante:</strong>{' '}
@@ -290,11 +305,10 @@ const OrderCard = styled.div`
   border-radius: ${pxToRem(16)};
   background-color: ${({ theme }) => theme.colors.tertiaryLight};
   align-items: flex-start;
-  max-width: ${pxToRem(400)};
+  width: ${pxToRem(400)};
 
   @media (max-width: 768px) {
     width: 100% !important;
-    max-width: 100% !important;
   }
 
   p {
