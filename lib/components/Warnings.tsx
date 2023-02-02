@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import useAuth from '../hooks/useAuth';
+import useUser from '../hooks/useUser';
 import type { warning } from '@prisma/client';
 import Modal from './Modal';
 import { SmallTitle } from './globalstyles';
@@ -13,7 +13,7 @@ type LoadingAction = {
 };
 
 export function Warnings() {
-  const { user, getWarnings, readWarning } = useAuth();
+  const { user, getWarnings, readWarning } = useUser();
   const [warnings, setWarnings] = useState<warning[]>([]);
   const [loadingAction, setLoadingAction] = useState<LoadingAction | null>(
     null

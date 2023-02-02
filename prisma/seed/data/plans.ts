@@ -8,16 +8,16 @@ export const plans: Prisma.planCreateInput[] = [
     name: 'premium',
     gatewayId:
       process.env.VERCEL_ENV === 'production'
-        ? 'price_1MMcYxHjyj22ql7XzAnT2s4C'
-        : 'price_1LyLy5Hjyj22ql7XkcJuEYib',
-    monthlyLimit: 3000,
-    price: 999,
+        ? 'price_1MX0xzHjyj22ql7XWTq9OxBt'
+        : 'price_1MVykWHjyj22ql7XKhe44ulX',
+    monthlyLimit: 10000,
+    price: 1599,
     requireCard: true,
   },
   {
     id: '161d1cc4-7eab-472f-a110-d677a1b0aca3',
     name: 'free',
-    monthlyLimit: 10,
+    monthlyLimit: 50,
     requireCard: false,
     price: 0,
   },

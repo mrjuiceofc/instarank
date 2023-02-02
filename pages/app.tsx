@@ -1,22 +1,15 @@
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useState } from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { Button } from '../lib/components/Botton';
-import useAuth from '../lib/hooks/useAuth';
+import useUser from '../lib/hooks/useUser';
 import prisma from '../lib/prisma';
 import pxToRem from '../lib/utils/pxToRem';
-import type {
-  InstagramPost,
-  InstagramUser,
-  SortPostsByUsernameDTO,
-} from '../use-cases/instagram/dto';
-import DefaultPersonImage from '../assets/person.jpg';
-import { TextField } from '../lib/components/TextField';
-import { SelectInput } from '../lib/components/SelectInput';
+
 import * as yup from 'yup';
-import { toast } from 'react-toastify';
-import { PostCard } from '../lib/components/PostCard';
 import Head from 'next/head';
+import { TextField } from '../lib/components/TextField';
+import { toast } from 'react-toastify';
 
 type Props = {
   premiumPlan: {
@@ -27,24 +20,34 @@ type Props = {
   };
 };
 
-const schema = yup.object().shape({
-  username: yup.string().required(),
-  postsLimit: yup.number().required(),
-  sortBy: yup.string().required(),
-  only: yup.string().required(),
-  fromDate: yup.date().required(),
-  untilDate: yup.date().required(),
-});
-
 export default function App({ premiumPlan }: Props) {
-  const { user, isLoading, requestChangePlan, sortPosts, refreshUser } =
-    useAuth();
-  const [instagramUser, setInstagramUser] = useState<InstagramUser | null>(
-    null
+  const {
+    user,
+    isLoading,
+    requestChangePlan,
+    getOrders,
+    createOrder,
+    refreshUser,
+  } = useUser();
+  const [orders, setOrders] = useState<any[]>([]);
+  const [isLoadingOrders, setIsLoadingOrders] = useState(false);
+  const [inputError, setInputError] = useState({
+    username: '',
+    amount: '',
+  });
+  const [schema, setSchema] = useState<any>(
+    yup.object().shape({
+      amount: yup
+        .number()
+        .min(10, 'Quantidade deve ser no mínimo 10')
+        .required('Quantidade é obrigatória'),
+      username: yup
+        .string()
+        .min(3, 'Usuário deve ter no mínimo 3 caracteres')
+        .max(30, 'Usuário deve ter no máximo 30 caracteres')
+        .required('Usuário é obrigatório'),
+    })
   );
-  const [posts, setPosts] = useState<InstagramPost[] | null>(null);
-  const [inputError, setInputError] = useState('');
-  const [isSorting, setIsSorting] = useState(false);
 
   const route = useRouter();
 
@@ -52,83 +55,86 @@ export default function App({ premiumPlan }: Props) {
     await requestChangePlan(premiumPlan.name);
   }, [premiumPlan]);
 
+  const getOrdersList = useCallback(async () => {
+    const response = await getOrders();
+
+    if (response.statusCode !== 200) {
+      toast.error(response.message);
+      return;
+    }
+
+    setOrders(response.orders);
+  }, []);
+
+  const onSubmit = useCallback(
+    async (event: React.FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
+
+      const body = new FormData(event.currentTarget);
+      const data = Object.fromEntries(body.entries());
+
+      try {
+        await schema.validate({
+          username: data.username,
+          amount: Number(data.amount),
+        });
+      } catch (error) {
+        setInputError({
+          username: error.path === 'username' ? error.message : '',
+          amount: error.path === 'amount' ? error.message : '',
+        });
+        return;
+      }
+
+      setIsLoadingOrders(true);
+      const response = await createOrder(data as any);
+      await refreshUser();
+      await getOrdersList();
+      setIsLoadingOrders(false);
+
+      if (response.statusCode !== 200) {
+        toast.error(response.message);
+        return;
+      }
+
+      toast.success('Pedido enviado com sucesso!');
+    },
+    [schema]
+  );
+
   useEffect(() => {
     if (!user && !isLoading) {
       route.push('/');
     }
   }, [user, isLoading]);
 
-  const onSubmitSort = useCallback(
-    async (event: React.FormEvent<HTMLFormElement>) => {
-      event.preventDefault();
-
-      const body: SortPostsByUsernameDTO = Object.fromEntries(
-        new FormData(event.currentTarget).entries()
-      ) as any;
-
-      body.username = body.username.replace('@', '');
-
-      try {
-        await schema.validate(body);
-      } catch (error) {
-        setInputError(error.path);
-        return;
-      }
-      const id = toast.loading(
-        'Aguarde enquanto ordenamos os posts, isso pode demorar até 1 minuto...'
+  useEffect(() => {
+    if (user) {
+      setSchema(
+        yup.object().shape({
+          amount: yup
+            .number()
+            .min(10, 'Quantidade deve ser no mínimo 10')
+            .max(
+              user.monthlyLimit,
+              `O seu limite até o fim do mês é de ${user.monthlyLimit.toLocaleString(
+                'pt-BR'
+              )} seguidores`
+            )
+            .required('Quantidade é obrigatória'),
+          username: yup
+            .string()
+            .min(3, 'Usuário deve ter no mínimo 3 caracteres')
+            .max(30, 'Usuário deve ter no máximo 30 caracteres')
+            .required('Usuário é obrigatório'),
+        })
       );
+    }
+  }, [user]);
 
-      setIsSorting(true);
-
-      const response = await sortPosts(body);
-      await refreshUser();
-
-      setIsSorting(false);
-
-      if (response.statusCode !== 200) {
-        toast.update(id, {
-          render: response.message,
-          type: 'error',
-          isLoading: false,
-          autoClose: 3000,
-        });
-        return;
-      }
-
-      if (response.data.posts.length === 0) {
-        toast.update(id, {
-          render: `Sem ${
-            response.data.params.only === 'reels' ? 'reels' : 'posts'
-          } de ${response.data.user.username} entre ${new Date(
-            response.data.params.fromDate
-          ).toLocaleDateString('pt-BR')} e ${new Date(
-            response.data.params.untilDate
-          ).toLocaleDateString('pt-BR')}`,
-          type: 'warning',
-          isLoading: false,
-          autoClose: 3000,
-        });
-        return;
-      }
-
-      toast.update(id, {
-        render: `${response.data.posts.length} ${
-          response.data.params.only === 'reels' ? 'reels' : 'posts'
-        } ordenados por ${response.data.params.sortBy} entre ${new Date(
-          response.data.params.fromDate
-        ).toLocaleDateString('pt-BR')} e ${new Date(
-          response.data.params.untilDate
-        ).toLocaleDateString('pt-BR')}`,
-        type: 'success',
-        isLoading: false,
-        autoClose: 3000,
-      });
-
-      setInstagramUser(response.data.user);
-      setPosts(response.data.posts);
-    },
-    []
-  );
+  useEffect(() => {
+    getOrdersList();
+  }, [getOrdersList]);
 
   return (
     <div>
@@ -136,130 +142,93 @@ export default function App({ premiumPlan }: Props) {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta
           name="description"
-          content="Esta ferramenta ordena os posts de uma conta do Instagram em ordem de curtidas ou comentários para analisar quais publicações estão tendo maior engajamento dos usuários"
+          content="Aumente sua base de seguidores no Instagram com nossa ferramenta de seguidores, escolha a quantidade desejada sem limitações e deixe que cuidemos disso por você. Experimente agora e veja a diferença na sua presença online!"
         />
         <title>
-          Descubra o segredo do seu concorrente no Instagram | Instarank
+          10 mil seguidores extras todo mês no Instagram | Instarank
         </title>
       </Head>
       <Wrapper>
-        <Form onSubmit={onSubmitSort}>
-          <FormColumn>
-            <ProfileImage
-              src={instagramUser?.profileImage || DefaultPersonImage.src}
-            />
-            <TextField
-              placeholder="Adicione o @ do usuário"
-              label="Nome de usuário"
-              name="username"
-              error={
-                inputError === 'username' && 'O nome de usuário é inválido'
-              }
-              onChange={async () => {
-                if (inputError === 'username') {
-                  setInputError('');
-                }
-              }}
-            />
-            <TextField
-              placeholder="Quantos posts deseja ordenar?"
-              type="number"
-              name="postsLimit"
-              label="Quantidade de posts"
-              error={
-                inputError === 'postsLimit' &&
-                'A quantidade de posts é inválida'
-              }
-              onChange={async () => {
-                if (inputError === 'postsLimit') {
-                  setInputError('');
-                }
-              }}
-            />
-          </FormColumn>
-          <FormColumn>
-            <SelectInput
-              placeholder="Selecione o tipo de ordenação"
-              label="Tipo de ordenação"
-              name="sortBy"
-              error={
-                inputError === 'sortBy' && 'O tipo de ordenação é inválido'
-              }
-              onChange={async () => {
-                if (inputError === 'sortBy') {
-                  setInputError('');
-                }
-              }}
-            >
-              <option value="likes">Likes</option>
-              <option value="date">Data</option>
-              <option value="comments">Comentários</option>
-            </SelectInput>
-            <SelectInput
-              name="only"
-              placeholder="Considere apenas"
-              label="Considerar apenas"
-              error={inputError === 'only' && 'O tipo de post é inválido'}
-              onChange={async () => {
-                if (inputError === 'only') {
-                  setInputError('');
-                }
-              }}
-            >
-              <option value="all">Todos</option>
-              <option value="posts">Posts</option>
-              <option value="reels">Reels</option>
-            </SelectInput>
-            <TextField
-              name="fromDate"
-              label="A partir da data"
-              type="date"
-              placeholder="A partir de qual data"
-              error={inputError === 'fromDate' && 'A data inicial é inválida'}
-              onChange={async () => {
-                if (inputError === 'fromDate') {
-                  setInputError('');
-                }
-              }}
-              max={new Date().toISOString().split('T')[0]}
-            />
-            <TextField
-              name="untilDate"
-              label="Até a data"
-              type="date"
-              placeholder="Até qual data você deseja ordenar"
-              error={inputError === 'untilDate' && 'A data final é inválida'}
-              onChange={async () => {
-                if (inputError === 'untilDate') {
-                  setInputError('');
-                }
-              }}
-              max={new Date().toISOString().split('T')[0]}
-            />
-
-            <Button isDisabled={isSorting} type="submit">
-              Ordenar
-            </Button>
-          </FormColumn>
+        <Form onSubmit={onSubmit}>
+          <TextField
+            name="username"
+            label="Usuário"
+            placeholder="Digite o nome de usuário"
+            type="text"
+            error={inputError.username}
+            onChange={() => {
+              setInputError((old) => ({
+                ...old,
+                username: '',
+              }));
+            }}
+          />
+          <TextField
+            name="amount"
+            label="Quantidade"
+            placeholder="Digite a quantidade de seguidores"
+            type="number"
+            error={inputError.amount}
+            onChange={() => {
+              setInputError((old) => ({
+                ...old,
+                amount: '',
+              }));
+            }}
+          />
+          <Button
+            isLoading={isLoadingOrders}
+            disabled={isLoadingOrders}
+            type="submit"
+          >
+            Enviar seguidores
+          </Button>
         </Form>
-        <PostsWrapper>
-          {!posts && (
+        <MyOrders>
+          <h2>Meus pedidos</h2>
+          {orders.length === 0 && (
             <p>
-              Preencha o formulário acima para ordenar os posts de um usuário do
-              Instagram
+              Você ainda não fez nenhum pedido, faça um pedido de seguidores
+              agora!
             </p>
           )}
-          {posts && posts.length === 0 && (
-            <p>Não foram encontrados posts para o usuário informado</p>
+          {orders.length > 0 && (
+            <WrapperOrders>
+              {orders.map((order) => (
+                <OrderCard key={order.id}>
+                  <p>
+                    <strong>Usuário:</strong> {order.username}
+                  </p>
+                  <p>
+                    <strong>Quantidade:</strong>{' '}
+                    {order.amount.toLocaleString('pt-BR')}
+                  </p>
+                  <p>
+                    <strong>Status:</strong> {order.status}
+                  </p>
+                  <p>
+                    <strong>Restante:</strong>{' '}
+                    {order.remains.toLocaleString('pt-BR')}
+                  </p>
+                  <p>
+                    <strong>Criado em:</strong>{' '}
+                    {new Date(order.createdAt).toLocaleDateString('pt-BR', {
+                      day: '2-digit',
+                      month: '2-digit',
+                      year: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit',
+                    })}
+                  </p>
+                </OrderCard>
+              ))}
+            </WrapperOrders>
           )}
-          {posts &&
-            posts.length > 0 &&
-            posts.map((post) => <PostCard post={post} key={post.igUrl} />)}
-        </PostsWrapper>
-
+        </MyOrders>
         {user && user.plan.name === 'free' && (
           <FloatButton isLoading={isLoading} onClick={() => onChangePlan()}>
-            Ordene até {premiumPlan.monthlyLimit.toLocaleString('pt-BR')} posts
+            ganhe {premiumPlan.monthlyLimit.toLocaleString('pt-BR')} seguidores
+            todos os meses
           </FloatButton>
         )}
       </Wrapper>
@@ -274,16 +243,26 @@ const Wrapper = styled.div`
   width: 100%;
   min-height: 100vh;
   text-align: center;
-  padding: ${pxToRem(38)};
+  padding: ${pxToRem(50)};
   gap: ${pxToRem(38)};
+
+  @media (max-width: 768px) {
+    padding: ${pxToRem(10)};
+    margin-top: ${pxToRem(38)};
+  }
+`;
+
+const MyOrders = styled.section`
+  width: 100%;
 `;
 
 const FloatButton = styled(Button)`
   position: fixed;
-  max-width: ${pxToRem(211)};
-  left: ${pxToRem(6)};
-  bottom: ${pxToRem(6)};
-  filter: drop-shadow(4px 4px 4px rgba(0, 0, 0, 0.25));
+  bottom: 0;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  border-top-left-radius: ${pxToRem(16)};
+  border-top-right-radius: ${pxToRem(16)};
 `;
 
 const Form = styled.form`
@@ -292,35 +271,35 @@ const Form = styled.form`
   gap: ${pxToRem(16)};
   justify-content: center;
   width: 100%;
+  max-width: ${pxToRem(640)};
 `;
 
-const FormColumn = styled.div`
+const WrapperOrders = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: ${pxToRem(16)};
+  justify-content: center;
+  width: 100% !important;
+`;
+
+const OrderCard = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: ${pxToRem(15)};
-  width: ${pxToRem(300)};
+  gap: ${pxToRem(16)};
+  padding: ${pxToRem(16)};
+  border-radius: ${pxToRem(16)};
+  background-color: ${({ theme }) => theme.colors.tertiaryLight};
+  align-items: flex-start;
+  max-width: ${pxToRem(400)};
 
   @media (max-width: 768px) {
-    width: 100%;
-    min-width: ${pxToRem(250)};
+    width: 100% !important;
+    max-width: 100% !important;
   }
-`;
 
-const ProfileImage = styled.img`
-  width: ${pxToRem(142)};
-  height: ${pxToRem(142)};
-  border-radius: 50%;
-  border: 1px solid ${({ theme }) => theme.colors.tertiary};
-`;
-
-const PostsWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: ${pxToRem(15)};
-  width: 100%;
-  flex-wrap: wrap;
+  p {
+    margin: 0;
+  }
 `;
 
 export async function getStaticProps() {

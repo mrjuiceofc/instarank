@@ -2,13 +2,13 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Loading } from '../lib/components/globalstyles';
-import useAuth from '../lib/hooks/useAuth';
+import useUser from '../lib/hooks/useUser';
 import { toast } from 'react-toastify';
 
 export default function PasswordReset() {
   const [token, setToken] = useState<undefined | string>();
   const router = useRouter();
-  const { saveResetPassword } = useAuth();
+  const { saveResetPassword } = useUser();
 
   useEffect(() => {
     const { token } = router.query;

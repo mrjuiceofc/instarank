@@ -9,7 +9,7 @@ import useGlobal from '../lib/hooks/useGlobal';
 import pxToRem from '../lib/utils/pxToRem';
 import prisma from '../lib/prisma';
 import { useEffect } from 'react';
-import useAuth from '../lib/hooks/useAuth';
+import useUser from '../lib/hooks/useUser';
 import { useRouter } from 'next/router';
 import { feedbacks } from '../lib/mocks/feedbacks';
 
@@ -24,7 +24,7 @@ type Props = {
 
 export default function Home({ plans }: Props) {
   const { openCreateUserModal } = useGlobal();
-  const { user, isLoading } = useAuth();
+  const { user, isLoading } = useUser();
   const route = useRouter();
 
   useEffect(() => {
@@ -39,20 +39,21 @@ export default function Home({ plans }: Props) {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta
           name="description"
-          content="Esta ferramenta ordena os posts de uma conta do Instagram em ordem de curtidas ou comentários para analisar quais publicações estão tendo maior engajamento dos usuários"
+          content="Aumente sua base de seguidores no Instagram com nossa ferramenta de seguidores, escolha a quantidade desejada sem limitações e deixe que cuidemos disso por você. Experimente agora e veja a diferença na sua presença online!"
         />
         <title>
-          Descubra o segredo do seu concorrente no Instagram | Instarank
+          10 mil seguidores extras todo mês no Instagram | Instarank
         </title>
       </Head>
       <Wrapper>
         <WrapperAbout>
           <WrapperText>
-            <Title>Descubra o segredo do seu concorrente no Instagram</Title>
+            <Title>10 mil seguidores extras todo mês no Instagram</Title>
             <StyledParagraph>
-              Esta ferramenta ordena os posts de uma conta do Instagram em ordem
-              de curtidas ou comentários para analisar quais publicações estão
-              tendo maior engajamento dos usuários.
+              Aumente sua base de seguidores no Instagram com nossa ferramenta
+              de seguidores, escolha a quantidade desejada sem limitações e
+              deixe que cuidemos disso por você. Experimente agora e veja a
+              diferença na sua presença online!
             </StyledParagraph>
             <WrapperButton>
               <Button onClick={() => openCreateUserModal('free')}>

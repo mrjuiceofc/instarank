@@ -8,24 +8,24 @@ export const feedbacks = [
     name: 'Mateus',
     imgSrc: MateusImg.src,
     message:
-      'Eu amei usar essa ferramenta! Ela me mostrou quais postagens estavam obtendo maior engajamento e me deu ideias criativas para meus próprios conteúdos.',
+      'Eu assinei há 2 meses e já posso dizer que valeu a pena. Tenho mais de 20 mil seguidores agora e isso realmente ajudou a aumentar minha presença no Instagram.',
   },
   {
     name: 'Lucas',
     imgSrc: LucasImg.src,
     message:
-      'O instarank me ajudou muito a entender o que está funcionando bem para meus concorrentes e como posso aplicar isso em minhas próprias postagens.',
+      'Esta ferramenta é incrível! Não só eu tenho 10 mil seguidores todos os meses, mas também posso escolher como vou distribuir esses seguidores para minhas contas.',
   },
   {
     name: 'Adriana',
     imgSrc: AdrianaImg.src,
     message:
-      'Antes eu tinha dificuldade para medir o sucesso de minhas postagens, mas o instarank me ajudou a entender o que estava funcionando e a aumentar meu engajamento.',
+      'Eu já experimentei muitas outras ferramentas, mas esta é definitivamente a melhor. A equipe de suporte também é muito útil e sempre me ajuda quando preciso.',
   },
   {
     name: 'Thiago',
     imgSrc: ThiagoImg.src,
     message:
-      'Eu recomendo o instarank para qualquer pessoa que deseja entender melhor o engajamento do Instagram e aumentar seus próprios resultados.',
+      'Eu estou muito satisfeito com a minha assinatura. 10 mil seguidores todos os meses é uma grande vantagem e me ajudou a alcançar mais pessoas e crescer minha conta.',
   },
 ];

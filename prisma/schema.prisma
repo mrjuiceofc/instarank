@@ -7,6 +7,16 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum order_status {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  PARTIAL
+  PROCESSING
+  CANCELLED
+  FAILED
+}
+
 model plan {
   id              String      @id @default(uuid())
   name            String      @unique
@@ -42,7 +52,7 @@ model user {
 
   passwordResetAttempts  passwordResetAttempt[]
   warnings               warning[]
-  ordinances             ordinance[]
+  orders                 order[]
 
   plan            plan        @relation(fields: [planId], references: [id])
 
@@ -80,20 +90,20 @@ model warning {
   @@map("warnings")
 }
 
-model ordinance {
+model order {
   id                  String      @id @default(uuid())
   userId              String      @map("user_id")
-  instagramUsername   String      @map("instagram_username")
-  sortBy              String      @map("sort_by")
-  onlyType            String      @map("only_type")
-  fromDate            DateTime    @map("from_date")
-  untilDate           DateTime    @map("until_date")
-  postLimit           Int         @map("post_limit")
+  username            String
+  amount              Int
+  remains             Int
+  smmOrderId          String      @map("smm_order_id")
+  smmServiceId        String      @map("smm_service_id")
+  status              order_status
   createdAt           DateTime    @default(now()) @map("created_at")
   updatedAt           DateTime    @updatedAt @map("updated_at")
   deletedAt           DateTime?   @map("deleted_at")
 
   user                user        @relation(fields: [userId], references: [id])
 
-  @@map("ordinances")
+  @@map("orders")
 }

@@ -109,6 +109,10 @@ export default function TermsOfUse() {
           consentimento prévio por escrito da instarank.
         </li>
         <li>
+          <b>Queda de seguidores:</b> A instarank não se responsabiliza por
+          queda de seguidores ou possivelmente banimento da conta.
+        </li>
+        <li>
           <b>Integridade dos termos:</b> Se qualquer cláusula desses termos e
           condições for considerada inválida ou inexequível, essa cláusula será
           removida e as demais cláusulas permanecerão válidas e exequíveis.

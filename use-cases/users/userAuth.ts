@@ -74,7 +74,7 @@ export async function userAuth({
     });
   } catch (error) {
     throw new BaseError({
-      message: 'Erro desconhecido ao atualizar limite de ordenações do usuário',
+      message: 'Erro desconhecido ao atualizar limite de seguidores do usuário',
       errorLocationCode: 'userAuth.ts:userAuth:handleLimitReset',
       requestId,
       statusCode: 500,

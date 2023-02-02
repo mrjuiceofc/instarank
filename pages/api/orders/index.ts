@@ -1,7 +1,8 @@
 import nextConnect from 'next-connect';
 import * as requestHandler from '../../../use-cases/requestHandler';
 import { NextApiResponse, NextApiRequest } from 'next';
-import { sortPostsByUsername } from '../../../use-cases/instagram/sortPostsByUsername';
+import { orderFollowers } from '../../../use-cases/orders/orderFollowers';
+import { findOrdersByUserId } from '../../../use-cases/orders/findOrdersByUserId';
 
 export default nextConnect({
   attachParams: true,
@@ -12,27 +13,27 @@ export default nextConnect({
   .use(requestHandler.logRequest)
   .use(requestHandler.authRequire)
   .use(requestHandler.handleLimit)
-  .post(postHandler);
+  .post(postHandler)
+  .get(getHandler);
 
 async function postHandler(request: NextApiRequest, response: NextApiResponse) {
-  const username = request.query.username as string;
-  const { sortBy, only, fromDate, untilDate, postsLimit } = request.body;
+  const { username, amount } = request.body;
 
-  const user = await sortPostsByUsername({
+  const order = await orderFollowers({
     requestId: request.context.requestId,
     userId: request.context.userId,
     username,
-    sortBy,
-    only,
-    fromDate: new Date(fromDate),
-    untilDate: new Date(untilDate),
-    postsLimit: Number(postsLimit),
+    amount: Number(amount),
   });
 
-  response.setHeader(
-    'Cache-Control',
-    'public, s-maxage=86400, stale-while-revalidate'
-  );
+  return response.status(200).json(order);
+}
 
-  return response.status(200).json(user);
+async function getHandler(request: NextApiRequest, response: NextApiResponse) {
+  const orders = await findOrdersByUserId({
+    requestId: request.context.requestId,
+    userId: request.context.userId,
+  });
+
+  return response.status(200).json(orders);
 }

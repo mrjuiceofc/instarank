@@ -1,6 +1,6 @@
 import { Button } from '../Botton';
 import { Error } from '../globalstyles';
-import useAuth from '../../hooks/useAuth';
+import useUser from '../../hooks/useUser';
 import useGlobal from '../../hooks/useGlobal';
 import { useCallback } from 'react';
 import { TextField } from '../TextField';
@@ -15,7 +15,7 @@ const schema = yup.object().shape({
 });
 
 export default function ResetStep() {
-  const { resetPassword } = useAuth();
+  const { resetPassword } = useUser();
   const { openLoginModal } = useGlobal();
   const {
     setIsLoading,
