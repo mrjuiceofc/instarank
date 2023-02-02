@@ -130,7 +130,7 @@ export default function ModalLogin({ isOpen, onClose: defaultOnClose }: Props) {
         <Line />
         <CreateAccount
           onClick={() => {
-            openCreateUserModal('premium');
+            openCreateUserModal('free');
             onClose();
           }}
         >
