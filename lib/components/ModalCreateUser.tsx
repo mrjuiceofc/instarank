@@ -29,12 +29,11 @@ export default function ModalCreateUser({
 }: Props) {
   const [inputError, setInputError] = useState('');
   const [globalError, setGlobalError] = useState('');
-  const { createUser, requestChangePlan } = useUser();
+  const { createUser, requestChangePlan, user } = useUser();
   const [passwordValue, setPasswordValue] = useState('');
   const [emailValue, setEmailValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { openLoginModal } = useGlobal();
-  const { user } = useAuth();
 
   const onClose = useCallback(() => {
     setInputError('');
