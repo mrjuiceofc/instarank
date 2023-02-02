@@ -23,12 +23,11 @@ const schema = yup.object().shape({
 export default function ModalLogin({ isOpen, onClose: defaultOnClose }: Props) {
   const [inputError, setInputError] = useState('');
   const [globalError, setGlobalError] = useState('');
-  const { login } = useUser();
+  const { login, user } = useUser();
   const [passwordValue, setPasswordValue] = useState('');
   const [emailValue, setEmailValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { openCreateUserModal, openResetPasswordModal } = useGlobal();
-  const { user } = useAuth();
 
   const onClose = useCallback(() => {
     setInputError('');
