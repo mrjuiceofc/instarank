@@ -33,8 +33,8 @@ export function PasswordResetTemplate({ url }: Props) {
 
 const Container = styled(Group)`
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  padding: 20px 100px;
   background-color: #f7f7f7;
+  padding: 10px;
 `;
 
 const Body = styled(Group)`

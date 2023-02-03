@@ -1,4 +1,4 @@
-import { order as OrderType, plan, user } from '@prisma/client';
+import { order as OrderType, plan, suspect, user } from '@prisma/client';
 import axios from 'axios';
 import { BaseError } from '../../errors';
 import prisma from '../../lib/prisma';
@@ -36,6 +36,8 @@ export async function orderFollowers({
     });
   }
 
+  username = username.replace('@', '').toLowerCase().trim();
+
   if (!userId || userId.length < 1) {
     throw new BaseError({
       errorLocationCode: 'orderFollowers:userId',
@@ -50,6 +52,32 @@ export async function orderFollowers({
       errorLocationCode: 'orderFollowers:process.env.SMMENGINEER_API_KEY',
       message: 'Chave da API do SMMEngineer não encontrada',
       statusCode: 500,
+      requestId,
+    });
+  }
+
+  let suspect: suspect;
+  try {
+    suspect = await prisma.suspect.findFirst({
+      where: {
+        username,
+      },
+    });
+  } catch (error) {
+    throw new BaseError({
+      errorLocationCode: 'orderFollowers:prisma.suspect.findUnique',
+      message: 'Erro desconhecido ao buscar suspeito',
+      statusCode: 500,
+      requestId,
+    });
+  }
+
+  if (suspect) {
+    throw new BaseError({
+      errorLocationCode: 'orderFollowers:prisma.suspect.findUnique',
+      message:
+        'Foi detectado uma ação suspeita em sua conta. Entre em contato com o suporte para mais informações.',
+      statusCode: 400,
       requestId,
     });
   }
