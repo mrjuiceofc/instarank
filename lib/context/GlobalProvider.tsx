@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router';
 import React, { ReactNode, createContext, useState, useCallback } from 'react';
 import ModalCreateUser from '../components/ModalCreateUser';
 import ModalLogin from '../components/ModalLogin';
@@ -21,16 +22,36 @@ export default function GlobalProvider({ children }: ProviderProps) {
   const [isOpenResetPasswordModal, setIsOpenResetPasswordModal] =
     useState(false);
   const [createUserPlan, setCreateUserPlan] = useState('free');
+  const router = useRouter();
 
-  const openCreateUserModal = useCallback((plan: string) => {
-    setCreateUserPlan(plan);
-    setIsOpenCreateUserModal(true);
-  }, []);
+  const openCreateUserModal = useCallback(
+    (plan: string) => {
+      const token = localStorage.getItem('token');
+
+      if (token) {
+        router.push('/app');
+        return;
+      }
+
+      setCreateUserPlan(plan);
+      setIsOpenCreateUserModal(true);
+    },
+    [router]
+  );
 
   return (
     <GlobalContext.Provider
       value={{
-        openLoginModal: () => setIsOpenLoginModal(true),
+        openLoginModal: () => {
+          const token = localStorage.getItem('token');
+
+          if (token) {
+            router.push('/app');
+            return;
+          }
+
+          setIsOpenLoginModal(true);
+        },
         openCreateUserModal,
         openResetPasswordModal: () => setIsOpenResetPasswordModal(true),
       }}

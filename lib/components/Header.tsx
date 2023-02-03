@@ -7,18 +7,13 @@ import { Button } from './Botton';
 import { Logo } from './Logo';
 import { Tooltip as ReactTooltip } from 'react-tooltip';
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 
 export function Header() {
   const { openLoginModal } = useGlobal();
-  const { user, isLoading } = useUser();
-  const [logoRedirectPath, setLogoRedirectPath] = useState('/');
+  const { user } = useUser();
   const [limitResetDate, setLimitResetDate] = useState<Date | null>(null);
-
-  useEffect(() => {
-    if (user && !isLoading) {
-      setLogoRedirectPath('/app');
-    }
-  }, [user, isLoading]);
+  const router = useRouter();
 
   useEffect(() => {
     if (!user) return;
@@ -32,16 +27,24 @@ export function Header() {
 
   return (
     <Wrapper>
-      <Link href={logoRedirectPath}>
+      <Link href="/">
         <a title="Instarank">
           <Logo showText={false} />
         </a>
       </Link>
-      {!user ? (
+      {!user && (
         <LoginButton title="Fazer login" onClick={() => openLoginModal()}>
           Entrar
         </LoginButton>
-      ) : (
+      )}
+      {user && router.pathname === '/' && (
+        <Link href="/app">
+          <a title="Ir para o painel">
+            <LoginButton title="Ir para o painel">Painel</LoginButton>
+          </a>
+        </Link>
+      )}
+      {user && router.pathname !== '/' && (
         <>
           <LimitParagraph id="monthly-limit">
             Restante: {user.monthlyLimit.toLocaleString('pt-BR')}

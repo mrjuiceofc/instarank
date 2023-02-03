@@ -27,12 +27,6 @@ export default function Home({ plans }: Props) {
   const { user, isLoading } = useUser();
   const route = useRouter();
 
-  useEffect(() => {
-    if (user && !isLoading) {
-      route.push('/app');
-    }
-  }, [user, isLoading]);
-
   return (
     <div>
       <Head>
