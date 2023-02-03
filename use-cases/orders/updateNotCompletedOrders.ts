@@ -1,8 +1,9 @@
-import { order } from '@prisma/client';
+import { order, user } from '@prisma/client';
 import axios from 'axios';
 import { BaseError } from '../../errors';
 import prisma from '../../lib/prisma';
 import { smmTranslateStatus } from '../../lib/utils/smmTranslateStatus';
+import { sendEmail } from '../sendEmail';
 import { SMMOrder, UpdateNotCompletedOrdersDTO } from './dto';
 
 export async function updateNotCompletedOrders({
@@ -34,6 +35,21 @@ export async function updateNotCompletedOrders({
   }
 
   for (const order of orders) {
+    let user: user;
+    try {
+      user = await prisma.user.findUnique({
+        where: {
+          id: order.userId,
+        },
+      });
+    } catch (error) {
+      continue;
+    }
+
+    if (!user) {
+      continue;
+    }
+
     let smmOrder: SMMOrder;
     try {
       const response = await axios.get('https://smmengineer.com/api/v2', {
@@ -63,6 +79,20 @@ export async function updateNotCompletedOrders({
 
     const newStatus = smmTranslateStatus[smmOrder.status];
 
+    try {
+      await prisma.order.update({
+        where: {
+          id: order.id,
+        },
+        data: {
+          remains: smmOrder.remains,
+          status: newStatus,
+        },
+      });
+    } catch (error) {
+      continue;
+    }
+
     if (
       ['COMPLETED', 'PARTIAL', 'CANCELLED'].includes(newStatus) &&
       smmOrder.remains
@@ -83,18 +113,23 @@ export async function updateNotCompletedOrders({
       }
     }
 
-    try {
-      await prisma.order.update({
-        where: {
-          id: order.id,
-        },
-        data: {
-          remains: smmOrder.remains,
-          status: newStatus,
-        },
-      });
-    } catch (error) {
-      continue;
+    if (['COMPLETED', 'PARTIAL'].includes(newStatus)) {
+      try {
+        await sendEmail({
+          requestId,
+          subject: `Seu pedido de ${order.amount} seguidores para o Instagram ${order.username} foi concluída`,
+          to: user.email,
+          template: 'CompletedOrder',
+          variables: {
+            username: order.username,
+            actionUrl: `${process.env.FRONTEND_URL}/app?utm_source=system+emails&utm_medium=email&utm_campaign=notify-order`,
+            amount: String(order.amount),
+            remains: String(smmOrder.remains),
+          },
+        });
+      } catch (error) {
+        continue;
+      }
     }
 
     updatedOrderIds.push(order.id);

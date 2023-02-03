@@ -1,7 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@jsx-mail/cli': ^1.2.2
+  '@jsx-mail/cli': 1.2.3
   '@jsx-mail/components': ^1.0.3
   '@prisma/client': ^4.5.0
   '@stripe/stripe-js': ^1.46.0
@@ -64,7 +64,7 @@ dependencies:
   yup: 0.32.11
 
 devDependencies:
-  '@jsx-mail/cli': 1.2.2_rp5f2pyo4ejrzqsmkroqwhtvhm
+  '@jsx-mail/cli': 1.2.3_rp5f2pyo4ejrzqsmkroqwhtvhm
   '@types/bcrypt': 5.0.0
   '@types/jsonwebtoken': 8.5.9
   '@types/node': 18.11.7
@@ -551,8 +551,8 @@ packages:
       '@jridgewell/sourcemap-codec': 1.4.14
     dev: true
 
-  /@jsx-mail/cli/1.2.2_rp5f2pyo4ejrzqsmkroqwhtvhm:
-    resolution: {integrity: sha512-taXFPtTyZoQYhAXXQlBLKirRBjvYtAlvU7Xr4AeerXLR5cw94HnX4q70IBVWZu5Fhhol90GhI2xmBCngAozovw==}
+  /@jsx-mail/cli/1.2.3_rp5f2pyo4ejrzqsmkroqwhtvhm:
+    resolution: {integrity: sha512-Cf8sExUrqFc4S+CqwuKChraQ0mnykuZygYru6PL5NhuzKAWoKBLkJaCrwYL8mU82BUBngs7+IZJVNJxgTP24lg==}
     hasBin: true
     dependencies:
       '@jsx-mail/core': 1.0.7_rp5f2pyo4ejrzqsmkroqwhtvhm

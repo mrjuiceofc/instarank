@@ -1,4 +1,5 @@
 import React from 'react';
+import { CompletedOrderTemplate } from './templates/CompletedOrder';
 import { PasswordResetTemplate } from './templates/PasswordReset';
 
 export default function App() {
@@ -7,6 +8,15 @@ export default function App() {
       componentFunction: PasswordResetTemplate,
       props: {
         url: 'https://example.com?code=123456',
+      },
+    },
+    CompletedOrder: {
+      componentFunction: CompletedOrderTemplate,
+      props: {
+        username: 'example',
+        actionUrl: 'https://example.com/orders/123456',
+        amount: '1000',
+        remains: '10',
       },
     },
   };

@@ -43,7 +43,7 @@
     "yup": "^0.32.11"
   },
   "devDependencies": {
-    "@jsx-mail/cli": "^1.2.2",
+    "@jsx-mail/cli": "1.2.3",
     "@types/bcrypt": "^5.0.0",
     "@types/jsonwebtoken": "^8.5.9",
     "@types/node": "^18.11.7",
