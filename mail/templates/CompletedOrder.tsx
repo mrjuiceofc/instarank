@@ -31,19 +31,19 @@ export function CompletedOrderTemplate({
           </p>
           {remains && remains > 0 && (
             <p>
-              Apenas restaram {remains} seguidores sem ser enviados, mas não se
-              preocupe, essa quantidade foi retornada para o seu limite mensal e
-              você pode fazer o pedido de uma nova ordem com ela.
+              Apenas restaram {remains} seguidores sem ser enviados. Mas não se
+              preocupe, essa quantidade voltou ao seu limite mensal e você pode
+              fazer outra ordem com ele se quiser.
             </p>
           )}
           <p>
-            Não pare de ganhar seguidores e crescer seu Instagram cada vez mais,
-            clique no botão abaixo para ver mais detalhes sobre esse pedido e
-            fazer outro caso queira:
+            Não pare de ganhar seguidores e crescer cada vez mais seu Instagram,
+            clique no botão abaixo para ver mais detalhes sobre essa ordem e
+            fazer outro se quiser:
           </p>
         </Group>
         <GroupButton align="center">
-          <Button href={actionUrl}>Ver pedido</Button>
+          <Button href={actionUrl}>Ver ordem</Button>
         </GroupButton>
         <Group align="center">
           <p>
@@ -74,4 +74,5 @@ const Body = styled(Group)`
 const GroupButton = styled(Group)`
   padding-top: 20px;
   padding-bottom: 20px;
+  width: 100%;
 `;
