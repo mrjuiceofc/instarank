@@ -14,7 +14,13 @@ export function TextField(props: Props) {
     <Wrapper>
       {props.label && <label htmlFor={defaultId}>{props.label}</label>}
       <Input id={defaultId} type="text" {...props} />
-      {props.error && <Error>{props.error}</Error>}
+      {props.error && (
+        <Error
+          dangerouslySetInnerHTML={{
+            __html: props.error,
+          }}
+        />
+      )}
     </Wrapper>
   );
 }

@@ -43,6 +43,7 @@ export default function App({ premiumPlan }: Props) {
     getOrders,
     createOrder,
     refreshUser,
+    createCheckoutSession,
   } = useUser();
   const [orders, setOrders] = useState<any[]>([]);
   const [isLoadingOrders, setIsLoadingOrders] = useState(false);
@@ -50,19 +51,18 @@ export default function App({ premiumPlan }: Props) {
     username: '',
     amount: '',
   });
-  const [schema, setSchema] = useState<any>(
-    yup.object().shape({
-      amount: yup
-        .number()
-        .min(10, 'Quantidade deve ser no mínimo 10')
-        .required('Quantidade é obrigatória'),
-      username: yup
-        .string()
-        .min(3, 'Usuário deve ter no mínimo 3 caracteres')
-        .max(30, 'Usuário deve ter no máximo 30 caracteres')
-        .required('Usuário é obrigatório'),
-    })
-  );
+  const [schema, setSchema] = useState<any>(yup.object().shape({}));
+  const [limitResetDate, setLimitResetDate] = useState<Date | null>(null);
+
+  useEffect(() => {
+    if (!user) return;
+
+    const lastResetDate = new Date(user.limitResetAt);
+    const nextResetDate = new Date(
+      lastResetDate.setMonth(lastResetDate.getMonth() + 1)
+    );
+    setLimitResetDate(nextResetDate);
+  }, [user]);
 
   const route = useRouter();
 
@@ -123,29 +123,79 @@ export default function App({ premiumPlan }: Props) {
     }
   }, [user, isLoading]);
 
-  useEffect(() => {
-    if (user) {
-      setSchema(
-        yup.object().shape({
-          amount: yup
-            .number()
-            .min(10, 'Quantidade deve ser no mínimo 10')
-            .max(
-              user.monthlyLimit,
-              `O seu limite até o fim do mês é de ${user.monthlyLimit.toLocaleString(
-                'pt-BR'
-              )} seguidores`
-            )
-            .required('Quantidade é obrigatória'),
-          username: yup
-            .string()
-            .min(3, 'Usuário deve ter no mínimo 3 caracteres')
-            .max(30, 'Usuário deve ter no máximo 30 caracteres')
-            .required('Usuário é obrigatório'),
-        })
-      );
+  const handleObjShape = useCallback(async () => {
+    const objShape: any = {
+      username: yup
+        .string()
+        .min(3, 'Usuário deve ter no mínimo 3 caracteres')
+        .max(30, 'Usuário deve ter no máximo 30 caracteres')
+        .required('Usuário é obrigatório'),
+    };
+
+    if (user.monthlyLimit > 10) {
+      objShape.amount = yup
+        .number()
+        .min(10, 'Quantidade deve ser no mínimo 10')
+        .max(
+          user.monthlyLimit,
+          `O seu limite até o fim do mês é de ${user.monthlyLimit.toLocaleString(
+            'pt-BR'
+          )} seguidores`
+        )
+        .required('Quantidade é obrigatória');
     }
-  }, [user]);
+
+    if (user.monthlyLimit <= 10 && user.plan.name === 'premium') {
+      objShape.amount = yup
+        .number()
+        .max(
+          0,
+          `Sua quantidade de seguidores mensal acabou ou é menor que 10. Volte aqui a partir do dia ${limitResetDate?.toLocaleDateString(
+            'pt-BR'
+          )} que você terá ${user.plan.monthlyLimit.toLocaleString(
+            'pt-BR'
+          )} seguidores para fazer um pedido.`
+        )
+        .required('Quantidade é obrigatória');
+    }
+
+    if (user.monthlyLimit <= 10 && user.plan.name === 'free') {
+      let text =
+        'Sua quantidade de seguidores mensal acabou ou é menor que 10.';
+
+      const session = await createCheckoutSession(premiumPlan.name);
+
+      if (session.url) {
+        text = `${text} <a href="${session.url}">Click aqui</a>`;
+      } else {
+        text = `${text} Click no botão abaixo "Ganhe ${premiumPlan.monthlyLimit.toLocaleString(
+          'pt-BR'
+        )} seguidores todos os meses"`;
+      }
+
+      text = `${text} para adquirir ${premiumPlan.monthlyLimit.toLocaleString(
+        'pt-BR'
+      )} seguidores todos os meses por apenas ${(
+        premiumPlan.price / 100
+      ).toLocaleString('pt-BR', {
+        style: 'currency',
+        currency: 'BRL',
+      })}`;
+
+      objShape.amount = yup
+        .number()
+        .max(0, text)
+        .required('Quantidade é obrigatória');
+    }
+
+    setSchema(yup.object().shape({ ...objShape }));
+  }, [user, limitResetDate, premiumPlan]);
+
+  useEffect(() => {
+    if (!user || !limitResetDate) return;
+
+    handleObjShape();
+  }, [user, limitResetDate, handleObjShape]);
 
   useEffect(() => {
     getOrdersList();

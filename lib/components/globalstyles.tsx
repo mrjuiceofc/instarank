@@ -58,6 +58,10 @@ export const Error = styled.span<TextProps>`
     font-weight: ${theme.text.error.fontWeight};
     ${margin && `margin: ${margin};`}
     ${textAlign && `text-align: ${textAlign};`}
+
+    a {
+      text-decoration: underline;
+    }
   `}
 `;
 

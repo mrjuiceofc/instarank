@@ -183,7 +183,12 @@ export default function App({ Component, pageProps }: AppProps) {
           <GlobalProvider>
             <GlobalStyle />
             <PageContent Component={Component} pageProps={pageProps} />
-            <ToastContainer />
+            <ToastContainer
+              style={{
+                fontSize: '0.8rem',
+                lineHeight: '1.2rem',
+              }}
+            />
           </GlobalProvider>
         </UserProvider>
       </ThemeProvider>

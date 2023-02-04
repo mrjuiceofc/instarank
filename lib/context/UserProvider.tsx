@@ -29,6 +29,7 @@ interface IUserProvider {
   resetPassword: (data: AuthData) => Promise<any>;
   saveResetPassword: (token: string) => Promise<any>;
   requestChangePlan: (planName: string) => Promise<any>;
+  createCheckoutSession: (planName: string) => Promise<any>;
   changePlan: (sessionId: string) => Promise<any>;
   getWarnings: () => Promise<any>;
   readWarning: (warningId: string) => Promise<any>;
@@ -203,19 +204,35 @@ export default function UserProvider({ children }: ProviderProps) {
     requestUser();
   }, []);
 
-  const requestChangePlan = useCallback(async (planName: string) => {
+  const createCheckoutSession = useCallback(async (planName: string) => {
     setIsLoading(true);
-    let sessionId: string;
     try {
       const response = await axios.post('/api/plans/session', {
         planName,
       });
-      sessionId = response.data.id;
+      return response.data;
     } catch (error) {
       toast.error('Houve um erro ao buscar o plano');
       return;
     } finally {
       setIsLoading(false);
+    }
+  }, []);
+
+  const requestChangePlan = useCallback(async (planName: string) => {
+    let sessionId: string;
+
+    try {
+      const session = await createCheckoutSession(planName);
+      if (!session.id) {
+        toast.error('Houve um erro ao buscar o plano');
+        return;
+      }
+
+      sessionId = session.id;
+    } catch (error) {
+      toast.error('Houve um erro ao abrir o checkout');
+      return;
     }
 
     try {
@@ -329,6 +346,7 @@ export default function UserProvider({ children }: ProviderProps) {
         getOrders,
         readWarning,
         createOrder,
+        createCheckoutSession,
       }}
     >
       {children}

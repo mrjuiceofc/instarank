@@ -56,6 +56,35 @@ export async function orderFollowers({
     });
   }
 
+  let hasProcessingOrder: boolean;
+  try {
+    const existsOrder = await prisma.order.findFirst({
+      where: {
+        username,
+        status: {
+          in: ['IN_PROGRESS', 'PENDING', 'PROCESSING'],
+        },
+      },
+    });
+    hasProcessingOrder = !!existsOrder;
+  } catch (error) {
+    throw new BaseError({
+      errorLocationCode: 'orderFollowers:prisma.order.findFirst',
+      message: 'Erro desconhecido ao buscar pedido',
+      statusCode: 500,
+      requestId,
+    });
+  }
+
+  if (hasProcessingOrder) {
+    throw new BaseError({
+      errorLocationCode: 'orderFollowers:prisma.order.findFirst',
+      message: `Já existe um pedido em andamento para o usuário ${username}. Aguarde o pedido ser finalizado para fazer outro pedido.`,
+      statusCode: 400,
+      requestId,
+    });
+  }
+
   let suspect: suspect;
   try {
     suspect = await prisma.suspect.findFirst({
