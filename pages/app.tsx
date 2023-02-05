@@ -71,6 +71,10 @@ export default function App({ premiumPlan }: Props) {
   }, [premiumPlan]);
 
   const getOrdersList = useCallback(async () => {
+    if (!user) {
+      return;
+    }
+
     const response = await getOrders();
 
     if (response.statusCode !== 200) {
@@ -79,7 +83,7 @@ export default function App({ premiumPlan }: Props) {
     }
 
     setOrders(response.orders);
-  }, []);
+  }, [user]);
 
   const onSubmit = useCallback(
     async (event: React.FormEvent<HTMLFormElement>) => {
@@ -198,8 +202,12 @@ export default function App({ premiumPlan }: Props) {
   }, [user, limitResetDate, handleObjShape]);
 
   useEffect(() => {
+    if (!user) {
+      return;
+    }
+
     getOrdersList();
-  }, [getOrdersList]);
+  }, [getOrdersList, user]);
 
   return (
     <div>
