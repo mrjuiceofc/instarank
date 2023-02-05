@@ -94,6 +94,7 @@ export async function createCheckoutSession({
       mode: 'subscription',
       customer_email: !user.gatewayId ? user.email : undefined,
       customer: user.gatewayId ? user.gatewayId : undefined,
+      locale: 'pt-BR',
     });
   } catch (error) {
     throw new BaseError({

@@ -10,6 +10,7 @@ import { Error } from './globalstyles';
 import useUser from '../hooks/useUser';
 import useGlobal from '../hooks/useGlobal';
 import * as gtag from '../gtag';
+import { useRouter } from 'next/router';
 
 type Props = {
   isOpen: boolean;
@@ -34,6 +35,7 @@ export default function ModalCreateUser({
   const [emailValue, setEmailValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { openLoginModal } = useGlobal();
+  const router = useRouter();
 
   const onClose = useCallback(() => {
     setInputError('');
@@ -89,6 +91,7 @@ export default function ModalCreateUser({
         if (plan === 'free') {
           setIsLoading(false);
           onClose();
+          router.push('/app');
           return;
         }
 
@@ -99,7 +102,7 @@ export default function ModalCreateUser({
         console.log(error);
       }
     },
-    [plan]
+    [plan, router]
   );
 
   return (
