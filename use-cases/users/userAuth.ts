@@ -12,6 +12,8 @@ export async function userAuth({
   requestId,
   ip,
 }: UserCreateOrUpdateDTO) {
+  email = email.toLowerCase().trim();
+
   let user: user;
   try {
     user = await prisma.user.findUnique({

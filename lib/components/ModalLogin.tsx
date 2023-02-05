@@ -9,6 +9,7 @@ import pxToRem from '../utils/pxToRem';
 import { Error } from './globalstyles';
 import useUser from '../hooks/useUser';
 import useGlobal from '../hooks/useGlobal';
+import { useRouter } from 'next/router';
 
 type Props = {
   isOpen: boolean;
@@ -28,6 +29,7 @@ export default function ModalLogin({ isOpen, onClose: defaultOnClose }: Props) {
   const [emailValue, setEmailValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { openCreateUserModal, openResetPasswordModal } = useGlobal();
+  const router = useRouter();
 
   const onClose = useCallback(() => {
     setInputError('');
@@ -67,12 +69,13 @@ export default function ModalLogin({ isOpen, onClose: defaultOnClose }: Props) {
         }
         setIsLoading(false);
         onClose();
+        router.push('/app');
       } catch (error) {
         setIsLoading(false);
         console.log(error);
       }
     },
-    []
+    [router]
   );
 
   return (

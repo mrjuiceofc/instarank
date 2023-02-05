@@ -14,6 +14,8 @@ export async function userCreate({
   utmMedium,
   utmCampaign,
 }: UserCreateOrUpdateDTO) {
+  email = email.toLowerCase().trim();
+
   let userAlreadyExists: user;
   try {
     userAlreadyExists = await prisma.user.findUnique({

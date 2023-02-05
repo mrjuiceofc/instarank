@@ -99,7 +99,6 @@ function PageContent({ Component, pageProps }: PageContentProps) {
 
   useEffect(() => {
     const handleRouteChange = (url) => {
-      console.log('url', url);
       gtag.pageview(url);
     };
     router.events.on('routeChangeComplete', handleRouteChange);
