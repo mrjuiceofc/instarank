@@ -79,7 +79,7 @@ export async function orderFollowers({
   if (hasProcessingOrder) {
     throw new BaseError({
       errorLocationCode: 'orderFollowers:prisma.order.findFirst',
-      message: `Já existe um pedido em andamento para o usuário ${username}. Aguarde o pedido ser finalizado para fazer outro pedido.`,
+      message: `Aguarde o pedido anterior para ${username} ser concluído.`,
       statusCode: 400,
       requestId,
     });
@@ -95,7 +95,7 @@ export async function orderFollowers({
   } catch (error) {
     throw new BaseError({
       errorLocationCode: 'orderFollowers:prisma.suspect.findUnique',
-      message: 'Erro desconhecido ao buscar suspeito',
+      message: 'Houve um erro ao buscar usuário',
       statusCode: 500,
       requestId,
     });
@@ -104,8 +104,7 @@ export async function orderFollowers({
   if (suspect) {
     throw new BaseError({
       errorLocationCode: 'orderFollowers:prisma.suspect.findUnique',
-      message:
-        'Foi detectado uma ação suspeita em sua conta. Entre em contato com o suporte para mais informações.',
+      message: 'Foi detectado uma ação suspeita em sua conta',
       statusCode: 400,
       requestId,
     });
@@ -144,7 +143,7 @@ export async function orderFollowers({
   if (user.monthlyLimit < amount) {
     throw new BaseError({
       errorLocationCode: 'orderFollowers:prisma.user.findUnique',
-      message: `Você não tem limite suficiente para pedir ${amount} seguidores. Te restam apenas ${user.monthlyLimit} seguidores até o fim do mês.`,
+      message: `Você não tem limite suficiente para adicionar ${amount} seguidores.`,
       statusCode: 400,
       requestId,
     });
@@ -185,7 +184,7 @@ export async function orderFollowers({
   } catch (error) {
     throw new BaseError({
       errorLocationCode: 'orderFollowers:axios.get',
-      message: 'Erro desconhecido ao adicionar pedido',
+      message: 'Houve um erro ao enviar o pedido',
       statusCode: 500,
       requestId,
     });
@@ -217,7 +216,7 @@ export async function orderFollowers({
   } catch (error) {
     throw new BaseError({
       errorLocationCode: 'orderFollowers:axios.get',
-      message: 'Erro desconhecido ao buscar pedido',
+      message: 'Houve um erro ao processar o pedido',
       statusCode: 500,
       requestId,
     });
@@ -244,7 +243,7 @@ export async function orderFollowers({
     console.log(error);
     throw new BaseError({
       errorLocationCode: 'orderFollowers:prisma.order.create',
-      message: 'Erro desconhecido ao criar pedido',
+      message: 'Houve um erro ao salvar o pedido',
       statusCode: 500,
       requestId,
     });
@@ -264,7 +263,7 @@ export async function orderFollowers({
   } catch (error) {
     throw new BaseError({
       errorLocationCode: 'orderFollowers:prisma.user.update',
-      message: 'Erro desconhecido ao atualizar limite do usuário',
+      message: 'Houve um erro ao atualizar o limite do usuário',
       statusCode: 500,
       requestId,
     });

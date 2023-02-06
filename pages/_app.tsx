@@ -184,7 +184,7 @@ export default function App({ Component, pageProps }: AppProps) {
             <PageContent Component={Component} pageProps={pageProps} />
             <ToastContainer
               style={{
-                fontSize: '0.8rem',
+                fontSize: '0.9rem',
                 lineHeight: '1.2rem',
               }}
             />
