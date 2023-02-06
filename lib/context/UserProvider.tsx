@@ -9,6 +9,7 @@ import type { user } from '../../use-cases/users/getUserFromId';
 import axios from '../utils/axios';
 import getStripe from '../get-stripejs.ts';
 import { toast } from 'react-toastify';
+import * as gtag from '../gtag';
 
 type AuthData = {
   email: string;
@@ -237,6 +238,7 @@ export default function UserProvider({ children }: ProviderProps) {
 
     try {
       const stripe = await getStripe();
+      gtag.conversion('AW-11069655695/iR7uCLSI-ooYEI-Vtp4p');
       const { error } = await stripe?.redirectToCheckout({ sessionId });
       if (error) {
         throw error;
