@@ -300,8 +300,13 @@ export default function App({ premiumPlan }: Props) {
         </MyOrders>
         {user && user.plan.name === 'free' && (
           <FloatButton isLoading={isLoading} onClick={() => onChangePlan()}>
-            ganhe {premiumPlan.monthlyLimit.toLocaleString('pt-BR')} seguidores
-            todos os meses
+            Assine {premiumPlan.monthlyLimit.toLocaleString('pt-BR')} seguidores
+            por{' '}
+            {(premiumPlan.price / 100).toLocaleString('pt-BR', {
+              style: 'currency',
+              currency: 'BRL',
+            })}
+            /mês
           </FloatButton>
         )}
       </Wrapper>
