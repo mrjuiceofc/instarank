@@ -136,7 +136,7 @@ export default function App({ premiumPlan }: Props) {
         .required('Usuário é obrigatório'),
     };
 
-    if (user.monthlyLimit > 10) {
+    if (user.monthlyLimit >= 10) {
       objShape.amount = yup
         .number()
         .min(10, 'Quantidade deve ser no mínimo 10')
