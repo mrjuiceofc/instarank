@@ -17,7 +17,7 @@ export const plans: Prisma.planCreateInput[] = [
   {
     id: '161d1cc4-7eab-472f-a110-d677a1b0aca3',
     name: 'free',
-    monthlyLimit: 50,
+    monthlyLimit: 10,
     requireCard: false,
     price: 0,
   },

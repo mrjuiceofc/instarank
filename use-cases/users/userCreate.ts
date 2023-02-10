@@ -4,6 +4,7 @@ import prisma from '../../lib/prisma';
 import { UserCreateOrUpdateDTO } from './dto';
 import * as bcrypt from 'bcrypt';
 import { userAuth } from './userAuth';
+import Stripe from 'stripe';
 
 export async function userCreate({
   email,
@@ -15,6 +16,10 @@ export async function userCreate({
   utmCampaign,
 }: UserCreateOrUpdateDTO) {
   email = email.toLowerCase().trim();
+
+  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+    apiVersion: '2022-11-15',
+  });
 
   let userAlreadyExists: user;
   try {
@@ -97,6 +102,20 @@ export async function userCreate({
     });
   }
 
+  let customer: Stripe.Customer;
+  try {
+    customer = await stripe.customers.create({
+      email,
+    });
+  } catch (error) {
+    throw new BaseError({
+      message: 'Erro desconhecido ao criar o cliente',
+      errorLocationCode: 'userCreate.ts:userCreate:stripe.customers.create',
+      requestId,
+      statusCode: 500,
+    });
+  }
+
   try {
     await prisma.user.create({
       data: {
@@ -110,6 +129,7 @@ export async function userCreate({
         utmSource,
         utmMedium,
         utmCampaign,
+        gatewayId: customer.id,
       },
     });
   } catch (error) {
