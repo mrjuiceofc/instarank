@@ -125,6 +125,12 @@ export default function TermsOfUse() {
           <b>Aceitação dos termos:</b> Ao usar o site, você confirma que leu,
           compreendeu e concordou com esses termos e condições.
         </li>
+        <li>
+          <b>Contato:</b> Autorizo a instarank a entrar em contato comigo por
+          qualquer meio de contato, isso inclui porem não se limita a: e-mail,
+          telefone, SMS, WhatsApp, Direct no Instagram das contas que informo ao
+          fazer meu pedido.
+        </li>
       </ul>
     </Wrapper>
   );
