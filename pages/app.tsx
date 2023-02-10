@@ -149,7 +149,7 @@ export default function App({ premiumPlan }: Props) {
         .required('Quantidade é obrigatória');
     }
 
-    if (user.monthlyLimit <= 10 && user.plan.name === 'premium') {
+    if (user.monthlyLimit < 10 && user.plan.name === 'premium') {
       objShape.amount = yup
         .number()
         .max(
@@ -163,7 +163,7 @@ export default function App({ premiumPlan }: Props) {
         .required('Quantidade é obrigatória');
     }
 
-    if (user.monthlyLimit <= 10 && user.plan.name === 'free') {
+    if (user.monthlyLimit < 10 && user.plan.name === 'free') {
       let text =
         'Sua quantidade de seguidores mensal acabou ou é menor que 10.';
 
