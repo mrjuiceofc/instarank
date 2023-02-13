@@ -12,13 +12,15 @@ type Props = {
 
 export function PlanCard(props: Props) {
   const { openCreateUserModal } = useGlobal();
-  const { planName, planPrice, planMonthlyLimit, ...rest } = props;
+  const { planName, planPrice, planMonthlyLimit } = props;
 
   return (
     <Wrapper {...props}>
       <WrapperTitles {...props}>
         <Title>{planName}</Title>
-        {planName === 'free' && <p>Ganhe seguidores grátis todos os meses</p>}
+        {planName === 'free' && (
+          <p>Faça agora um teste grátis e experimente nossa eficiência.</p>
+        )}
         {planName === 'premium' && (
           <p>Experimente o poder de infinitas possibilidades</p>
         )}

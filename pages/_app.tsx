@@ -85,10 +85,10 @@ function PageContent({ Component, pageProps }: PageContentProps) {
   }, [router.query]);
 
   useEffect(() => {
-    import('react-facebook-pixel')
+    import('tiktok-pixel')
       .then((x) => x.default)
       .then((ReactPixel) => {
-        ReactPixel.init(process.env.NEXT_PUBLIC_FACEBOOK_PIXEL_ID);
+        ReactPixel.init(process.env.NEXT_PUBLIC_TIKTOK_PIXEL_ID);
         ReactPixel.pageView();
 
         router.events.on('routeChangeComplete', () => {

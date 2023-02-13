@@ -25,13 +25,13 @@ specifiers:
   prisma: ^4.5.0
   react: ^18.2.0
   react-dom: ^18.2.0
-  react-facebook-pixel: ^1.0.4
   react-hotjar: ^5.4.1
   react-toastify: ^9.1.1
   react-tooltip: ^5.1.0
   request-ip: ^3.3.0
   stripe: ^11.5.0
   styled-components: ^5.3.5
+  tiktok-pixel: ^2.0.3
   ts-node: ^10.9.1
   typescript: ^4.7.4
   uuid: ^9.0.0
@@ -53,13 +53,13 @@ dependencies:
   pino: 8.7.0
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
-  react-facebook-pixel: 1.0.4
   react-hotjar: 5.4.1
   react-toastify: 9.1.1_biqbaboplfbrettd7655fr4n2y
   react-tooltip: 5.1.0_biqbaboplfbrettd7655fr4n2y
   request-ip: 3.3.0
   stripe: 11.5.0
   styled-components: 5.3.6_7i5myeigehqah43i5u7wbekgba
+  tiktok-pixel: 2.0.3_react@18.2.0
   uuid: 9.0.0
   yup: 0.32.11
 
@@ -2702,10 +2702,6 @@ packages:
       react: 18.2.0
       scheduler: 0.23.0
 
-  /react-facebook-pixel/1.0.4:
-    resolution: {integrity: sha512-givZY8MS0v/mdbRzvcvouBo/j0TtDiu/93f4gIjJXwDDgwlf6bYUiQvb2qcqjluOOD/hIKUQHNYLNsSOnoEklg==}
-    dev: false
-
   /react-hotjar/5.4.1:
     resolution: {integrity: sha512-2205ONuPZzAFAQaIG2BQf/l8nePf5ir16vF7S/RT937JYvw3c7WSH65XRnL3sT4GMpU4eDzesB964xNE5wjGPQ==}
     dev: false
@@ -3123,6 +3119,15 @@ packages:
     resolution: {integrity: sha512-rUkv4/fnb4rqy/gGy7VuqK6wE1+1DOCOWy4RMeaV69ZHMP11tQKZvZSip1yTgrKCMZzEMcCL/bKfHvSfDHx+iQ==}
     dependencies:
       real-require: 0.2.0
+    dev: false
+
+  /tiktok-pixel/2.0.3_react@18.2.0:
+    resolution: {integrity: sha512-OL55YB/GK7cjqD0vMeIy9WDasQik2kxEE83hb5v6a1STD8dNx47llMScLjXhZ+0B7lNdbxy9kFfCv8S807xgaQ==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      react: '>=16'
+    dependencies:
+      react: 18.2.0
     dev: false
 
   /to-fast-properties/2.0.0:
