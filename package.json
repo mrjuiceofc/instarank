@@ -3,8 +3,8 @@
   "description": "Earn up to 10,000 followers per month on Instagram with a subscription",
   "private": true,
   "scripts": {
-    "build": "pnpm services:prepare:prod && next build",
-    "dev": "pnpm services:prepare:dev && pnpm next --port 3132",
+    "build": "yarn services:prepare:prod && next build",
+    "dev": "yarn services:prepare:dev && yarn next --port 3132",
     "start": "next start",
     "mail:build": "jsxm handlebars",
     "services:up": "docker-compose up -d",
@@ -13,8 +13,8 @@
     "database:migrate:prod": "prisma migrate deploy",
     "database:generate": "prisma generate",
     "database:seed": "prisma db seed",
-    "services:prepare:prod": "pnpm mail:build && pnpm database:generate && pnpm database:migrate:prod && pnpm database:seed",
-    "services:prepare:dev": "pnpm mail:build && pnpm services:up && pnpm database:generate && pnpm database:migrate:dev && pnpm database:seed"
+    "services:prepare:prod": "yarn mail:build && yarn database:generate && yarn database:migrate:prod && yarn database:seed",
+    "services:prepare:dev": "yarn mail:build && yarn services:up && yarn database:generate && yarn database:migrate:dev && yarn database:seed"
   },
   "dependencies": {
     "@jsx-mail/components": "^1.0.3",
