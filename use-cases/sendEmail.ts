@@ -7,8 +7,13 @@ import path from 'path';
 
 const transporter = nodemailer.createTransport({
   host: 'smtp.umbler.com',
-  port: 547,
   secure: false,
+  secureConnection: false,
+  tls: {
+    ciphers: 'SSLv3',
+    rejectUnauthorized: false,
+  },
+  port: 587,
   auth: {
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASSWORD,
