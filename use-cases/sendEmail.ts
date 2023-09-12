@@ -7,14 +7,8 @@ import path from 'path';
 
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
-  secure: true,
-  secureConnection: false,
-  tls: {
-    ciphers: 'SSLv3',
-  },
-  requireTLS: true,
   port: Number(process.env.SMTP_PORT),
-  debug: true,
+  secure: false,
   auth: {
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASSWORD,
