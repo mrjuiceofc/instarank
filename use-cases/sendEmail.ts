@@ -6,8 +6,8 @@ import fs from 'fs';
 import path from 'path';
 
 const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: Number(process.env.SMTP_PORT),
+  host: 'smtp.umbler.com',
+  port: 547,
   secure: false,
   auth: {
     user: process.env.SMTP_USER,
