@@ -8,7 +8,7 @@ import { OrderFollowersDTO, SMMOrder } from './dto';
 const serviceByPlan: {
   [key: string]: string;
 } = {
-  free: '9333',
+  free: '7555',
   premium: '8118',
 };
 
