@@ -106,6 +106,8 @@ model order {
   username            String
   amount              Int
   remains             Int
+  charge              Float?
+  currency            String?
   smmOrderId          String      @map("smm_order_id")
   smmServiceId        String      @map("smm_service_id")
   status              order_status
