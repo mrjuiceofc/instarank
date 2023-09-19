@@ -85,6 +85,8 @@ export async function updateNotCompletedOrders({
           id: order.id,
         },
         data: {
+          charge: Number(smmOrder.charge),
+          currency: smmOrder.currency,
           remains: smmOrder.remains,
           status: newStatus,
         },
