@@ -228,6 +228,8 @@ export async function orderFollowers({
       data: {
         amount,
         remains: order.remains,
+        currency: order.currency,
+        charge: Number(order.charge),
         smmOrderId: String(smmOrderId),
         smmServiceId,
         status: smmTranslateStatus[order.status],
