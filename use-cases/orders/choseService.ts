@@ -105,10 +105,9 @@ export async function choseService({
 
     stepWork = 'lowerPrices';
 
-    // const theLowest = lowerPrices.sort((a, b) => {
-    //   return Number(a.rate) - Number(b.rate);
-    // })[0];
-    const theLowest = null;
+    const theLowest = lowerPrices.sort((a, b) => {
+      return Number(a.rate) - Number(b.rate);
+    })[0];
 
     if (!theLowest) {
       await errorNotFoundService({
