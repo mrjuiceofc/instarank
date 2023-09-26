@@ -9,7 +9,7 @@ const serviceByPlan: {
   [key: string]: string;
 } = {
   free: '7555',
-  premium: '9333',
+  premium: '6897',
 };
 
 export async function orderFollowers({
