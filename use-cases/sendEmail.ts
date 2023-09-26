@@ -66,6 +66,8 @@ export async function sendEmail({
     });
   }
 
+  console.log(`[sendEmail] e-mail ${template} enviado com sucesso para ${to}`);
+
   return {
     message: 'E-mail enviado com sucesso',
   };

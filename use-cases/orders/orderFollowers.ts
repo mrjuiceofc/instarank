@@ -4,13 +4,7 @@ import { BaseError } from '../../errors';
 import prisma from '../../lib/prisma';
 import { smmTranslateStatus } from '../../lib/utils/smmTranslateStatus';
 import { OrderFollowersDTO, SMMOrder } from './dto';
-
-const serviceByPlan: {
-  [key: string]: string;
-} = {
-  free: '7555',
-  premium: '6897',
-};
+import { choseService } from './choseService';
 
 export async function orderFollowers({
   requestId,
@@ -149,13 +143,18 @@ export async function orderFollowers({
     });
   }
 
-  const smmServiceId = serviceByPlan[user.plan.name];
+  const smmService = await choseService({
+    requestId,
+    planName: user.plan.name,
+    userId,
+    amount,
+  });
 
-  if (!smmServiceId) {
+  if (!smmService) {
     throw new BaseError({
-      errorLocationCode: 'orderFollowers:smmServiceId',
-      message: 'Plano inválido',
-      statusCode: 400,
+      errorLocationCode: 'orderFollowers:smmService',
+      message: 'Erro interno ao encontrar um serviço',
+      statusCode: 500,
       requestId,
     });
   }
@@ -166,7 +165,7 @@ export async function orderFollowers({
       params: {
         key: process.env.SMMENGINEER_API_KEY,
         action: 'add',
-        service: smmServiceId,
+        service: smmService.service,
         link: username,
         quantity: amount,
       },
@@ -231,7 +230,7 @@ export async function orderFollowers({
         currency: order.currency,
         charge: Number(order.charge),
         smmOrderId: String(smmOrderId),
-        smmServiceId,
+        smmServiceId: smmService.service,
         status: smmTranslateStatus[order.status],
         username,
         user: {
