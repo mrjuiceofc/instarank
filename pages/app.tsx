@@ -53,6 +53,8 @@ export default function App({ premiumPlan }: Props) {
   });
   const [schema, setSchema] = useState<any>(yup.object().shape({}));
   const [limitResetDate, setLimitResetDate] = useState<Date | null>(null);
+  const [username, setUsername] = useState('');
+  const [amount, setAmount] = useState('');
 
   useEffect(() => {
     if (!user) return;
@@ -89,14 +91,13 @@ export default function App({ premiumPlan }: Props) {
     async (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
 
-      const body = new FormData(event.currentTarget);
-      const data = Object.fromEntries(body.entries());
+      const data = {
+        username,
+        amount: Number(amount.length === 0 ? 0 : amount),
+      };
 
       try {
-        await schema.validate({
-          username: data.username,
-          amount: Number(data.amount),
-        });
+        await schema.validate(data);
       } catch (error) {
         setInputError({
           username: error.path === 'username' ? error.message : '',
@@ -117,8 +118,11 @@ export default function App({ premiumPlan }: Props) {
       }
 
       toast.success('Pedido enviado com sucesso!');
+
+      setUsername('');
+      setAmount('');
     },
-    [schema]
+    [schema, username, amount]
   );
 
   useEffect(() => {
@@ -228,8 +232,10 @@ export default function App({ premiumPlan }: Props) {
             label="Usuário"
             placeholder="Digite o nome de usuário"
             type="text"
+            value={username}
             error={inputError.username}
-            onChange={() => {
+            onChange={(e) => {
+              setUsername(e.target.value);
               setInputError((old) => ({
                 ...old,
                 username: '',
@@ -241,8 +247,10 @@ export default function App({ premiumPlan }: Props) {
             label="Quantidade"
             placeholder="Digite a quantidade de seguidores"
             type="number"
+            value={amount}
             error={inputError.amount}
-            onChange={() => {
+            onChange={(e) => {
+              setAmount(e.target.value);
               setInputError((old) => ({
                 ...old,
                 amount: '',
