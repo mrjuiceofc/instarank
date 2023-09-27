@@ -47,13 +47,9 @@ export async function changePlanByWebhookObject({
   }
 
   if (session.status !== 'complete') {
-    throw new BaseError({
-      errorLocationCode:
-        'changePlanByWebhookObject:stripe.checkout.sessions.retrieve',
-      message: 'O checkout não está completo',
-      statusCode: 500,
-      requestId,
-    });
+    return {
+      message: 'Ignorado, pois a seção não está completa',
+    };
   }
 
   if (session.payment_status !== 'paid') {
