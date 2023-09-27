@@ -95,6 +95,7 @@ export async function createCheckoutSession({
       customer_email: !user.gatewayId ? user.email : undefined,
       customer: user.gatewayId ? user.gatewayId : undefined,
       locale: 'pt-BR',
+      payment_method_types: ['card', 'boleto'],
     });
   } catch (error) {
     throw new BaseError({

@@ -40,6 +40,7 @@ async function postHandler(request: NextApiRequest, response: NextApiResponse) {
   const actionsEventType: ActionsEventType = {
     'customer.subscription.deleted': downgradePlan,
     'checkout.session.completed': changePlanByWebhookObject,
+    'checkout.session.async_payment_succeeded': changePlanByWebhookObject,
   };
 
   const action = actionsEventType[event.type];
@@ -52,6 +53,8 @@ async function postHandler(request: NextApiRequest, response: NextApiResponse) {
       message: 'Não existe ação para o evento',
     });
   }
+
+  console.log(`[Webhook] executando ação para o evento ${event.type}`);
 
   const result = await action({
     requestId: request.context.requestId,
