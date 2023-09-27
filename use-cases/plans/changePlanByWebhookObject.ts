@@ -58,13 +58,9 @@ export async function changePlanByWebhookObject({
 
   if (session.payment_status !== 'paid') {
     console.log(`[changePlanByWebhookObject] seção ${sessionId} não está paga`);
-    throw new BaseError({
-      errorLocationCode:
-        'changePlanByWebhookObject:stripe.checkout.sessions.retrieve',
-      message: 'O checkout não foi pago',
-      statusCode: 500,
-      requestId,
-    });
+    return {
+      message: 'Ignorado, pois o checkout não está pago',
+    };
   }
 
   if (!session.customer) {
@@ -199,5 +195,7 @@ export async function changePlanByWebhookObject({
     });
   }
 
-  return;
+  return {
+    message: 'Plano atualizado com sucesso',
+  };
 }
