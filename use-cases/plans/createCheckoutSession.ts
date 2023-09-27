@@ -84,7 +84,7 @@ export async function createCheckoutSession({
   let session: Stripe.Checkout.Session;
   try {
     session = await stripe.checkout.sessions.create({
-      success_url: `${process.env.FRONTEND_URL}/checkout/success?session_id={CHECKOUT_SESSION_ID}&plan=${plan.name}`,
+      success_url: `${process.env.FRONTEND_URL}/checkout/success?plan=${plan.name}`,
       line_items: [
         {
           price: plan.gatewayId,
@@ -95,6 +95,7 @@ export async function createCheckoutSession({
       customer_email: !user.gatewayId ? user.email : undefined,
       customer: user.gatewayId ? user.gatewayId : undefined,
       locale: 'pt-BR',
+      payment_method_types: ['card', 'boleto'],
     });
   } catch (error) {
     throw new BaseError({

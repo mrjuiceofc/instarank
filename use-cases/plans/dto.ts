@@ -6,17 +6,16 @@ export type CreateCheckoutSessionDTO = {
   requestId: string;
 };
 
-export type ChangePlanBySessionIdDTO = {
-  sessionId: string;
+export type ChangePlanByWebhookObjectDTO = {
+  object: any;
   requestId: string;
 };
 
 export type ProcessWebhookDTO = {
   request: NextApiRequest;
-  eventName: string;
 };
 
 export type DowngradePlanDTO = {
   requestId: string;
-  stripeCustomerId: string;
+  object: any;
 };

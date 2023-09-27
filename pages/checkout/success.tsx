@@ -6,6 +6,8 @@ import { Loading } from '../../lib/components/globalstyles';
 import useUser from '../../lib/hooks/useUser';
 import prisma from '../../lib/prisma';
 import pxToRem from '../../lib/utils/pxToRem';
+import { Button } from '../../lib/components/Botton';
+import Link from 'next/link';
 
 type plan = {
   id: string;
@@ -20,73 +22,68 @@ type Props = {
 
 export default function CheckoutSuccess({ plans }: Props) {
   const router = useRouter();
-  const { changePlan, refreshUser } = useUser();
-  const [hasError, setHasError] = useState(false);
   const [paidPlan, setPaidPlan] = useState<plan | null>(null);
 
   useEffect(() => {
-    const load = async () => {
-      const sessionId = router.query.session_id as string;
-
-      if (sessionId) {
-        try {
-          const result = await changePlan(sessionId);
-          if (result.statusCode !== 200) {
-            throw new Error("Couldn't change plan");
-          }
-          await refreshUser();
-          toast.success('Plano alterado com sucesso!');
-          router.push('/app');
-        } catch (error) {
-          toast.error('Houve um erro');
-          setHasError(true);
-        }
-      }
-    };
-
     const foundPlan = plans.find((plan) => plan.name === router.query.plan);
     setPaidPlan(foundPlan);
-
-    load();
   }, [router.query, plans]);
 
   return (
     <Wrapper>
-      {hasError ? (
+      {paidPlan && (
         <>
-          <h3>Erro ao mudar o seu plano</h3>
+          <h3>Parabéns!!</h3>
           <p>
-            Envie um e-mail para{' '}
-            <a href="mailto:contato@instarank.com.br">
-              contato@instarank.com.br
-            </a>{' '}
-            que iremos te ajudar
+            O pagamento de{' '}
+            <span>
+              {(paidPlan.price / 100).toLocaleString('pt-BR', {
+                style: 'currency',
+                currency: 'BRL',
+              })}
+            </span>{' '}
+            foi feito com sucesso e agora você tem{' '}
+            {paidPlan.monthlyLimit.toLocaleString('pt-BR')} seguidores todos os
+            meses!
           </p>
-        </>
-      ) : (
-        <>
-          {paidPlan && (
-            <>
-              <h3>Mudando o seu plano...</h3>
-              <p>
-                O pagamento de{' '}
-                <span>
-                  {(paidPlan.price / 100).toLocaleString('pt-BR', {
-                    style: 'currency',
-                    currency: 'BRL',
-                  })}
-                </span>{' '}
-                foi feito com sucesso, agora estamos mudando o seu plano para{' '}
-                {paidPlan.name}...
-              </p>
-            </>
-          )}
-          <Loading />
+          <Link
+            href="/app"
+            style={{
+              width: '100%',
+            }}
+          >
+            <a
+              style={{
+                width: '80%',
+              }}
+            >
+              <Button>Usar meus seguidores</Button>
+            </a>
+          </Link>
         </>
       )}
     </Wrapper>
   );
 }
+
+const Wrapper = styled.main`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+  min-height: calc(100vh - 100px);
+  text-align: center;
+  padding: 0 ${pxToRem(15)};
+
+  h3 {
+    font-size: ${pxToRem(20)};
+    margin: 0;
+  }
+`;
 
 export async function getStaticProps() {
   const plans = await prisma.plan.findMany({
@@ -106,14 +103,3 @@ export async function getStaticProps() {
     },
   };
 }
-
-const Wrapper = styled.main`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  min-height: 100vh;
-  text-align: center;
-  padding: 0 ${pxToRem(15)};
-`;

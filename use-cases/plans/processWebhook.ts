@@ -3,10 +3,7 @@ import { BaseError } from '../../errors';
 import { ProcessWebhookDTO } from './dto';
 import { buffer } from 'micro';
 
-export async function processWebhook({
-  request,
-  eventName,
-}: ProcessWebhookDTO) {
+export async function processWebhook({ request }: ProcessWebhookDTO) {
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
     apiVersion: '2022-11-15',
   });
@@ -18,7 +15,8 @@ export async function processWebhook({
   if (!sig || !sig.length) {
     console.log('[processWebhook] Signature não encontrada');
     throw new BaseError({
-      errorLocationCode: 'changePlanBySessionId:stripe.webhooks.constructEvent',
+      errorLocationCode:
+        'changePlanByWebhookObject:stripe.webhooks.constructEvent',
       message: 'Signature não encontrada',
       statusCode: 400,
       requestId: request.context.requestId,
@@ -38,20 +36,9 @@ export async function processWebhook({
   } catch (error) {
     console.log('[processWebhook] Erro ao verificar webhook:', error);
     throw new BaseError({
-      errorLocationCode: 'changePlanBySessionId:stripe.webhooks.constructEvent',
+      errorLocationCode:
+        'changePlanByWebhookObject:stripe.webhooks.constructEvent',
       message: 'Erro desconhecido ao buscar evento',
-      statusCode: 400,
-      requestId: request.context.requestId,
-    });
-  }
-
-  if (event.type !== eventName) {
-    console.log(
-      `[processWebhook] o evento ${event.type} não é do tipo ${eventName}`
-    );
-    throw new BaseError({
-      errorLocationCode: 'changePlanBySessionId:stripe.webhooks.constructEvent',
-      message: `O evento não é do tipo ${eventName}`,
       statusCode: 400,
       requestId: request.context.requestId,
     });
