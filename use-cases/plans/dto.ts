@@ -6,8 +6,8 @@ export type CreateCheckoutSessionDTO = {
   requestId: string;
 };
 
-export type ChangePlanBySessionIdDTO = {
-  sessionId: string;
+export type ChangePlanByWebhookObjectDTO = {
+  object: any;
   requestId: string;
 };
 

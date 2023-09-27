@@ -4,6 +4,7 @@ import { NextApiResponse, NextApiRequest } from 'next';
 import { BaseError } from '../../errors';
 import { processWebhook } from '../../use-cases/plans/processWebhook';
 import { downgradePlan } from '../../use-cases/plans/downgradePlan';
+import { changePlanByWebhookObject } from '../../use-cases/plans/changePlanByWebhookObject';
 
 type ActionFunction = (data: {
   requestId: string;
@@ -38,6 +39,7 @@ async function postHandler(request: NextApiRequest, response: NextApiResponse) {
 
   const actionsEventType: ActionsEventType = {
     'customer.subscription.deleted': downgradePlan,
+    'checkout.session.completed': changePlanByWebhookObject,
   };
 
   const action = actionsEventType[event.type];

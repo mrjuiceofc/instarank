@@ -1,4 +1,4 @@
-import { ChangePlanBySessionIdDTO } from './dto';
+import { ChangePlanByWebhookObjectDTO } from './dto';
 import Stripe from 'stripe';
 import { BaseError } from '../../errors';
 import { plan, user } from '@prisma/client';
@@ -9,13 +9,15 @@ type subscription = Stripe.Subscription & {
   plan: Stripe.Plan;
 };
 
-export async function changePlanBySessionId({
-  sessionId,
+export async function changePlanByWebhookObject({
+  object,
   requestId,
-}: ChangePlanBySessionIdDTO) {
+}: ChangePlanByWebhookObjectDTO) {
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
     apiVersion: '2022-11-15',
   });
+
+  const sessionId = object.id;
 
   let session: Stripe.Checkout.Session;
   try {
@@ -23,7 +25,7 @@ export async function changePlanBySessionId({
   } catch (error) {
     throw new BaseError({
       errorLocationCode:
-        'changePlanBySessionId:stripe.checkout.sessions.retrieve',
+        'changePlanByWebhookObject:stripe.checkout.sessions.retrieve',
       message: 'Erro desconhecido ao buscar sessão',
       statusCode: 500,
       requestId,
@@ -37,7 +39,7 @@ export async function changePlanBySessionId({
   ) {
     throw new BaseError({
       errorLocationCode:
-        'changePlanBySessionId:stripe.checkout.sessions.retrieve',
+        'changePlanByWebhookObject:stripe.checkout.sessions.retrieve',
       message: 'Seção não encontrada',
       statusCode: 404,
       requestId,
@@ -47,7 +49,7 @@ export async function changePlanBySessionId({
   if (session.status !== 'complete') {
     throw new BaseError({
       errorLocationCode:
-        'changePlanBySessionId:stripe.checkout.sessions.retrieve',
+        'changePlanByWebhookObject:stripe.checkout.sessions.retrieve',
       message: 'O checkout não está completo',
       statusCode: 500,
       requestId,
@@ -57,7 +59,7 @@ export async function changePlanBySessionId({
   if (!session.customer) {
     throw new BaseError({
       errorLocationCode:
-        'changePlanBySessionId:stripe.checkout.sessions.retrieve',
+        'changePlanByWebhookObject:stripe.checkout.sessions.retrieve',
       message: 'O id do cliente não foi encontrado',
       statusCode: 500,
       requestId,
@@ -81,7 +83,7 @@ export async function changePlanBySessionId({
   } catch (error) {
     console.log(error);
     throw new BaseError({
-      errorLocationCode: 'changePlanBySessionId:prisma.user.findUnique',
+      errorLocationCode: 'changePlanByWebhookObject:prisma.user.findUnique',
       message: 'Erro desconhecido ao buscar usuário',
       statusCode: 500,
       requestId,
@@ -90,7 +92,7 @@ export async function changePlanBySessionId({
 
   if (!user) {
     throw new BaseError({
-      errorLocationCode: 'changePlanBySessionId:prisma.user.findUnique',
+      errorLocationCode: 'changePlanByWebhookObject:prisma.user.findUnique',
       message: 'Usuário não encontrado',
       statusCode: 404,
       requestId,
@@ -105,7 +107,8 @@ export async function changePlanBySessionId({
     subscription = gatewaySubscription as any;
   } catch (error) {
     throw new BaseError({
-      errorLocationCode: 'changePlanBySessionId:stripe.subscriptions.retrieve',
+      errorLocationCode:
+        'changePlanByWebhookObject:stripe.subscriptions.retrieve',
       message: 'Erro desconhecido ao buscar assinatura',
       statusCode: 500,
       requestId,
@@ -122,7 +125,7 @@ export async function changePlanBySessionId({
     });
   } catch (error) {
     throw new BaseError({
-      errorLocationCode: 'changePlanBySessionId:prisma.plan.findUnique',
+      errorLocationCode: 'changePlanByWebhookObject:prisma.plan.findUnique',
       message: 'Erro desconhecido ao buscar plano',
       statusCode: 500,
       requestId,
@@ -131,7 +134,7 @@ export async function changePlanBySessionId({
 
   if (!plan) {
     throw new BaseError({
-      errorLocationCode: 'changePlanBySessionId:prisma.plan.findUnique',
+      errorLocationCode: 'changePlanByWebhookObject:prisma.plan.findUnique',
       message: 'Plano não encontrado',
       statusCode: 404,
       requestId,
@@ -163,7 +166,7 @@ export async function changePlanBySessionId({
     });
   } catch (error) {
     throw new BaseError({
-      errorLocationCode: 'changePlanBySessionId:prisma.user.update',
+      errorLocationCode: 'changePlanByWebhookObject:prisma.user.update',
       message: 'Erro desconhecido ao atualizar usuário',
       statusCode: 500,
       requestId,
@@ -178,7 +181,7 @@ export async function changePlanBySessionId({
     });
   } catch (error) {
     throw new BaseError({
-      errorLocationCode: 'changePlanBySessionId:handleLimitReset',
+      errorLocationCode: 'changePlanByWebhookObject:handleLimitReset',
       message: 'Erro desconhecido ao resetar limite',
       statusCode: 500,
       requestId,

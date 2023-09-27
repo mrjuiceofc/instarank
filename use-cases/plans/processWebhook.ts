@@ -15,7 +15,8 @@ export async function processWebhook({ request }: ProcessWebhookDTO) {
   if (!sig || !sig.length) {
     console.log('[processWebhook] Signature não encontrada');
     throw new BaseError({
-      errorLocationCode: 'changePlanBySessionId:stripe.webhooks.constructEvent',
+      errorLocationCode:
+        'changePlanByWebhookObject:stripe.webhooks.constructEvent',
       message: 'Signature não encontrada',
       statusCode: 400,
       requestId: request.context.requestId,
@@ -35,7 +36,8 @@ export async function processWebhook({ request }: ProcessWebhookDTO) {
   } catch (error) {
     console.log('[processWebhook] Erro ao verificar webhook:', error);
     throw new BaseError({
-      errorLocationCode: 'changePlanBySessionId:stripe.webhooks.constructEvent',
+      errorLocationCode:
+        'changePlanByWebhookObject:stripe.webhooks.constructEvent',
       message: 'Erro desconhecido ao buscar evento',
       statusCode: 400,
       requestId: request.context.requestId,
