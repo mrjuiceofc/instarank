@@ -7,13 +7,12 @@ import { handleLimitReset } from '../users/handleLimitReset';
 import { createWarning } from '../users/warnings/createWarning';
 import { createCheckoutSession } from './createCheckoutSession';
 
-export async function downgradePlan({
-  requestId,
-  stripeCustomerId,
-}: DowngradePlanDTO) {
+export async function downgradePlan({ requestId, object }: DowngradePlanDTO) {
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
     apiVersion: '2022-11-15',
   });
+
+  const stripeCustomerId = object.customer;
 
   let customer: Stripe.Customer;
   try {
@@ -228,7 +227,9 @@ export async function downgradePlan({
     console.log(
       `[downgradePlan] error ao criar checkout session: ${error} | não afeta o downgrade`
     );
-    return;
+    return {
+      message: 'Atualizado com sucesso, mas o warning não foi gerado',
+    };
   }
 
   try {
@@ -247,6 +248,12 @@ export async function downgradePlan({
     console.log(
       `[downgradePlan] error ao criar warning: ${error} | não afeta o downgrade`
     );
-    return;
+    return {
+      message: 'Atualizado com sucesso, mas o warning não foi gerado',
+    };
   }
+
+  return {
+    message: 'Atualizado com sucesso',
+  };
 }

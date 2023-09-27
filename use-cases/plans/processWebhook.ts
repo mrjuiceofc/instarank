@@ -3,10 +3,7 @@ import { BaseError } from '../../errors';
 import { ProcessWebhookDTO } from './dto';
 import { buffer } from 'micro';
 
-export async function processWebhook({
-  request,
-  eventName,
-}: ProcessWebhookDTO) {
+export async function processWebhook({ request }: ProcessWebhookDTO) {
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
     apiVersion: '2022-11-15',
   });
@@ -40,18 +37,6 @@ export async function processWebhook({
     throw new BaseError({
       errorLocationCode: 'changePlanBySessionId:stripe.webhooks.constructEvent',
       message: 'Erro desconhecido ao buscar evento',
-      statusCode: 400,
-      requestId: request.context.requestId,
-    });
-  }
-
-  if (event.type !== eventName) {
-    console.log(
-      `[processWebhook] o evento ${event.type} não é do tipo ${eventName}`
-    );
-    throw new BaseError({
-      errorLocationCode: 'changePlanBySessionId:stripe.webhooks.constructEvent',
-      message: `O evento não é do tipo ${eventName}`,
       statusCode: 400,
       requestId: request.context.requestId,
     });
