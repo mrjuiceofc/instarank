@@ -2,6 +2,7 @@ import React from 'react';
 import { CompletedOrderTemplate } from './templates/CompletedOrder';
 import { PasswordResetTemplate } from './templates/PasswordReset';
 import { NotifyAdminBug } from './templates/NotifyAdminBug';
+import { PaidUser } from './templates/PaidUser';
 
 export default function App() {
   return {
@@ -24,6 +25,14 @@ export default function App() {
       componentFunction: NotifyAdminBug,
       props: {
         message: 'Erro xxx',
+      },
+    },
+    PaidUser: {
+      componentFunction: PaidUser,
+      props: {
+        planName: 'Premium',
+        actionUrl: 'https://example.com/upgrade',
+        amount: '10000',
       },
     },
   };
