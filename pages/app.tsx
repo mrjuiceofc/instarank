@@ -11,6 +11,7 @@ import Head from 'next/head';
 import { TextField } from '../lib/components/TextField';
 import { toast } from 'react-toastify';
 import type { order_status } from '@prisma/client';
+import useGlobal from '../lib/hooks/useGlobal';
 
 type Props = {
   premiumPlan: {
@@ -45,6 +46,7 @@ export default function App({ premiumPlan }: Props) {
     refreshUser,
     createCheckoutSession,
   } = useUser();
+  const { openLoginModal } = useGlobal();
   const [orders, setOrders] = useState<any[]>([]);
   const [isLoadingOrders, setIsLoadingOrders] = useState(false);
   const [inputError, setInputError] = useState({
@@ -127,7 +129,7 @@ export default function App({ premiumPlan }: Props) {
 
   useEffect(() => {
     if (!user && !isLoading) {
-      route.push('/');
+      openLoginModal();
     }
   }, [user, isLoading]);
 
