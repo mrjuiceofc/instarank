@@ -203,7 +203,7 @@ export async function changePlanByWebhookObject({
       to: user.email,
       variables: {
         planName: plan.name,
-        amount: String(plan.monthlyLimit),
+        amount: plan.monthlyLimit.toLocaleString('pt-BR'),
         actionUrl: `${process.env.FRONTEND_URL}/checkout/success?plan=premium&utm_source=system+emails&utm_medium=email&utm_campaign=now-you-are-a-paid-user`,
       },
     });

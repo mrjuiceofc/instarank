@@ -6,7 +6,7 @@ import { Button } from '../components/Botton';
 type Props = {
   planName: string;
   actionUrl: string;
-  amount: number;
+  amount: string;
 };
 
 export function PaidUser({ planName, actionUrl, amount }: Props) {
@@ -19,8 +19,8 @@ export function PaidUser({ planName, actionUrl, amount }: Props) {
         <Group align="center">
           <p>
             O seu pagamento foi confirmado e você se tornou um usuário{' '}
-            {planName}, com isso você passa a ter acesso a{' '}
-            {Number(amount).toLocaleString('pt-BR')} seguidores todos os meses!
+            {planName}, com isso você passa a ter acesso a {amount} seguidores
+            todos os meses!
           </p>
           <p>
             Não perca tempo, click no botão abaixo e use os seus seguidores para
