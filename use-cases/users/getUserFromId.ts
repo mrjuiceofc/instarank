@@ -13,6 +13,7 @@ export type user = {
   monthlyLimit: number;
   limitResetAt: Date;
   lastAccessAt: Date;
+  sawSuccessPlanAt?: Date;
   deletedAt?: Date;
 };
 
@@ -33,6 +34,7 @@ export async function getUserFromId({ userId, requestId }: GetUserFromIdDTO) {
         monthlyLimit: true,
         limitResetAt: true,
         lastAccessAt: true,
+        sawSuccessPlanAt: true,
         deletedAt: true,
       },
     });
