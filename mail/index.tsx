@@ -32,7 +32,7 @@ export default function App() {
       props: {
         planName: 'Premium',
         actionUrl: 'https://example.com/upgrade',
-        amount: '10000',
+        amount: '10.000',
       },
     },
   };
