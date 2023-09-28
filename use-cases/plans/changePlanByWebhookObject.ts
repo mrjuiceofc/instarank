@@ -166,6 +166,7 @@ export async function changePlanByWebhookObject({
           },
         },
         gatewayId: session.customer as string,
+        sawSuccessPlanAt: null,
       },
     });
   } catch (error) {

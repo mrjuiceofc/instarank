@@ -10,6 +10,7 @@ import axios from '../utils/axios';
 import getStripe from '../get-stripejs.ts';
 import { toast } from 'react-toastify';
 import * as gtag from '../gtag';
+import { useRouter } from 'next/router';
 
 type AuthData = {
   email: string;
@@ -49,6 +50,7 @@ type ProviderProps = {
 export default function UserProvider({ children }: ProviderProps) {
   const [loggedUser, setLoggedUser] = useState<user | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const router = useRouter();
 
   const requestUser = useCallback(async () => {
     try {
@@ -330,6 +332,22 @@ export default function UserProvider({ children }: ProviderProps) {
       setIsLoading(false);
     }
   }, []);
+
+  const markSawSuccessPlanAt = useCallback(async () => {
+    await axios.put('/api/users/mark-saw-success-plan-at');
+    await requestUser();
+  }, [loggedUser]);
+
+  useEffect(() => {
+    if (!loggedUser) return;
+    if (loggedUser.sawSuccessPlanAt) return;
+    if (router.route === '/checkout/success') {
+      markSawSuccessPlanAt();
+      return;
+    }
+
+    router.push(`/checkout/success?plan=${loggedUser.plan.name}`);
+  }, [loggedUser, router.route]);
 
   return (
     <UserContext.Provider

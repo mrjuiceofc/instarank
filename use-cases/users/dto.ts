@@ -25,6 +25,11 @@ export type GetUserFromIdDTO = {
   requestId: string;
 };
 
+export type MarkSawSuccessPlanAtDTO = {
+  userId: string;
+  requestId: string;
+};
+
 export type RequestPasswordResetDTO = {
   requestId: string;
   ip: string;

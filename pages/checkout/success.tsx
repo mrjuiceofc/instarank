@@ -1,13 +1,11 @@
 import { useRouter } from 'next/router';
-import { useCallback, useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { Loading } from '../../lib/components/globalstyles';
-import useUser from '../../lib/hooks/useUser';
 import prisma from '../../lib/prisma';
 import pxToRem from '../../lib/utils/pxToRem';
 import { Button } from '../../lib/components/Botton';
 import Link from 'next/link';
+import ReactConfetti from 'react-confetti';
 
 type plan = {
   id: string;
@@ -23,6 +21,20 @@ type Props = {
 export default function CheckoutSuccess({ plans }: Props) {
   const router = useRouter();
   const [paidPlan, setPaidPlan] = useState<plan | null>(null);
+  const [confettiWidth, setConfettiWidth] = useState(0);
+  const [confettiHeight, setConfettiHeight] = useState(0);
+
+  useEffect(() => {
+    function handleResize() {
+      setConfettiWidth(document.body.clientWidth);
+      setConfettiHeight(window.innerHeight);
+    }
+
+    window.addEventListener('resize', handleResize);
+    handleResize();
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     const foundPlan = plans.find((plan) => plan.name === router.query.plan);
@@ -31,6 +43,15 @@ export default function CheckoutSuccess({ plans }: Props) {
 
   return (
     <Wrapper>
+      <ReactConfetti
+        width={confettiWidth}
+        height={confettiHeight}
+        recycle={false}
+        numberOfPieces={800}
+        tweenDuration={15000}
+        gravity={0.15}
+      />
+
       {paidPlan && (
         <>
           <h3>Parabéns!!</h3>
