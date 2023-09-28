@@ -4,6 +4,7 @@ import { BaseError } from '../../errors';
 import { plan, user } from '@prisma/client';
 import prisma from '../../lib/prisma';
 import { handleLimitReset } from '../users/handleLimitReset';
+import { sendEmail } from '../sendEmail';
 
 type subscription = Stripe.Subscription & {
   plan: Stripe.Plan;
@@ -189,6 +190,28 @@ export async function changePlanByWebhookObject({
       statusCode: 500,
       requestId,
     });
+  }
+
+  try {
+    console.log(
+      `[changePlanByWebhookObject] enviando e-mail notificando o usuário ${user.email} sobre a mudança de plano para ${plan.name}`
+    );
+    await sendEmail({
+      requestId,
+      subject: 'Sua assinatura foi confirmada',
+      template: 'PaidUser',
+      to: user.email,
+      variables: {
+        planName: plan.name,
+        amount: String(plan.monthlyLimit),
+        actionUrl: `${process.env.FRONTEND_URL}/checkout/success?plan=premium&utm_source=system+emails&utm_medium=email&utm_campaign=now-you-are-a-paid-user`,
+      },
+    });
+  } catch (error) {
+    console.log(
+      `[changePlanByWebhookObject] erro ao enviar e-mail notificando o usuário`
+    );
+    console.log(error);
   }
 
   return {
