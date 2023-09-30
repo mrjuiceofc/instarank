@@ -35,9 +35,8 @@ export function ErrorOrder({ amount, username, actionUrl }: Props) {
         <Group align="center">
           <p>
             Se você tentar novamente com um usuário público e com o nome de
-            usuário correto e ainda assim tiver um erro, não se excite em
-            responder esse e-mail nos relatando esse problema e nossa equipe vai
-            te ajudar!
+            usuário correto e ainda assim tiver um erro, responda a esse e-mail
+            nos relatando esse problema e nossa equipe vai te ajudar!
           </p>
           <p>
             Obrigado por escolher o <b>Instarank</b>
