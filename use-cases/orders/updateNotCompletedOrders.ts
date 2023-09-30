@@ -5,7 +5,7 @@ import prisma from '../../lib/prisma';
 import { smmTranslateStatus } from '../../lib/utils/smmTranslateStatus';
 import { sendEmail } from '../sendEmail';
 import { SMMOrder, UpdateNotCompletedOrdersDTO } from './dto';
-
+('');
 export async function updateNotCompletedOrders({
   requestId,
 }: UpdateNotCompletedOrdersDTO) {
@@ -119,7 +119,7 @@ export async function updateNotCompletedOrders({
       try {
         await sendEmail({
           requestId,
-          subject: `Seu pedido de ${order.amount} seguidores para o Instagram ${order.username} foi concluída`,
+          subject: `Sua ordem de ${order.amount} seguidores para o Instagram ${order.username} foi concluída`,
           to: user.email,
           template: 'CompletedOrder',
           variables: {
@@ -127,6 +127,22 @@ export async function updateNotCompletedOrders({
             actionUrl: `${process.env.FRONTEND_URL}/app?utm_source=system+emails&utm_medium=email&utm_campaign=notify-order`,
             amount: String(order.amount),
             remains: String(smmOrder.remains),
+          },
+        });
+      } catch (error) {
+        continue;
+      }
+    } else if (newStatus === 'CANCELLED') {
+      try {
+        await sendEmail({
+          requestId,
+          subject: `Sua ordem de ${order.amount} seguidores para o Instagram ${order.username} foi cancelada`,
+          to: user.email,
+          template: 'ErrorOrder',
+          variables: {
+            username: order.username,
+            actionUrl: `${process.env.FRONTEND_URL}/app?utm_source=system+emails&utm_medium=email&utm_campaign=notify-order-error`,
+            amount: String(order.amount),
           },
         });
       } catch (error) {
