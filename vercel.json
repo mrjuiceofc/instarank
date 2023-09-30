@@ -1,0 +1,7 @@
+{
+  "functions": {
+    "api/orders/check": {
+      "maxDuration": 60
+    }
+  }
+}
